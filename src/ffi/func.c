@@ -1,4 +1,4 @@
-#include <ronin/rat/func.h>
+#include <ronin/rat/ffi/func.h>
 #include <ronin/rat/errno.h>
 
 #include <malloc.h>

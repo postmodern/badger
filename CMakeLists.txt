@@ -12,13 +12,17 @@ include_directories(${RONIN_RAT_SOURCE_DIR}/include)
 
 add_definitions("-Wall")
 add_library(
-	ronin_rat STATIC src/func.c
+	ronin_rat STATIC src/rat.c
 )
 
 add_executable(ronin_rat_server src/programs/server.c)
 target_link_libraries(ronin_rat_server ronin_rat)
 
 if (USE_FFI)
+	add_library(
+		ronin_rat_ffi STATIC src/ffi/func.c
+	)
+
 	if (UNIX)
 		include(FindPkgConfig)
 		pkg_check_modules(FFI REQUIRED libffi>=3.0.8)
@@ -26,6 +30,8 @@ if (USE_FFI)
 		include_directories(${FFI_INCLUDE_DIRS})
 		target_link_libraries(ronin_rat_server ${FFI_LIBRARIES})
 	endif (UNIX)
+
+	target_link_libraries(ronin_rat_server ronin_rat_ffi)
 endif (USE_FFI)
 
 add_subdirectory(test)

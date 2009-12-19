@@ -13,10 +13,10 @@ struct ronin_rat_lib
 };
 typedef struct ronin_rat_lib ronin_rat_lib_t;
 
-ronin_rat_lib_t * ronin_rat_lib_create();
-ronin_rat_lib_t * ronin_rat_lib_load(const char *name);
-ronin_rat_func_t * ronin_rat_lib_lookup(const ronin_rat_lib_t *lib,const char *name);
-int ronin_rat_lib_close(ronin_rat_lib_t *lib);
-void ronin_rat_lib_destroy(ronin_rat_lib_t *lib);
+extern ronin_rat_lib_t * ronin_rat_lib_create();
+extern ronin_rat_lib_t * ronin_rat_lib_load(const char *name);
+extern ronin_rat_func_t * ronin_rat_lib_lookup(const ronin_rat_lib_t *lib,const char *name);
+extern int ronin_rat_lib_close(ronin_rat_lib_t *lib);
+extern void ronin_rat_lib_destroy(ronin_rat_lib_t *lib);
 
 #endif

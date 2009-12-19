@@ -21,9 +21,9 @@ struct ronin_rat_tree
 };
 typedef struct ronin_rat_tree ronin_rat_tree_t;
 
-ronin_rat_tree_t * ronin_rat_tree_create(ronin_rat_tree_destroy_func destroy_func);
-int ronin_rat_tree_add(ronin_rat_tree_t *tree,const char *key,void *data);
-void * ronin_rat_tree_search(ronin_rat_tree_t *tree,const char *key);
-void ronin_rat_tree_destroy(ronin_rat_tree_t *tree);
+extern ronin_rat_tree_t * ronin_rat_tree_create(ronin_rat_tree_destroy_func destroy_func);
+extern int ronin_rat_tree_add(ronin_rat_tree_t *tree,const char *key,void *data);
+extern void * ronin_rat_tree_search(ronin_rat_tree_t *tree,const char *key);
+extern void ronin_rat_tree_destroy(ronin_rat_tree_t *tree);
 
 #endif

@@ -6,6 +6,11 @@ set(LIBRARY_SOVERSION "0")
 
 option(USE_FFI "Enables the use of the Foreign Function Interface (FFI)" ON)
 
+if (UNIX)
+	include(FindPkgConfig)
+	pkg_check_modules(BERT REQUIRED libBERT>=0.1.0)
+endif (UNIX)
+
 configure_file(config.h.cmake ${RONIN_RAT_SOURCE_DIR}/include/ronin/rat/config.h)
 
 include_directories(${RONIN_RAT_SOURCE_DIR}/include)
@@ -24,7 +29,6 @@ if (USE_FFI)
 	)
 
 	if (UNIX)
-		include(FindPkgConfig)
 		pkg_check_modules(FFI REQUIRED libffi>=3.0.8)
 
 		include_directories(${FFI_INCLUDE_DIRS})

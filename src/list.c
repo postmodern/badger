@@ -103,7 +103,7 @@ void * ronin_rat_list_search(ronin_rat_list_t *list,const char *key)
 
 	while (next_node)
 	{
-		switch (strcmp(next_node->key,key))
+		switch (strcmp(key,next_node->key))
 		{
 			case -1:
 				return NULL;

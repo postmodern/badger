@@ -93,7 +93,14 @@ int ronin_rat_list_add(ronin_rat_list_t *list,const char *key,void *data)
 		return RONIN_RAT_ERRNO_MALLOC;
 	}
 
-	last_node->next = new_node;
+	if (last_node)
+	{
+		last_node->next = new_node;
+	}
+	else
+	{
+		list->head = new_node;
+	}
 	return 1;
 }
 

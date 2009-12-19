@@ -16,7 +16,7 @@ typedef void (*ronin_rat_list_destroy_func)(void *data);
 
 struct ronin_rat_list
 {
-	ronin_rat_list_node_t *root;
+	ronin_rat_list_node_t *head;
 
 	ronin_rat_list_destroy_func destroy_func;
 };

@@ -4,7 +4,7 @@ project(RONIN_RAT C)
 set(LIBRARY_VERSION "0.1.0")
 set(LIBRARY_SOVERSION "0")
 
-configure_file(config.h.cmake ${RONIN_RAT_SOURCE_DIR}/include/bert/config.h)
+configure_file(config.h.cmake ${RONIN_RAT_SOURCE_DIR}/include/ronin/rat/config.h)
 
 include_directories(${RONIN_RAT_SOURCE_DIR}/include)
 

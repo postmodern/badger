@@ -3,7 +3,7 @@ CMakeFiles
 Makefile
 cmake_install.cmake
 install_manifest.txt
-include/ronint/rat/config.h
+include/ronin/rat/config.h
 ronin_rat_server
 test/Testing
 test/CTestTestfile.cmake

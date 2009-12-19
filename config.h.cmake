@@ -3,4 +3,6 @@
 
 #define RONIN_RAT_VERSION "${LIBRARY_VERSION}"
 
+#cmakedefine USE_FFI
+
 #endif

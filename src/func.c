@@ -1,4 +1,5 @@
 #include <ronin/rat/func.h>
+#include <ronin/rat/errno.h>
 
 #include <malloc.h>
 #include <string.h>
@@ -38,6 +39,29 @@ cleanup_func:
 	free(new_func);
 cleanup:
 	return NULL;
+}
+
+int ronin_rat_func_call(ronin_rat_func_t *func,int argc,bert_data_t *args,bert_data_t **ret)
+{
+	if (func->argc != -1)
+	{
+		if (argc != func->argc)
+		{
+			return RONIN_RAT_ERRNO_ARGC;
+		}
+
+		unsigned int i;
+
+		for (i=0;i<argc;i++)
+		{
+			if (args[i].type != func->arg_types[i])
+			{
+				return RONIN_RAT_ERRNO_ARG_TYPE;
+			}
+		}
+	}
+
+	return func->ptr(argc,args,ret);
 }
 
 void ronin_rat_func_destroy(ronin_rat_func_t *func)

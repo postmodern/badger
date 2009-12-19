@@ -1,14 +1,14 @@
-#include <ronin/rat/ffi/func.h>
+#include <ronin/ffi/func.h>
 #include <ronin/rat/errno.h>
 
 #include <malloc.h>
 #include <string.h>
 
-ronin_rat_func_t * ronin_rat_func_create(const char *name,const ffi_type **args,size_t args_length,ffi_type *ret)
+ronin_ffi_func_t * ronin_ffi_func_create(const char *name,const ffi_type **args,size_t args_length,ffi_type *ret)
 {
-	ronin_rat_func_t *new_func;
+	ronin_ffi_func_t *new_func;
 
-	if (!(new_func = malloc(sizeof(ronin_rat_func_t))))
+	if (!(new_func = malloc(sizeof(ronin_ffi_func_t))))
 	{
 		// malloc failed
 		goto cleanup;
@@ -41,12 +41,12 @@ cleanup:
 	return NULL;
 }
 
-int ronin_rat_func_call(const ronin_rat_func_t *func,void **args,ffi_arg *ret)
+int ronin_ffi_func_call(const ronin_ffi_func_t *func,void **args,ffi_arg *ret)
 {
 	return RONIN_RAT_ERRNO_FUNC;
 }
 
-void ronin_rat_func_destroy(ronin_rat_func_t *func)
+void ronin_ffi_func_destroy(ronin_ffi_func_t *func)
 {
 	if (!func)
 	{

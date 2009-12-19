@@ -3,7 +3,7 @@
 #include <malloc.h>
 #include <string.h>
 
-ronin_rat_func_t * ronin_rat_func_create(const char *name,ronin_rat_func_ptr address,int argc,bert_data_t *arg_types)
+ronin_rat_func_t * ronin_rat_func_create(const char *name,ronin_rat_func_ptr ptr,int argc,bert_data_t *arg_types)
 {
 	ronin_rat_func_t *new_func;
 
@@ -29,7 +29,7 @@ ronin_rat_func_t * ronin_rat_func_create(const char *name,ronin_rat_func_ptr add
 		}
 	}
 
-	new_func->address = address;
+	new_func->ptr = ptr;
 	return new_func;
 
 cleanup_name:

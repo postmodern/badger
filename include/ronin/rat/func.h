@@ -13,11 +13,12 @@ struct ronin_rat_func
 	ssize_t argc;
 	bert_data_type *arg_types;
 
-	ronin_rat_func_ptr address;
+	ronin_rat_func_ptr ptr;
 };
 typedef struct ronin_rat_func ronin_rat_func_t;
 
-ronin_rat_func_t * ronin_rat_func_create(const char *name,ronin_rat_func_ptr address,int argc,bert_data_t *arg_types);
+ronin_rat_func_t * ronin_rat_func_create(const char *name,ronin_rat_func_ptr ptr,int argc,bert_data_t *arg_types);
+int ronin_rat_func_call(ronin_rat_func_t *func,int argc,bert_data_t *args);
 void ronin_rat_func_destroy(ronin_rat_func_t *func);
 
 #endif

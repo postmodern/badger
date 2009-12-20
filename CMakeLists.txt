@@ -17,7 +17,7 @@ include_directories(${RONIN_RAT_SOURCE_DIR}/include)
 
 add_definitions("-Wall")
 add_library(
-	ronin_rat STATIC src/rat.c src/list.c src/func.c src/service.c
+	ronin_rat STATIC src/rat.c src/slist.c src/func.c src/service.c
 )
 
 add_executable(ronin_rat_server src/programs/server.c)

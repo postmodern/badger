@@ -7,7 +7,7 @@ include/ronin/rat/config.h
 ronin_rat_server
 test/Testing
 test/CTestTestfile.cmake
-test/test_list_search
+test/test_slist_search
 *.a
 *.so
 *.swp

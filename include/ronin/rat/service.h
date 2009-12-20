@@ -2,13 +2,13 @@
 #define _RONIN_RAT_SERVICE_H_
 
 #include <ronin/rat/func.h>
-#include <ronin/list.h>
+#include <ronin/slist.h>
 
 struct ronin_rat_service
 {
 	char *name;
 
-	ronin_list_t *functions;
+	ronin_slist_t *functions;
 };
 typedef struct ronin_rat_service ronin_rat_service_t;
 

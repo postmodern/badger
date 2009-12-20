@@ -19,7 +19,7 @@ ronin_rat_service_t * ronin_rat_service_create(const char *name)
 		goto cleanup_service;
 	}
 
-	if (!(new_service->functions = ronin_list_create((ronin_list_destroy_func)ronin_rat_func_destroy)))
+	if (!(new_service->functions = ronin_slist_create((ronin_slist_destroy_func)ronin_rat_func_destroy)))
 	{
 		goto cleanup_name;
 	}
@@ -36,12 +36,12 @@ cleanup:
 
 const ronin_rat_func_t * ronin_rat_service_search(const ronin_rat_service_t *service,const char *name)
 {
-	return (ronin_rat_func_t *)ronin_list_search(service->functions,name);
+	return (ronin_rat_func_t *)ronin_slist_search(service->functions,name);
 }
 
 void ronin_rat_service_destroy(ronin_rat_service_t *service)
 {
-	ronin_list_destroy(service->functions);
+	ronin_slist_destroy(service->functions);
 	free(service->name);
 	free(service);
 }

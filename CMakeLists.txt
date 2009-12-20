@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 2.6)
 project(RONIN_RAT C)
 
+set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/modules)
+include(install_paths)
+
 option(USE_FFI "Enables the use of the Foreign Function Interface (FFI)" ON)
 
 if (UNIX)
@@ -34,5 +37,10 @@ if (USE_FFI)
 
 	target_link_libraries(ronin_rat_server ronin_rat_ffi)
 endif (USE_FFI)
+
+install(
+	TARGETS ronin_rat_server
+	RUNTIME DESTINATION ${BIN_INSTALL_DIR}
+)
 
 add_subdirectory(test)

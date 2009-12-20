@@ -21,7 +21,7 @@ add_library(
 )
 
 add_executable(ronin_rat_server src/programs/server.c)
-target_link_libraries(ronin_rat_server ronin_rat)
+target_link_libraries(ronin_rat_server BERT-static ronin_rat)
 
 if (USE_FFI)
 	add_library(

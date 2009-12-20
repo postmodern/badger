@@ -1,9 +1,9 @@
 #ifndef _RONIN_RAT_LIBS_H_
 #define _RONIN_RAT_LIBS_H_
 
-#include <ronin/rat/list.h>
+#include <ronin/slist.h>
 
-typedef ronin_rat_list_t ronin_rat_libs_t;
+typedef ronin_slist_t ronin_rat_libs_t;
 
 extern ronin_rat_libs_t * ronin_rat_libs_create();
 extern int ronin_rat_libs_add(ronin_rat_libs_t *libs,ronin_rat_lib_t *lib);

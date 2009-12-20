@@ -1,15 +1,15 @@
 #ifndef _RONIN_RAT_LIB_H_
 #define _RONIN_RAT_LIB_H_
 
-#include <ronin/rat/tree.h>
 #include <ronin/rat/func.h>
+#include <ronin/slist.h>
 
 struct ronin_rat_lib
 {
 	char *name;
 	void *handler;
 
-	ronin_rat_tree_t *funcs;
+	ronin_slist_t *funcs;
 };
 typedef struct ronin_rat_lib ronin_rat_lib_t;
 

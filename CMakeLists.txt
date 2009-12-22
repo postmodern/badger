@@ -58,4 +58,11 @@ install(
 	RUNTIME DESTINATION ${BIN_INSTALL_DIR}
 )
 
+if(USE_FFI)
+	install(
+		TARGETS ronin_rat_ffi
+		ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
+	)
+endif(USE_FFI)
+
 add_subdirectory(test)

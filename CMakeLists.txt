@@ -4,6 +4,8 @@ project(RONIN_RAT C)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/modules)
 include(install_paths)
 
+set(LIBRARY_VERSION "0.1.0")
+set(LIBRARY_SOVERSION "0")
 set(
 	RONIN_RAT_FILES
 	src/rat.c src/slist.c src/func.c src/service.c
@@ -20,8 +22,20 @@ configure_file(config.h.cmake ${RONIN_RAT_SOURCE_DIR}/include/ronin/rat/config.h
 include_directories(${RONIN_RAT_SOURCE_DIR}/include)
 
 add_definitions("-Wall")
+
 add_library(ronin_rat SHARED ${RONIN_RAT_FILES})
+set_target_properties(
+	ronin_rat PROPERTIES
+	VERSION ${LIBRARY_VERSION}
+	SOVERSION ${LIBRARY_SOVERSION}
+)
+
 add_library(ronin_rat-static STATIC ${RONIN_RAT_FILES})
+set_target_properties(
+	ronin_rat-static PROPERTIES
+	VERSION ${LIBRARY_VERSION}
+	SOVERSION ${LIBRARY_SOVERSION}
+)
 
 add_executable(ronin_rat_server src/programs/server.c)
 target_link_libraries(ronin_rat_server BERT-static ronin_rat-static)

@@ -21,7 +21,9 @@ configure_file(config.h.cmake ${RONIN_RAT_SOURCE_DIR}/include/ronin/rat/config.h
 
 include_directories(${RONIN_RAT_SOURCE_DIR}/include)
 
-add_definitions("-Wall")
+if (UNIX)
+	add_definitions("-Wall")
+endif (UNIX)
 
 add_library(ronin_rat SHARED ${RONIN_RAT_FILES})
 set_target_properties(

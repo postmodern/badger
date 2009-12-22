@@ -6,10 +6,6 @@ include(install_paths)
 
 set(LIBRARY_VERSION "0.1.0")
 set(LIBRARY_SOVERSION "0")
-set(
-	RONIN_RAT_FILES
-	src/rat.c src/slist.c src/func.c src/service.c
-)
 
 option(USE_FFI "Enables the use of the Foreign Function Interface (FFI)" ON)
 
@@ -25,22 +21,18 @@ if(UNIX)
 	add_definitions("-Wall")
 endif(UNIX)
 
-add_library(ronin_rat SHARED ${RONIN_RAT_FILES})
+add_library(
+	ronin_rat STATIC
+	src/rat.c src/slist.c src/func.c src/service.c
+)
 set_target_properties(
 	ronin_rat PROPERTIES
 	VERSION ${LIBRARY_VERSION}
 	SOVERSION ${LIBRARY_SOVERSION}
 )
 
-add_library(ronin_rat-static STATIC ${RONIN_RAT_FILES})
-set_target_properties(
-	ronin_rat-static PROPERTIES
-	VERSION ${LIBRARY_VERSION}
-	SOVERSION ${LIBRARY_SOVERSION}
-)
-
 add_executable(ronin_rat_server src/programs/server.c)
-target_link_libraries(ronin_rat_server BERT-static ronin_rat-static)
+target_link_libraries(ronin_rat_server BERT-static ronin_rat)
 
 if(USE_FFI)
 	add_library(
@@ -59,10 +51,6 @@ endif(USE_FFI)
 
 install(
 	TARGETS ronin_rat
-	LIBRARY DESTINATION ${LIB_INSTALL_DIR}
-)
-install(
-	TARGETS ronin_rat-static
 	ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
 )
 install(

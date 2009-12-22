@@ -9,7 +9,5 @@ test/Testing
 test/CTestTestfile.cmake
 test/test_slist_search
 *.a
-*.so
-*.so.*
 *.swp
 *~

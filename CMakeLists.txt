@@ -4,6 +4,10 @@ project(BADGER C)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/modules)
 include(install_paths)
 
+if(UNIX)
+	include(FindPkgConfig)
+endif(UNIX)
+
 set(LIBRARY_VERSION "0.1.0")
 set(LIBRARY_SOVERSION "0")
 
@@ -40,7 +44,7 @@ if(USE_FFI)
 	)
 
 	if(UNIX)
-		find_library(FFI ffi)
+		pkg_search_module(FFI libffi)
 
 		include_directories(${FFI_INCLUDE_DIRS})
 		target_link_libraries(badger_server ${FFI_LIBRARIES})

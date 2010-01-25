@@ -1,14 +1,14 @@
-#include <ronin/rat/errno.h>
-#include <ronin/slist.h>
+#include <badger/errno.h>
+#include <badger/slist.h>
 
 #include <malloc.h>
 #include <string.h>
 
-ronin_slist_node_t * ronin_slist_node_create(const char *key,void *data)
+badger_slist_node_t * badger_slist_node_create(const char *key,void *data)
 {
-	ronin_slist_node_t *new_node;
+	badger_slist_node_t *new_node;
 
-	if (!(new_node = malloc(sizeof(ronin_slist_node_t))))
+	if (!(new_node = malloc(sizeof(badger_slist_node_t))))
 	{
 		// malloc failed
 		return NULL;
@@ -20,7 +20,7 @@ ronin_slist_node_t * ronin_slist_node_create(const char *key,void *data)
 	return new_node;
 }
 
-void ronin_slist_node_destroy(ronin_slist_node_t *node,ronin_slist_destroy_func destroy_func)
+void badger_slist_node_destroy(badger_slist_node_t *node,badger_slist_destroy_func destroy_func)
 {
 	if (node->data && destroy_func)
 	{
@@ -30,11 +30,11 @@ void ronin_slist_node_destroy(ronin_slist_node_t *node,ronin_slist_destroy_func 
 	free(node);
 }
 
-ronin_slist_t * ronin_slist_create(ronin_slist_destroy_func destroy_func)
+badger_slist_t * badger_slist_create(badger_slist_destroy_func destroy_func)
 {
-	ronin_slist_t *new_slist;
+	badger_slist_t *new_slist;
 
-	if (!(new_slist = malloc(sizeof(ronin_slist_t))))
+	if (!(new_slist = malloc(sizeof(badger_slist_t))))
 	{
 		// malloc failed
 		return NULL;
@@ -45,11 +45,11 @@ ronin_slist_t * ronin_slist_create(ronin_slist_destroy_func destroy_func)
 	return new_slist;
 }
 
-int ronin_slist_add(ronin_slist_t *slist,const char *key,void *data)
+int badger_slist_add(badger_slist_t *slist,const char *key,void *data)
 {
-	ronin_slist_node_t *next_node = slist->head;
-	ronin_slist_node_t *last_node = NULL;
-	ronin_slist_node_t *new_node;
+	badger_slist_node_t *next_node = slist->head;
+	badger_slist_node_t *last_node = NULL;
+	badger_slist_node_t *new_node;
 
 	while (next_node)
 	{
@@ -58,9 +58,9 @@ int ronin_slist_add(ronin_slist_t *slist,const char *key,void *data)
 			case -1:
 				if (!last_node)
 				{
-					if (!(new_node = ronin_slist_node_create(key,data)))
+					if (!(new_node = badger_slist_node_create(key,data)))
 					{
-						return RONIN_RAT_ERRNO_MALLOC;
+						return BADGER_ERRNO_MALLOC;
 					}
 
 					new_node->next = slist->head;
@@ -69,9 +69,9 @@ int ronin_slist_add(ronin_slist_t *slist,const char *key,void *data)
 				}
 				else if (strcmp(key,last_node->key) == 1)
 				{
-					if (!(new_node = ronin_slist_node_create(key,data)))
+					if (!(new_node = badger_slist_node_create(key,data)))
 					{
-						return RONIN_RAT_ERRNO_MALLOC;
+						return BADGER_ERRNO_MALLOC;
 					}
 
 					new_node->next = next_node;
@@ -88,9 +88,9 @@ int ronin_slist_add(ronin_slist_t *slist,const char *key,void *data)
 		next_node = next_node->next;
 	}
 
-	if (!(new_node = ronin_slist_node_create(key,data)))
+	if (!(new_node = badger_slist_node_create(key,data)))
 	{
-		return RONIN_RAT_ERRNO_MALLOC;
+		return BADGER_ERRNO_MALLOC;
 	}
 
 	if (last_node)
@@ -104,9 +104,9 @@ int ronin_slist_add(ronin_slist_t *slist,const char *key,void *data)
 	return 1;
 }
 
-void * ronin_slist_search(ronin_slist_t *slist,const char *key)
+void * badger_slist_search(badger_slist_t *slist,const char *key)
 {
-	ronin_slist_node_t *next_node = slist->head;
+	badger_slist_node_t *next_node = slist->head;
 
 	while (next_node)
 	{
@@ -125,18 +125,18 @@ void * ronin_slist_search(ronin_slist_t *slist,const char *key)
 	return NULL;
 }
 
-void ronin_slist_destroy(ronin_slist_t *slist)
+void badger_slist_destroy(badger_slist_t *slist)
 {
-	ronin_slist_node_t *next_node = slist->head;
-	ronin_slist_node_t *last_node;
-	ronin_slist_destroy_func destroy_func = slist->destroy_func;
+	badger_slist_node_t *next_node = slist->head;
+	badger_slist_node_t *last_node;
+	badger_slist_destroy_func destroy_func = slist->destroy_func;
 
 	while (next_node)
 	{
 		last_node = next_node;
 		next_node = next_node->next;
 
-		ronin_slist_node_destroy(last_node,destroy_func);
+		badger_slist_node_destroy(last_node,destroy_func);
 	}
 
 	free(slist);

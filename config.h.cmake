@@ -1,7 +1,7 @@
-#ifndef _RONIN_RAT_CONFIG_H_
-#define _RONIN_RAT_CONFIG_H_
+#ifndef _BADGER_CONFIG_H_
+#define _BADGER_CONFIG_H_
 
-#define RONIN_RAT_VERSION "${LIBRARY_VERSION}"
+#define BADGER_VERSION "${LIBRARY_VERSION}"
 
 #cmakedefine USE_FFI
 

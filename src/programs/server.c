@@ -1,9 +1,9 @@
-#include <ronin/rat.h>
+#include <badger/badger.h>
 
 #include <stdio.h>
 
 int main(int argc,const char **args)
 {
-	printf("ronin rat: %s\n",ronin_rat_version());
+	printf("badger: %s\n",badger_version());
 	return 0;
 }

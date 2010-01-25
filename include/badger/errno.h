@@ -1,0 +1,12 @@
+#ifndef _BADGER_ERRNO_H_
+#define _BADGER_ERRNO_H_
+
+#define BADGER_ERRNO_MAX		-6
+#define BADGER_ERRNO_MALLOC		-5
+#define BADGER_ERRNO_ARG_TYPE		-4
+#define BADGER_ERRNO_ARGC		-3
+#define BADGER_ERRNO_FUNC		-2
+#define BADGER_ERRNO_SERVICE		-1
+#define BADGER_SUCCESS			0
+
+#endif

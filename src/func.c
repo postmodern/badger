@@ -1,14 +1,14 @@
-#include <ronin/rat/func.h>
-#include <ronin/rat/errno.h>
+#include <badger/func.h>
+#include <badger/errno.h>
 
 #include <malloc.h>
 #include <string.h>
 
-ronin_rat_func_t * ronin_rat_func_create(const char *name,ronin_rat_func_ptr ptr,int argc,bert_data_t *arg_types)
+badger_func_t * badger_func_create(const char *name,badger_func_ptr ptr,int argc,bert_data_t *arg_types)
 {
-	ronin_rat_func_t *new_func;
+	badger_func_t *new_func;
 
-	if (!(new_func = malloc(sizeof(ronin_rat_func_t))))
+	if (!(new_func = malloc(sizeof(badger_func_t))))
 	{
 		// malloc failed
 		goto cleanup;
@@ -41,13 +41,13 @@ cleanup:
 	return NULL;
 }
 
-int ronin_rat_func_call(ronin_rat_func_t *func,int argc,bert_data_t *args,bert_data_t **ret)
+int badger_func_call(badger_func_t *func,int argc,bert_data_t *args,bert_data_t **ret)
 {
 	if (func->argc != -1)
 	{
 		if (argc != func->argc)
 		{
-			return RONIN_RAT_ERRNO_ARGC;
+			return BADGER_ERRNO_ARGC;
 		}
 
 		unsigned int i;
@@ -56,7 +56,7 @@ int ronin_rat_func_call(ronin_rat_func_t *func,int argc,bert_data_t *args,bert_d
 		{
 			if (args[i].type != func->arg_types[i])
 			{
-				return RONIN_RAT_ERRNO_ARG_TYPE;
+				return BADGER_ERRNO_ARG_TYPE;
 			}
 		}
 	}
@@ -64,7 +64,7 @@ int ronin_rat_func_call(ronin_rat_func_t *func,int argc,bert_data_t *args,bert_d
 	return func->ptr(argc,args,ret);
 }
 
-void ronin_rat_func_destroy(ronin_rat_func_t *func)
+void badger_func_destroy(badger_func_t *func)
 {
 	if (func->argc > 0)
 	{

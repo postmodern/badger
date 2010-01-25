@@ -1,14 +1,14 @@
-#include <ronin/rat/service.h>
-#include <ronin/rat/func.h>
+#include <badger/service.h>
+#include <badger/func.h>
 
 #include <malloc.h>
 #include <string.h>
 
-ronin_rat_service_t * ronin_rat_service_create(const char *name)
+badger_service_t * badger_service_create(const char *name)
 {
-	ronin_rat_service_t *new_service;
+	badger_service_t *new_service;
 
-	if (!(new_service = malloc(sizeof(ronin_rat_service_t))))
+	if (!(new_service = malloc(sizeof(badger_service_t))))
 	{
 		// malloc failed
 		goto cleanup;
@@ -19,7 +19,7 @@ ronin_rat_service_t * ronin_rat_service_create(const char *name)
 		goto cleanup_service;
 	}
 
-	if (!(new_service->functions = ronin_slist_create((ronin_slist_destroy_func)ronin_rat_func_destroy)))
+	if (!(new_service->functions = badger_slist_create((badger_slist_destroy_func)badger_func_destroy)))
 	{
 		goto cleanup_name;
 	}
@@ -34,14 +34,14 @@ cleanup:
 	return NULL;
 }
 
-const ronin_rat_func_t * ronin_rat_service_search(const ronin_rat_service_t *service,const char *name)
+const badger_func_t * badger_service_search(const badger_service_t *service,const char *name)
 {
-	return (ronin_rat_func_t *)ronin_slist_search(service->functions,name);
+	return (badger_func_t *)badger_slist_search(service->functions,name);
 }
 
-void ronin_rat_service_destroy(ronin_rat_service_t *service)
+void badger_service_destroy(badger_service_t *service)
 {
-	ronin_slist_destroy(service->functions);
+	badger_slist_destroy(service->functions);
 	free(service->name);
 	free(service);
 }

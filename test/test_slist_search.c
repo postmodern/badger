@@ -1,15 +1,15 @@
 #include "test.h"
-#include <ronin/slist.h>
+#include <badger/slist.h>
 
 #include <malloc.h>
 
-ronin_slist_t *slist;
+badger_slist_t *slist;
 
 void test_search_head()
 {
 	int *i;
 	
-	if (!(i = ronin_slist_search(slist,"a")))
+	if (!(i = badger_slist_search(slist,"a")))
 	{
 		test_fail("unable to find element %s in the slist","a");
 	}
@@ -24,7 +24,7 @@ void test_search()
 {
 	int *i;
 	
-	if (!(i = ronin_slist_search(slist,"b")))
+	if (!(i = badger_slist_search(slist,"b")))
 	{
 		test_fail("unable to find element %s in the slist","b");
 	}
@@ -37,7 +37,7 @@ void test_search()
 
 void test_search_not_found()
 {
-	if (ronin_slist_search(slist,"c"))
+	if (badger_slist_search(slist,"c"))
 	{
 		test_fail("found element %s, that should not be in the slist","c");
 	}
@@ -45,7 +45,7 @@ void test_search_not_found()
 
 int main()
 {
-	if (!(slist = ronin_slist_create(NULL)))
+	if (!(slist = badger_slist_create(NULL)))
 	{
 		test_fail("malloc failed");
 	}
@@ -53,12 +53,12 @@ int main()
 	int i1 = 1;
 	int i2 = 2;
 
-	if (ronin_slist_add(slist,"a",&i1) < 1)
+	if (badger_slist_add(slist,"a",&i1) < 1)
 	{
 		test_fail("failed to add %s => %d into the sorted slist","a",i1);
 	}
 
-	if (ronin_slist_add(slist,"b",&i2) < 1)
+	if (badger_slist_add(slist,"b",&i2) < 1)
 	{
 		test_fail("failed to add %s => %d into the sorted slist","b",i2);
 	}
@@ -67,6 +67,6 @@ int main()
 	test_search();
 	test_search_not_found();
 
-	ronin_slist_destroy(slist);
+	badger_slist_destroy(slist);
 	return 0;
 }

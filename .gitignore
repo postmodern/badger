@@ -3,8 +3,8 @@ CMakeFiles
 Makefile
 cmake_install.cmake
 install_manifest.txt
-include/ronin/rat/config.h
-ronin_rat_server
+include/badger/config.h
+badger_server
 test/Testing
 test/CTestTestfile.cmake
 test/test_slist_search

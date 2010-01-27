@@ -1,7 +1,7 @@
 #include <badger/errno.h>
 #include <badger/slist.h>
 
-#include <malloc.h>
+#include <stdlib.h>
 #include <string.h>
 
 badger_slist_node_t * badger_slist_node_create(const char *key,void *data)

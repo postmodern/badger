@@ -1,7 +1,7 @@
 #include <badger/func.h>
 #include <badger/errno.h>
 
-#include <malloc.h>
+#include <stdlib.h>
 #include <string.h>
 
 badger_func_t * badger_func_create(const char *name,badger_func_ptr ptr,int argc,bert_data_t *arg_types)

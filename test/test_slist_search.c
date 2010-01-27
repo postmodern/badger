@@ -1,7 +1,7 @@
 #include "test.h"
 #include <badger/slist.h>
 
-#include <malloc.h>
+#include <stdlib.h>
 
 badger_slist_t *slist;
 

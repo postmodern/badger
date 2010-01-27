@@ -1,7 +1,7 @@
 #include <badger/service.h>
 #include <badger/func.h>
 
-#include <malloc.h>
+#include <stdlib.h>
 #include <string.h>
 
 badger_service_t * badger_service_create(const char *name)

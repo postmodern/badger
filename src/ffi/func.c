@@ -1,7 +1,7 @@
 #include <badger/ffi/func.h>
 #include <badger/errno.h>
 
-#include <malloc.h>
+#include <stdlib.h>
 #include <string.h>
 
 badger_ffi_func_t * badger_ffi_func_create(const char *name,const ffi_type **args,size_t args_length,ffi_type *ret)

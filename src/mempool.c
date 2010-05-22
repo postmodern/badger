@@ -39,7 +39,7 @@ void mempool_chunk_destroy(struct mempool_chunk *chunk)
 	free(chunk);
 }
 
-int mempool_alloc(mempool *mempool,size_t size)
+int mempool_alloc(mempool_t *mempool,size_t size)
 {
 	struct mempool_chunk *new_chunk;
 

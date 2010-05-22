@@ -12,7 +12,7 @@ set(LIBRARY_VERSION "0.1.0")
 set(LIBRARY_SOVERSION "0")
 
 if(UNIX)
-	find_library(BERT BERT-static)
+	find_library(MSGPACK msgpack)
 endif(UNIX)
 
 configure_file(config.h.cmake ${BADGER_SOURCE_DIR}/include/badger/config.h)
@@ -34,7 +34,7 @@ set_target_properties(
 )
 
 add_executable(badger_server src/programs/server.c)
-target_link_libraries(badger_server BERT-static badger)
+target_link_libraries(badger_server msgpack badger)
 
 install(
 	TARGETS badger

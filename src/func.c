@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-badger_func_t * badger_func_create(const char *name,badger_func_ptr ptr,int argc,bert_data_t *arg_types)
+badger_func_t * badger_func_create(const char *name,badger_func_ptr ptr,int argc,msgpack_object_type *arg_types)
 {
 	badger_func_t *new_func;
 
@@ -24,7 +24,7 @@ badger_func_t * badger_func_create(const char *name,badger_func_ptr ptr,int argc
 
 	if (argc > 0)
 	{
-		if (!(new_func->arg_types = malloc(sizeof(bert_data_type)*argc)))
+		if (!(new_func->arg_types = malloc(sizeof(msgpack_object_type)*argc)))
 		{
 			goto cleanup_name;
 		}
@@ -41,7 +41,7 @@ cleanup:
 	return NULL;
 }
 
-int badger_func_call(badger_func_t *func,int argc,bert_data_t *args,bert_data_t **ret)
+int badger_func_call(badger_func_t *func,int argc,msgpack_object *args,msgpack_object **ret)
 {
 	if (func->argc != -1)
 	{

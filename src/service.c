@@ -19,7 +19,7 @@ badger_service_t * badger_service_create(const char *name)
 		goto cleanup_service;
 	}
 
-	if (!(new_service->functions = badger_slist_create((badger_slist_destroy_func)badger_func_destroy)))
+	if (!(new_service->functions = badger_slist_dict((badger_slist_destroy_func)badger_func_destroy)))
 	{
 		goto cleanup_name;
 	}

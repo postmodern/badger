@@ -45,7 +45,7 @@ void test_search_not_found()
 
 int main()
 {
-	if (!(slist = badger_slist_create(NULL)))
+	if (!(slist = badger_slist_create(badger_slist_compare_strings,NULL)))
 	{
 		test_fail("malloc failed");
 	}

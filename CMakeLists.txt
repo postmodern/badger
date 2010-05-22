@@ -11,8 +11,6 @@ endif(UNIX)
 set(LIBRARY_VERSION "0.1.0")
 set(LIBRARY_SOVERSION "0")
 
-option(USE_FFI "Enables the use of the Foreign Function Interface (FFI)" ON)
-
 if(UNIX)
 	find_library(BERT BERT-static)
 endif(UNIX)
@@ -38,21 +36,6 @@ set_target_properties(
 add_executable(badger_server src/programs/server.c)
 target_link_libraries(badger_server BERT-static badger)
 
-if(USE_FFI)
-	add_library(
-		badger_ffi STATIC src/ffi/func.c
-	)
-
-	if(UNIX)
-		pkg_search_module(FFI libffi)
-
-		include_directories(${FFI_INCLUDE_DIRS})
-		target_link_libraries(badger_server ${FFI_LIBRARIES})
-	endif(UNIX)
-
-	target_link_libraries(badger_server badger_ffi)
-endif(USE_FFI)
-
 install(
 	TARGETS badger
 	ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
@@ -61,12 +44,5 @@ install(
 	TARGETS badger_server
 	RUNTIME DESTINATION ${BIN_INSTALL_DIR}
 )
-
-if(USE_FFI)
-	install(
-		TARGETS badger_ffi
-		ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
-	)
-endif(USE_FFI)
 
 add_subdirectory(test)

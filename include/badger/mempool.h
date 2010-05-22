@@ -21,6 +21,11 @@ static inline mempool_t * mempool_create()
 
 int mempool_alloc(mempool_t *mempool,size_t size);
 
+static inline int mempool_free(mempool_t *mempool,void *ptr)
+{
+	return slist_remove(mempool,ptr);
+}
+
 static inline void mempool_destroy(mempool_t *mempool)
 {
 	slist_destroy(mempool);

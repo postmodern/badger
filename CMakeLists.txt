@@ -25,7 +25,7 @@ endif(UNIX)
 
 add_library(
 	badger STATIC
-	src/badger.c src/slist.c src/func.c src/service.c
+	src/badger.c src/slist.c src/mempool.c src/func.c src/service.c
 )
 set_target_properties(
 	badger PROPERTIES

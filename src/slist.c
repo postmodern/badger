@@ -131,6 +131,38 @@ void * slist_search(slist_t *slist,const void *key)
 	return NULL;
 }
 
+int slist_remove(slist_t *slist,const void *key)
+{
+	slist_node_t *last_node = NULL;
+	slist_node_t *next_node = slist->head;
+
+	while (next_node)
+	{
+		switch (slist->compare_func(key,next_node->key))
+		{
+			case -1:
+				return 0;
+			case 0:
+				if (last_node)
+				{
+					last_node->next = next_node->next;
+				}
+				else
+				{
+					slist->head = next_node->next;
+				}
+
+				slist_node_destroy(next_node,slist->destroy_func);
+				return 1;
+			case 1:
+				next_node = next_node->next;
+				break;
+		}
+	}
+
+	return 0;
+}
+
 void slist_destroy(slist_t *slist)
 {
 	slist_node_t *next_node = slist->head;

@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-badger_slist_node_t * badger_slist_node_create(const char *key,void *data)
+badger_slist_node_t * badger_slist_node_create(const void *key,void *data)
 {
 	badger_slist_node_t *new_node;
 
@@ -30,7 +30,7 @@ void badger_slist_node_destroy(badger_slist_node_t *node,badger_slist_destroy_fu
 	free(node);
 }
 
-badger_slist_t * badger_slist_create(badger_slist_destroy_func destroy_func)
+badger_slist_t * badger_slist_create(badger_slist_compare_func compare_func,badger_slist_destroy_func destroy_func)
 {
 	badger_slist_t *new_slist;
 
@@ -41,11 +41,12 @@ badger_slist_t * badger_slist_create(badger_slist_destroy_func destroy_func)
 	}
 
 	new_slist->head = NULL;
+	new_slist->compare_func = compare_func;
 	new_slist->destroy_func = destroy_func;
 	return new_slist;
 }
 
-int badger_slist_add(badger_slist_t *slist,const char *key,void *data)
+int badger_slist_add(badger_slist_t *slist,const void *key,void *data)
 {
 	badger_slist_node_t *next_node = slist->head;
 	badger_slist_node_t *last_node = NULL;
@@ -53,7 +54,7 @@ int badger_slist_add(badger_slist_t *slist,const char *key,void *data)
 
 	while (next_node)
 	{
-		switch (strcmp(key,next_node->key))
+		switch (slist->compare_func(key,next_node->key))
 		{
 			case -1:
 				if (!last_node)
@@ -104,13 +105,13 @@ int badger_slist_add(badger_slist_t *slist,const char *key,void *data)
 	return 1;
 }
 
-void * badger_slist_search(badger_slist_t *slist,const char *key)
+void * badger_slist_search(badger_slist_t *slist,const void *key)
 {
 	badger_slist_node_t *next_node = slist->head;
 
 	while (next_node)
 	{
-		switch (strcmp(key,next_node->key))
+		switch (slist->compare_func(key,next_node->key))
 		{
 			case -1:
 				return NULL;

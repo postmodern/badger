@@ -56,9 +56,4 @@ extern int slist_add(slist_t *slist,const void *key,void *data);
 extern void * slist_search(slist_t *slist,const void *key);
 extern void slist_destroy(slist_t *slist);
 
-static inline slist_t * slist_dict(slist_destroy_func destroy_func)
-{
-	return slist_create(slist_compare_strings,destroy_func);
-}
-
 #endif

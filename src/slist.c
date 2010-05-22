@@ -27,6 +27,11 @@ void slist_node_destroy(slist_node_t *node,slist_destroy_func destroy_func)
 		destroy_func(node->data);
 	}
 
+	// zero the slist_node fields before freeing it
+	node->key = NULL;
+	node->data = NULL;
+	node->next = NULL;
+
 	free(node);
 }
 
@@ -139,6 +144,11 @@ void slist_destroy(slist_t *slist)
 
 		slist_node_destroy(last_node,destroy_func);
 	}
+
+	// zero the slist fields before freeing it
+	slist->head = NULL;
+	slist->compare_func = NULL;
+	slist->destroy_func = NULL;
 
 	free(slist);
 }

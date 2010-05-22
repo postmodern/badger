@@ -3,13 +3,13 @@
 
 #include <stdlib.h>
 
-badger_slist_t *slist;
+slist_t *slist;
 
 void test_search_head()
 {
 	int *i;
 	
-	if (!(i = badger_slist_search(slist,"a")))
+	if (!(i = slist_search(slist,"a")))
 	{
 		test_fail("unable to find element %s in the slist","a");
 	}
@@ -24,7 +24,7 @@ void test_search()
 {
 	int *i;
 	
-	if (!(i = badger_slist_search(slist,"b")))
+	if (!(i = slist_search(slist,"b")))
 	{
 		test_fail("unable to find element %s in the slist","b");
 	}
@@ -37,7 +37,7 @@ void test_search()
 
 void test_search_not_found()
 {
-	if (badger_slist_search(slist,"c"))
+	if (slist_search(slist,"c"))
 	{
 		test_fail("found element %s, that should not be in the slist","c");
 	}
@@ -45,7 +45,7 @@ void test_search_not_found()
 
 int main()
 {
-	if (!(slist = badger_slist_create(badger_slist_compare_strings,NULL)))
+	if (!(slist = slist_create(slist_compare_strings,NULL)))
 	{
 		test_fail("malloc failed");
 	}
@@ -53,12 +53,12 @@ int main()
 	int i1 = 1;
 	int i2 = 2;
 
-	if (badger_slist_add(slist,"a",&i1) < 1)
+	if (slist_add(slist,"a",&i1) < 1)
 	{
 		test_fail("failed to add %s => %d into the sorted slist","a",i1);
 	}
 
-	if (badger_slist_add(slist,"b",&i2) < 1)
+	if (slist_add(slist,"b",&i2) < 1)
 	{
 		test_fail("failed to add %s => %d into the sorted slist","b",i2);
 	}
@@ -67,6 +67,6 @@ int main()
 	test_search();
 	test_search_not_found();
 
-	badger_slist_destroy(slist);
+	slist_destroy(slist);
 	return 0;
 }

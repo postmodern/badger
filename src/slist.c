@@ -4,11 +4,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-badger_slist_node_t * badger_slist_node_create(const void *key,void *data)
+slist_node_t * slist_node_create(const void *key,void *data)
 {
-	badger_slist_node_t *new_node;
+	slist_node_t *new_node;
 
-	if (!(new_node = malloc(sizeof(badger_slist_node_t))))
+	if (!(new_node = malloc(sizeof(slist_node_t))))
 	{
 		// malloc failed
 		return NULL;
@@ -20,7 +20,7 @@ badger_slist_node_t * badger_slist_node_create(const void *key,void *data)
 	return new_node;
 }
 
-void badger_slist_node_destroy(badger_slist_node_t *node,badger_slist_destroy_func destroy_func)
+void slist_node_destroy(slist_node_t *node,slist_destroy_func destroy_func)
 {
 	if (node->data && destroy_func)
 	{
@@ -30,11 +30,11 @@ void badger_slist_node_destroy(badger_slist_node_t *node,badger_slist_destroy_fu
 	free(node);
 }
 
-badger_slist_t * badger_slist_create(badger_slist_compare_func compare_func,badger_slist_destroy_func destroy_func)
+slist_t * slist_create(slist_compare_func compare_func,slist_destroy_func destroy_func)
 {
-	badger_slist_t *new_slist;
+	slist_t *new_slist;
 
-	if (!(new_slist = malloc(sizeof(badger_slist_t))))
+	if (!(new_slist = malloc(sizeof(slist_t))))
 	{
 		// malloc failed
 		return NULL;
@@ -46,11 +46,11 @@ badger_slist_t * badger_slist_create(badger_slist_compare_func compare_func,badg
 	return new_slist;
 }
 
-int badger_slist_add(badger_slist_t *slist,const void *key,void *data)
+int slist_add(slist_t *slist,const void *key,void *data)
 {
-	badger_slist_node_t *next_node = slist->head;
-	badger_slist_node_t *last_node = NULL;
-	badger_slist_node_t *new_node;
+	slist_node_t *next_node = slist->head;
+	slist_node_t *last_node = NULL;
+	slist_node_t *new_node;
 
 	while (next_node)
 	{
@@ -59,7 +59,7 @@ int badger_slist_add(badger_slist_t *slist,const void *key,void *data)
 			case -1:
 				if (!last_node)
 				{
-					if (!(new_node = badger_slist_node_create(key,data)))
+					if (!(new_node = slist_node_create(key,data)))
 					{
 						return BADGER_ERRNO_MALLOC;
 					}
@@ -70,7 +70,7 @@ int badger_slist_add(badger_slist_t *slist,const void *key,void *data)
 				}
 				else if (strcmp(key,last_node->key) == 1)
 				{
-					if (!(new_node = badger_slist_node_create(key,data)))
+					if (!(new_node = slist_node_create(key,data)))
 					{
 						return BADGER_ERRNO_MALLOC;
 					}
@@ -89,7 +89,7 @@ int badger_slist_add(badger_slist_t *slist,const void *key,void *data)
 		next_node = next_node->next;
 	}
 
-	if (!(new_node = badger_slist_node_create(key,data)))
+	if (!(new_node = slist_node_create(key,data)))
 	{
 		return BADGER_ERRNO_MALLOC;
 	}
@@ -105,9 +105,9 @@ int badger_slist_add(badger_slist_t *slist,const void *key,void *data)
 	return 1;
 }
 
-void * badger_slist_search(badger_slist_t *slist,const void *key)
+void * slist_search(slist_t *slist,const void *key)
 {
-	badger_slist_node_t *next_node = slist->head;
+	slist_node_t *next_node = slist->head;
 
 	while (next_node)
 	{
@@ -126,18 +126,18 @@ void * badger_slist_search(badger_slist_t *slist,const void *key)
 	return NULL;
 }
 
-void badger_slist_destroy(badger_slist_t *slist)
+void slist_destroy(slist_t *slist)
 {
-	badger_slist_node_t *next_node = slist->head;
-	badger_slist_node_t *last_node;
-	badger_slist_destroy_func destroy_func = slist->destroy_func;
+	slist_node_t *next_node = slist->head;
+	slist_node_t *last_node;
+	slist_destroy_func destroy_func = slist->destroy_func;
 
 	while (next_node)
 	{
 		last_node = next_node;
 		next_node = next_node->next;
 
-		badger_slist_node_destroy(last_node,destroy_func);
+		slist_node_destroy(last_node,destroy_func);
 	}
 
 	free(slist);

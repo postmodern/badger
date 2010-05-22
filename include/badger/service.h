@@ -8,7 +8,7 @@ struct badger_service
 {
 	char *name;
 
-	badger_slist_t *functions;
+	slist_t *functions;
 };
 typedef struct badger_service badger_service_t;
 

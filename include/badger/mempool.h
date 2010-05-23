@@ -19,7 +19,7 @@ static inline mempool_t * mempool_create()
 	return slist_create(slist_compare_ints,(slist_destroy_func)mempool_chunk_destroy);
 }
 
-extern int mempool_alloc(mempool_t *mempool,size_t size);
+extern void * mempool_alloc(mempool_t *mempool,size_t size);
 
 static inline int mempool_free(mempool_t *mempool,void *ptr)
 {

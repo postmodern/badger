@@ -9,7 +9,7 @@ badger_server_t * badger_server_create()
 
 	if (!(new_server = malloc(sizeof(badger_server_t))))
 	{
-		return NULL;
+		goto cleanup;
 	}
 
 	new_server->uri = NULL;
@@ -18,11 +18,12 @@ badger_server_t * badger_server_create()
 
 	if (!(new_server->services = slist_create(slist_compare_strings,(slist_destroy_func)badger_service_destroy)))
 	{
-		goto cleanup;
+		goto cleanup_new_server;
 	}
 
-cleanup:
+cleanup_new_server:
 	free(new_server);
+cleanup:
 	return NULL;
 }
 
@@ -68,7 +69,7 @@ int badger_server_open(badger_server_t *server,const char *uri)
 	if (!(server->uri = strdup(uri)))
 	{
 		// malloc failure
-		return -1;
+		goto cleanup;
 	}
 
 	// Initialise 0MQ context, requesting a single application thread

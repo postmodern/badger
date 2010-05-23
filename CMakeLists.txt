@@ -16,6 +16,7 @@ if(UNIX)
 	find_library(ZMQ zmq)
 endif(UNIX)
 
+include(CheckIncludeFiles)
 configure_file(config.h.cmake ${BADGER_SOURCE_DIR}/include/badger/config.h)
 
 include_directories(${BADGER_SOURCE_DIR}/include)

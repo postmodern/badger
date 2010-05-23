@@ -11,10 +11,8 @@ endif(UNIX)
 set(LIBRARY_VERSION "0.1.0")
 set(LIBRARY_SOVERSION "0")
 
-if(UNIX)
-	find_library(MSGPACK msgpack)
-	find_library(ZMQ zmq)
-endif(UNIX)
+find_library(MSGPACK msgpack)
+find_library(ZMQ zmq)
 
 include(CheckIncludeFiles)
 configure_file(config.h.cmake ${BADGER_SOURCE_DIR}/include/badger/config.h)
@@ -38,7 +36,14 @@ set_target_properties(
 )
 
 add_executable(badger_server src/programs/server.c)
-target_link_libraries(badger_server msgpack zmq badger)
+if(UNIX)
+	set_target_properties(
+		badger_server PROPERTIES
+		LINK_FLAGS "-static"
+	)
+endif(UNIX)
+
+target_link_libraries(badger_server ${MSGPACK} ${ZMQ} badger)
 
 install(
 	TARGETS badger

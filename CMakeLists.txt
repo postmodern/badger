@@ -13,6 +13,7 @@ set(LIBRARY_SOVERSION "0")
 
 if(UNIX)
 	find_library(MSGPACK msgpack)
+	find_library(ZMQ zmq)
 endif(UNIX)
 
 configure_file(config.h.cmake ${BADGER_SOURCE_DIR}/include/badger/config.h)
@@ -34,7 +35,7 @@ set_target_properties(
 )
 
 add_executable(badger_server src/programs/server.c)
-target_link_libraries(badger_server msgpack badger)
+target_link_libraries(badger_server msgpack zmq badger)
 
 install(
 	TARGETS badger

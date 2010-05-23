@@ -45,14 +45,14 @@ void * mempool_alloc(mempool_t *mempool,size_t size)
 
 	if (!(new_chunk = mempool_chunk_create(size)))
 	{
-		return -1;
+		return NULL;
 	}
 
 	if (slist_add(mempool,new_chunk->ptr,new_chunk) == -1)
 	{
 		mempool_chunk_destroy(new_chunk);
-		return -1;
+		return NULL;
 	}
 
-	return 0;
+	return new_chunk->ptr;
 }

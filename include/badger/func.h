@@ -17,8 +17,8 @@ struct badger_func
 };
 typedef struct badger_func badger_func_t;
 
-badger_func_t * badger_func_create(const char *name,badger_func_ptr ptr,int argc,msgpack_object_type *arg_types);
-int badger_func_call(badger_func_t *func,int argc,msgpack_object *args,msgpack_object **ret);
-void badger_func_destroy(badger_func_t *func);
+extern badger_func_t * badger_func_create(const char *name,badger_func_ptr ptr,int argc,msgpack_object_type *arg_types);
+extern int badger_func_call(badger_func_t *func,int argc,msgpack_object *args,msgpack_object **ret);
+extern void badger_func_destroy(badger_func_t *func);
 
 #endif

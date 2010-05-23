@@ -26,6 +26,38 @@ cleanup:
 	return NULL;
 }
 
+int badger_server_register(badger_server_t *server,const char *service,const char *name,badger_func_ptr ptr,int argc,msgpack_object_type *arg_types)
+{
+	badger_service_t *new_service;
+
+	if (!(new_service = slist_search(server->services,service)))
+	{
+		if (!(new_service = badger_service_create(service)))
+		{
+			goto cleanup;
+		}
+
+		if (slist_add(server->services,new_service->name,new_service))
+		{
+			goto cleanup_new_service;
+		}
+
+		if (badger_service_register(new_service,name,ptr,argc,arg_types))
+		{
+			goto cleanup_new_service;
+		}
+
+		return 0;
+	}
+
+	return badger_service_register(new_service,name,ptr,argc,arg_types);
+
+cleanup_new_service:
+	badger_service_destroy(new_service);
+cleanup:
+	return -1;
+}
+
 int badger_server_open(badger_server_t *server,const char *uri)
 {
 	if (server->uri)

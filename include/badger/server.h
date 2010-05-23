@@ -17,6 +17,7 @@ struct badger_server
 typedef struct badger_server badger_server_t;
 
 extern badger_server_t * badger_server_create();
+extern int badger_server_register(badger_server_t *server,const char *service,const char *name,badger_func_ptr ptr,int argc,msgpack_object_type *arg_types);
 extern int badger_server_open(badger_server_t *server,const char *uri);
 extern int badger_server_listen(const badger_server_t *server);
 extern int badger_server_close(badger_server_t *server);

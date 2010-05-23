@@ -22,4 +22,6 @@ void badger_init()
 void badger_fini()
 {
 	mempool_destroy(badger_global_mempool);
+
+	badger_global_mempool = NULL;
 }

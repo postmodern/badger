@@ -66,5 +66,10 @@ void badger_service_destroy(badger_service_t *service)
 {
 	slist_destroy(service->functions);
 	free(service->name);
+
+	// zero the service fields before freeing it
+	service->functions = NULL;
+	service->name = NULL;
+
 	free(service);
 }

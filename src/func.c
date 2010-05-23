@@ -72,5 +72,11 @@ void badger_func_destroy(badger_func_t *func)
 	}
 
 	free(func->name);
+
+	// zero the function fields before freeing it
+	func->argc = 0;
+	func->arg_types = NULL;
+	func->name = NULL;
+
 	free(func);
 }

@@ -175,5 +175,12 @@ void badger_server_destroy(badger_server_t *server)
 	}
 
 	slist_destroy(server->services);
+
+	// zero the server fields before freeing it
+	server->uri = NULL;
+	server->zmq_context = NULL;
+	server->zmq_socket = NULL;
+	server->services = NULL;
+
 	free(server);
 }

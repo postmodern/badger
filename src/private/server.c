@@ -3,6 +3,7 @@
 #include <badger/func.h>
 #include <badger/errno.h>
 #include "private/util.h"
+#include "private/packet.h"
 #include "private/server.h"
 
 #include <alloca.h>

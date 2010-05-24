@@ -1,8 +1,6 @@
 #ifndef _BADGER_PACKET_H_
 #define _BADGER_PACKET_H_
 
-#include <sys/types.h>
-
 /*
  * A Badger packet consists of the Badger Protocol version, a checksum and
  * a payload.
@@ -63,7 +61,5 @@
 #define BADGER_PACKET_EARGC		0xfb
 
 #define BADGER_PACKET_MINSIZE		(1 + 4 + 7)
-
-extern int badger_packet_valid(const unsigned char *packet,size_t packet_size);
 
 #endif

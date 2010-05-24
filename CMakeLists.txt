@@ -35,6 +35,7 @@ endif(UNIX)
 
 add_library(
 	badger-static STATIC
+	src/private/aes.c
 	src/util.c src/slist.c src/mempool.c src/func.c src/service.c
 	src/encoders.c src/server.c src/private/server.c
 	src/badger.c

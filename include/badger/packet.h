@@ -45,8 +45,6 @@
 
 #define BADGER_PROTOCOL_VERSION		0x01
 
-typedef uint8_t badger_packet_type;
-
 #define BADGER_PACKET_PING		0x01
 #define BADGER_PACKET_PONG		0x02
 #define BADGER_PACKET_CALL		0x03

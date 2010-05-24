@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <msgpack/object.h>
-#include <msgpack/unpack.h>
+#include <msgpack/pack.h>
 
 typedef enum
 {
@@ -66,7 +66,7 @@ static inline uint32_t badger_map_length(const badger_data_t *data)
 	return data->via.map.size;
 }
 
-static inline const badger_data_t * badger_map_index(const badger_data_t *map,uint32_t index)
+static inline const badger_data_t * badger_map_index(const badger_data_t *data,uint32_t index)
 {
 	if (index >= data->via.map.size)
 	{
@@ -169,7 +169,7 @@ static inline int badger_return_raw(badger_ret_t *ret,const void *data,size_t le
 
 static inline int badger_return_string(badger_ret_t *ret,const char *str)
 {
-	return badger_raw(str,strlen(str));
+	return badger_return_raw(ret,str,strlen(str));
 }
 
 static inline int badger_return_array(badger_ret_t *ret,unsigned int length)

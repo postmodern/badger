@@ -24,6 +24,8 @@ badger_server_t * badger_server_create()
 		goto cleanup_new_server;
 	}
 
+	return new_server;
+
 cleanup_new_server:
 	free(new_server);
 cleanup:

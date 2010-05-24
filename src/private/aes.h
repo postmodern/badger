@@ -84,23 +84,23 @@ typedef struct
 // THE CIPHER INTERFACE
 
 #if !defined(AES_BLOCK_SIZE)
-extern void aes_set_blk(aes_context *, const int);
+void aes_set_blk(aes_context *, const int);
 #endif
 
 #if defined(__linux__) && defined(__KERNEL__) && (defined(X86_ASM) || defined(AMD64_ASM))
  asmlinkage
 #endif
-extern void aes_set_key(aes_context *, const unsigned char [], const int, const int);
+void aes_set_key(aes_context *, const unsigned char [], const int, const int);
 
 #if defined(__linux__) && defined(__KERNEL__) && (defined(X86_ASM) || defined(AMD64_ASM))
  asmlinkage
 #endif
-extern void aes_encrypt(const aes_context *, const unsigned char [], unsigned char []);
+void aes_encrypt(const aes_context *, const unsigned char [], unsigned char []);
 
 #if defined(__linux__) && defined(__KERNEL__) && (defined(X86_ASM) || defined(AMD64_ASM))
  asmlinkage
 #endif
-extern void aes_decrypt(const aes_context *, const unsigned char [], unsigned char []);
+void aes_decrypt(const aes_context *, const unsigned char [], unsigned char []);
 
 // The block length inputs to aes_set_block and aes_set_key are in numbers
 // of bytes or bits.  The calls to subroutines must be made in the above

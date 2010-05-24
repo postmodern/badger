@@ -4,7 +4,7 @@ Makefile
 cmake_install.cmake
 install_manifest.txt
 include/badger/config.h
-badger_server
+badger
 test/Testing
 test/CTestTestfile.cmake
 test/test_slist_search

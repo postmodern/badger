@@ -33,26 +33,26 @@ if(UNIX)
 endif(UNIX)
 
 add_library(
-	badger STATIC
+	badger-static STATIC
 	src/util.c src/slist.c src/mempool.c src/func.c
 	src/service.c src/server.c src/private/server.c
 	src/badger.c
 )
 set_target_properties(
-	badger PROPERTIES
+	badger-static PROPERTIES
 	VERSION ${LIBRARY_VERSION}
 	SOVERSION ${LIBRARY_SOVERSION}
 )
 
-add_executable(badger_server src/programs/server.c)
-target_link_libraries(badger_server ${MSGPACK} ${ZMQ} badger)
+add_executable(badger src/programs/server.c)
+target_link_libraries(badger ${MSGPACK} ${ZMQ} badger-static)
 
 install(
-	TARGETS badger
+	TARGETS badger-static
 	ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
 )
 install(
-	TARGETS badger_server
+	TARGETS badger
 	RUNTIME DESTINATION ${BIN_INSTALL_DIR}
 )
 

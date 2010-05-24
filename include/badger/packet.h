@@ -2,15 +2,15 @@
 #define _BADGER_PACKET_H_
 
 /*
- * A Badger packet consists of a checksum, the Badger Protocol version and
+ * A Badger packet consists of the Badger Protocol version, a checksum and
  * a payload.
- *
- * The checksum is a simple CRC32 checksum of the payload. The CRC32
- * checksum is written as a network packed 4-byte integer.
  *
  * The Badger Protocol version simply denotes what version of the
  * Badger Protocol the client or the server are speaking. The version number
  * is written as a single byte.
+ *
+ * The checksum is a simple CRC32 checksum of the payload. The CRC32
+ * checksum is written as a network packed 4-byte integer.
  *
  * The payload is represented as a packed msgpack Array object.
  *
@@ -60,6 +60,6 @@
 #define BADGER_PACKET_ENOFUNC	 	0xfc
 #define BADGER_PACKET_EARGC		0xfb
 
-#define BADGER_PACKET_MINSIZE		(4 + 1 + 7)
+#define BADGER_PACKET_MINSIZE		(1 + 4 + 7)
 
 #endif

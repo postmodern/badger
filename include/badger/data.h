@@ -22,6 +22,11 @@ typedef enum
 
 typedef msgpack_object badger_data_t;
 
+static inline badger_data_type badger_type(const badger_data_t *data)
+{
+	return data->type;
+}
+
 static inline unsigned int badger_boolean(const badger_data_t *data)
 {
 	return data->via.boolean;

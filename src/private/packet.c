@@ -4,6 +4,12 @@
 
 int badger_packet_valid(const unsigned char *packet,size_t packet_size)
 {
+	if (packet_size < BADGER_PACKET_MINSIZE)
+	{
+		// short packet
+		return 0;
+	}
+
 	const void *packed_payload = badger_packet_payload(packet);
 	size_t payload_size = (packet_size - BADGER_PACKET_HDRSIZE);
 

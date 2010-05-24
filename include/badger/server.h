@@ -16,6 +16,9 @@ struct badger_server
 	badger_encoder_func encoder_func;
 	void *encoder_data;
 
+	badger_decoder_func decoder_func;
+	void *decoder_data;
+
 	slist_t *services;
 };
 typedef struct badger_server badger_server_t;

@@ -1,4 +1,7 @@
 #include <badger/packet.h>
+#include <badger/data.h>
+#include <badger/func.h>
+#include <badger/errno.h>
 #include "private/util.h"
 #include "private/server.h"
 
@@ -165,7 +168,7 @@ int badger_server_process(const badger_server_t *server,const msgpack_object *pa
 	if (length < 2)
 	{
 		// there must be a minimum of two fields in the payload
-		return -1;
+		goto ignore;
 	}
 
 	const msgpack_object *fields = payload->via.array.ptr;
@@ -173,19 +176,30 @@ int badger_server_process(const badger_server_t *server,const msgpack_object *pa
 	if (fields[0].type != MSGPACK_OBJECT_POSITIVE_INTEGER)
 	{
 		// the type field must be a positive integer
-		return -1;
+		goto ignore;
 	}
 
 	if (fields[1].type != MSGPACK_OBJECT_POSITIVE_INTEGER)
 	{
 		// the timestamp field must be a positive integer
-		return -1;
+		goto ignore;
 	}
 
 	if (!fields[1].via.u64)
 	{
 		// the timestamp field must not be empty
-		return -1;
+		goto ignore;
+	}
+
+	switch (fields[0].via.u64)
+	{
+		// valid payload types
+		case BADGER_PACKET_PING:
+		case BADGER_PACKET_CALL:
+			break;
+		default:
+			// ignore unknown payload types
+			goto ignore;
 	}
 
 	switch (fields[0].via.u64)
@@ -197,57 +211,107 @@ int badger_server_process(const badger_server_t *server,const msgpack_object *pa
 			if (length < 5)
 			{
 				// function call payloads must have atleast five fields
-				return -1;
-			}
-
-			if (fields[2].type != MSGPACK_OBJECT_RAW)
-			{
-				// the service field must be a string
-				return -1;
-			}
-
-			if (!fields[2].via.raw.size)
-			{
-				// the service field must have atleast one character
-				return -1;
-			}
-
-			if (!fields[2].via.raw.ptr[0])
-			{
-				// the service field must not be empty
-				return -1;
-			}
-
-			if (fields[3].type != MSGPACK_OBJECT_RAW)
-			{
-				// the name field must be a string
-				return -1;
-			}
-
-			if (!fields[3].via.raw.size)
-			{
-				// the name field must have atleast one character
-				return -1;
-			}
-
-			if (!fields[3].via.raw.ptr[0])
-			{
-				// the name field must not be empty
-				return -1;
-			}
-
-			if (fields[4].type != MSGPACK_OBJECT_ARRAY)
-			{
-				// the arguments field must be an Array
-				return -1;
+				goto ignore;
 			}
 
 			// call the function
-			break;
+			return badger_server_call(server,fields+2);
 		default:
 			// ignore other packet types
+			goto ignore;
+	}
+
+	return 0;
+
+ignore:
+	return -1;
+}
+
+int badger_server_call(const badger_server_t *server,const msgpack_object *fields)
+{
+	if (fields[0].type != MSGPACK_OBJECT_RAW)
+	{
+		// the service field must be a string
+		return -1;
+	}
+
+	if (!fields[0].via.raw.size)
+	{
+		// the service field must have atleast one character
+		return -1;
+	}
+
+	if (!fields[0].via.raw.ptr[0])
+	{
+		// the service field must not be empty
+		return -1;
+	}
+
+	if (fields[1].type != MSGPACK_OBJECT_RAW)
+	{
+		// the name field must be a string
+		return -1;
+	}
+
+	if (!fields[1].via.raw.size)
+	{
+		// the name field must have atleast one character
+		return -1;
+	}
+
+	if (!fields[1].via.raw.ptr[0])
+	{
+		// the name field must not be empty
+		return -1;
+	}
+
+	if (fields[2].type != MSGPACK_OBJECT_ARRAY)
+	{
+		// the arguments field must be an Array
+		return -1;
+	}
+
+	size_t service_length = fields[0].via.raw.size;
+	char service_name[service_length + 1];
+
+	memcpy(service_name,fields[0].via.raw.ptr,service_length);
+	service_name[service_length] = '\0';
+
+	const badger_service_t *service;
+
+	if (!(service = slist_search(server->services,service_name)))
+	{
+		// service not found
+		return -1;
+	}
+
+	size_t name_length = fields[1].via.raw.size;
+	char name[name_length + 1];
+
+	memcpy(name,fields[1].via.raw.ptr,name_length);
+	name[name_length] = '\0';
+
+	const badger_func_t *func;
+
+	if (!(func = badger_service_search(service,name)))
+	{
+		// function not found
+		return -1;
+	}
+
+	int argc = (int)fields[2].via.array.size;
+	const badger_data_t *args = fields[2].via.array.ptr;
+
+	switch (badger_func_valid(func,argc,args))
+	{
+		case BADGER_ERRNO_ARGC:
+			// wrong number of arguments
+			return -1;
+		case BADGER_ERRNO_ARG_TYPE:
+			// wrong argument type
 			return -1;
 	}
 
+	badger_func_call(func,argc,args,NULL);
 	return 0;
 }

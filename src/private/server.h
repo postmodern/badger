@@ -10,4 +10,6 @@ int badger_server_unpack(const badger_server_t *server,const unsigned char *pack
 int badger_server_send(const badger_server_t *server,const msgpack_object *payload);
 int badger_server_process(const badger_server_t *server,const msgpack_object *payload);
 
+int badger_server_call(const badger_server_t *server,const msgpack_object *fields);
+
 #endif

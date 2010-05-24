@@ -3,6 +3,7 @@ project(BADGER C)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/modules)
 include(install_paths)
+include(CheckIncludeFiles)
 
 option(DEBUG "Enable debugging" off)
 option(XOR_ENCODER "Enable the XOR packet encoder" on)
@@ -22,7 +23,6 @@ if(AES_ENCODER)
 	set(BADGER_SRC src/private/aes.c ${BADGER_SRC})
 endif(AES_ENCODER)
 
-include(CheckIncludeFiles)
 configure_file(config.h.cmake ${BADGER_SOURCE_DIR}/include/badger/config.h)
 
 include_directories(${BADGER_SOURCE_DIR}/include)

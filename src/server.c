@@ -75,8 +75,8 @@ int badger_server_open(badger_server_t *server,const char *uri)
 		goto cleanup;
 	}
 
-	// Create a ZMQ_REP socket to receive requests and send replies
-	if (!(server->zmq_socket = zmq_socket(server->zmq_context,ZMQ_REP)))
+	// Create a ZMQ_P2P socket to receive requests and send replies
+	if (!(server->zmq_socket = zmq_socket(server->zmq_context,ZMQ_P2P)))
 	{
 		goto cleanup_context;
 	}

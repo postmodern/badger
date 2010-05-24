@@ -16,7 +16,8 @@ typedef enum
 	badger_data_raw = MSGPACK_OBJECT_RAW,
 	badger_data_string = MSGPACK_OBJECT_RAW,
 	badger_data_array = MSGPACK_OBJECT_ARRAY,
-	badger_data_map = MSGPACK_OBJECT_MAP
+	badger_data_map = MSGPACK_OBJECT_MAP,
+	badger_data_any = -1 
 } badger_data_type;
 
 typedef msgpack_object badger_data_t;

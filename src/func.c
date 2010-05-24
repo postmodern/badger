@@ -1,10 +1,7 @@
 #include <badger/func.h>
 #include <badger/errno.h>
 
-#include <stdlib.h>
-#include <string.h>
-
-int badger_func_call(badger_func_t *func,int argc,msgpack_object *args,msgpack_object **ret)
+int badger_func_call(const badger_func_t *func,int argc,const badger_data_t *args,badger_ret_t *ret)
 {
 	if (func->argc != -1)
 	{

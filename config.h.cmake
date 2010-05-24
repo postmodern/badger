@@ -5,4 +5,7 @@
 
 #cmakedefine DEBUG
 
+// badger encoder options
+#cmakedefine XOR_ENCODER
+
 #endif

@@ -15,6 +15,7 @@ find_library(MSGPACK msgpack)
 find_library(ZMQ zmq)
 
 option(DEBUG "Enable debugging" on)
+option(XOR_ENCODER "Enable the XOR packet encoder" on)
 
 if(DEBUG)
 	if(UNIX)

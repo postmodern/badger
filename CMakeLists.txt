@@ -4,10 +4,6 @@ project(BADGER C)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/modules)
 include(install_paths)
 
-if(UNIX)
-	include(FindPkgConfig)
-endif(UNIX)
-
 option(DEBUG "Enable debugging" off)
 option(XOR_ENCODER "Enable the XOR packet encoder" on)
 option(AES_ENCODER "Enable the AES packet encoder" on)

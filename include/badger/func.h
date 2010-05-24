@@ -8,17 +8,15 @@ typedef int (*badger_func_ptr)(int argc,msgpack_object *args,msgpack_object **re
 
 struct badger_func
 {
-	char *name;
-
-	ssize_t argc;
-	msgpack_object_type *arg_types;
+	const char *name;
 
 	badger_func_ptr ptr;
+
+	ssize_t argc;
+	const msgpack_object_type arg_types[];
 };
 typedef struct badger_func badger_func_t;
 
-extern badger_func_t * badger_func_create(const char *name,badger_func_ptr ptr,int argc,msgpack_object_type *arg_types);
 extern int badger_func_call(badger_func_t *func,int argc,msgpack_object *args,msgpack_object **ret);
-extern void badger_func_destroy(badger_func_t *func);
 
 #endif

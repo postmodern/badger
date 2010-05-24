@@ -19,7 +19,7 @@ badger_server_t * badger_server_create()
 	new_server->zmq_context = NULL;
 	new_server->zmq_socket = NULL;
 
-	if (!(new_server->services = slist_create(slist_compare_strings,(slist_destroy_func)badger_service_destroy)))
+	if (!(new_server->services = slist_create(slist_compare_strings,NULL)))
 	{
 		goto cleanup_new_server;
 	}
@@ -32,36 +32,9 @@ cleanup:
 	return NULL;
 }
 
-int badger_server_register(badger_server_t *server,const char *service,const char *name,badger_func_ptr ptr,int argc,msgpack_object_type *arg_types)
+int badger_server_register(badger_server_t *server,const badger_service_t *service)
 {
-	badger_service_t *new_service;
-
-	if (!(new_service = slist_search(server->services,service)))
-	{
-		if (!(new_service = badger_service_create(service)))
-		{
-			goto cleanup;
-		}
-
-		if (slist_add(server->services,new_service->name,new_service))
-		{
-			goto cleanup_new_service;
-		}
-
-		if (badger_service_register(new_service,name,ptr,argc,arg_types))
-		{
-			goto cleanup_new_service;
-		}
-
-		return 0;
-	}
-
-	return badger_service_register(new_service,name,ptr,argc,arg_types);
-
-cleanup_new_service:
-	badger_service_destroy(new_service);
-cleanup:
-	return -1;
+	return slist_add(server->services,service->name,(badger_server_t *)service);
 }
 
 int badger_server_open(badger_server_t *server,const char *uri)

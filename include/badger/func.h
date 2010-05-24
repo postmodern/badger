@@ -18,6 +18,7 @@ struct badger_func
 };
 typedef struct badger_func badger_func_t;
 
+extern int badger_func_valid(const badger_func_t *func,int argc,const badger_data_t *args);
 extern int badger_func_call(const badger_func_t *func,int argc,const badger_data_t *args,badger_ret_t *ret);
 
 #endif

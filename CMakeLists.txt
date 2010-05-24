@@ -46,10 +46,12 @@ set_target_properties(
 )
 
 add_executable(badger src/programs/server.c)
-set_target_properties(
-	badger PROPERTIES
-	LINK_FLAGS "-Bstatic --strip-all"
-)
+if(UNIX)
+	set_target_properties(
+		badger PROPERTIES
+		LINK_FLAGS "-static -s"
+	)
+endif(UNIX)
 target_link_libraries(badger badger-static ${BADGER_LIBS})
 
 install(

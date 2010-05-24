@@ -32,7 +32,7 @@ if(UNIX)
 	add_definitions("-Wall")
 
 	if(DEBUG)
-		add_definitions("-ggdb")
+		add_definitions("-g")
 	else(DEBUG)
 		add_definitions("-O3")
 	endif(DEBUG)

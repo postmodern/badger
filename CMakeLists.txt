@@ -10,6 +10,7 @@ endif(UNIX)
 
 set(LIBRARY_VERSION "0.1.0")
 set(LIBRARY_SOVERSION "0")
+set(BADGER_LIBS msgpack zmq uuid pthread stdc++)
 
 find_library(MSGPACK msgpack)
 find_library(ZMQ zmq)
@@ -46,9 +47,14 @@ set_target_properties(
 	VERSION ${LIBRARY_VERSION}
 	SOVERSION ${LIBRARY_SOVERSION}
 )
+target_link_libraries(badger-static)
 
 add_executable(badger src/programs/server.c)
-target_link_libraries(badger ${MSGPACK} ${ZMQ} badger-static)
+set_target_properties(
+	badger PROPERTIES
+	LINK_FLAGS "-static"
+)
+target_link_libraries(badger badger-static ${BADGER_LIBS})
 
 install(
 	TARGETS badger-static

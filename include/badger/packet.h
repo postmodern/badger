@@ -60,6 +60,6 @@
 #define BADGER_PACKET_ENOFUNC	 	0xfc
 #define BADGER_PACKET_EARGC		0xfb
 
-#define BADGER_PACKET_MINSIZE		(4 + 7)
+#define BADGER_PACKET_MINSIZE		(4 + 1 + 7)
 
 #endif

@@ -18,6 +18,7 @@ include(CheckIncludeFiles)
 configure_file(config.h.cmake ${BADGER_SOURCE_DIR}/include/badger/config.h)
 
 include_directories(${BADGER_SOURCE_DIR}/include)
+include_directories(${BADGER_SOURCE_DIR}/src)
 
 if(UNIX)
 	add_definitions("-Wall")
@@ -26,7 +27,7 @@ endif(UNIX)
 add_library(
 	badger STATIC
 	src/util.c src/slist.c src/mempool.c src/func.c
-	src/service.c src/server.c
+	src/service.c src/server.c src/private/server.c
 	src/badger.c
 )
 set_target_properties(

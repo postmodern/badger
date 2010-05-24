@@ -12,7 +12,7 @@ typedef enum
 	badger_data_boolean = MSGPACK_OBJECT_BOOLEAN,
 	badger_data_uint = MSGPACK_OBJECT_POSITIVE_INTEGER,
 	badger_data_int = MSGPACK_OBJECT_NEGATIVE_INTEGER,
-	badger_data_float = MSGPACK_OBJECT_DOUBLE,
+	badger_data_double = MSGPACK_OBJECT_DOUBLE,
 	badger_data_raw = MSGPACK_OBJECT_RAW,
 	badger_data_string = MSGPACK_OBJECT_RAW,
 	badger_data_array = MSGPACK_OBJECT_ARRAY,
@@ -36,7 +36,7 @@ static inline int64_t badger_int(const badger_data_t *data)
 	return data->via.i64;
 }
 
-static inline double badger_float(const badger_data_t *data)
+static inline double badger_double(const badger_data_t *data)
 {
 	return data->via.dec;
 }
@@ -155,7 +155,7 @@ static inline int badger_return_int64(badger_ret_t *ret,int64_t i)
 	return msgpack_pack_int64(ret,i);
 }
 
-static inline int badger_return_float(badger_ret_t *ret,double d)
+static inline int badger_return_double(badger_ret_t *ret,double d)
 {
 	return msgpack_pack_double(ret,d);
 }

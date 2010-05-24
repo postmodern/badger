@@ -43,6 +43,18 @@ int badger_server_register(badger_server_t *server,const badger_service_t *servi
 	return slist_add(server->services,service->name,(badger_server_t *)service);
 }
 
+void badger_server_encoder(badger_server_t *server,badger_encoder_func encoder,void *data)
+{
+	server->encoder_func = encoder;
+	server->encoder_data = data;
+}
+
+void badger_server_decoder(badger_server_t *server,badger_decoder_func decoder,void *data)
+{
+	server->decoder_func = decoder;
+	server->decoder_data = data;
+}
+
 int badger_server_open(badger_server_t *server,const char *uri)
 {
 	if (server->uri)

@@ -5,7 +5,12 @@
  * A Badger packet consists of a checksum, the Badger Protocol version and
  * a payload.
  *
- * The checksum is a simple CRC32 checksum of the payload.
+ * The checksum is a simple CRC32 checksum of the payload. The CRC32
+ * checksum is written as a network packed 4-byte integer.
+ *
+ * The Badger Protocol version simply denotes what version of the
+ * Badger Protocol the client or the server are speaking. The version number
+ * is written as a single byte.
  *
  * The payload is represented as a packed msgpack Array object.
  *

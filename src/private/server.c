@@ -70,25 +70,14 @@ int badger_server_decode(const badger_server_t *server,zmq_msg_t *request)
 
 int badger_server_unpack(const badger_server_t *server,const unsigned char *packet,size_t packet_size)
 {
+	if (!badger_packet_valid(packet,packet_size))
+	{
+		// ignore invalid packets
+		goto cleanup;
+	}
+
 	const void *packed_payload = (packet + 1 + sizeof(crc32_t));
 	size_t payload_size = (packet_size - 1 - sizeof(crc32_t));
-
-	uint8_t packet_version = *packet;
-
-	if (packet_version != BADGER_PROTOCOL_VERSION)
-	{
-		// unsupported protocol
-		goto cleanup;
-	}
-
-	crc32_t claimed_checksum = ntohl(*(crc32_t *)(packet + 1));
-	crc32_t actual_checksum = badger_crc32(packed_payload,payload_size);
-
-	if (claimed_checksum != actual_checksum)
-	{
-		// ignore corrupted packets
-		goto cleanup;
-	}
 
 	msgpack_zone *zone = msgpack_zone_new(MSGPACK_ZONE_CHUNK_SIZE);
 	size_t offset = 0;

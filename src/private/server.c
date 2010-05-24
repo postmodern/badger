@@ -2,6 +2,7 @@
 #include "private/util.h"
 #include "private/server.h"
 
+#include <alloca.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <msgpack/sbuffer.h>
@@ -22,15 +23,50 @@ int badger_server_recv(const badger_server_t *server)
 		goto cleanup_zmq_msg;
 	}
 
-	if (zmq_msg_size(&request) < BADGER_PACKET_MINSIZE)
+	// decode the packet
+	badger_server_decode(server,&request);
+
+	// close the message
+	zmq_msg_close(&request);
+	return 0;
+
+cleanup_zmq_msg:
+	zmq_msg_close(&request);
+cleanup:
+	return -1;
+}
+
+int badger_server_decode(const badger_server_t *server,zmq_msg_t *request)
+{
+	size_t packet_size = zmq_msg_size(request);
+
+	if (packet_size < BADGER_PACKET_MINSIZE)
 	{
-		// short packet
-		goto cleanup_zmq_msg;
+		// ignore short packets
+		return -1;
 	}
 
-	const void *packet = zmq_msg_data(&request);
-	size_t packet_size = zmq_msg_size(&request);
+	if (server->decoder_func)
+	{
+		int ret;
+		unsigned char packet[packet_size];
 
+		// decode the packet
+		server->decoder_func(packet,zmq_msg_data(request),packet_size,server->decoder_data);
+
+		// unpack the payload
+		ret = badger_server_unpack(server,packet,packet_size);
+
+		// zero the decoded packet
+		memset(packet,0,packet_size);
+		return ret;
+	}
+
+	return badger_server_unpack(server,zmq_msg_data(request),packet_size);
+}
+
+int badger_server_unpack(const badger_server_t *server,const unsigned char *packet,size_t packet_size)
+{
 	const void *packed_payload = (packet + sizeof(crc32_t));
 	size_t payload_size = (packet_size - sizeof(crc32_t));
 
@@ -39,8 +75,8 @@ int badger_server_recv(const badger_server_t *server)
 
 	if (claimed_checksum != actual_checksum)
 	{
-		// corrupted packet
-		goto cleanup_zmq_msg;
+		// ignore corrupted packets
+		goto cleanup;
 	}
 
 	msgpack_zone *zone = msgpack_zone_new(MSGPACK_ZONE_CHUNK_SIZE);
@@ -58,20 +94,21 @@ int badger_server_recv(const badger_server_t *server)
 				goto cleanup_msgpack_object;
 			}
 
+			// process the payload
 			badger_server_process(server,&payload);
+
 		case MSGPACK_UNPACK_CONTINUE:
 			msgpack_zone_free(zone);
 			break;
 		case MSGPACK_UNPACK_PARSE_ERROR:
-			return -1;
+			// invalid payload
+			goto cleanup_msgpack_object;
 	}
 
 	return 0;
 
 cleanup_msgpack_object:
 	msgpack_zone_free(zone);
-cleanup_zmq_msg:
-	zmq_msg_close(&request);
 cleanup:
 	return -1;
 }

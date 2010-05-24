@@ -1,8 +1,9 @@
 #ifndef _BADGER_SERVER_H_
 #define _BADGER_SERVER_H_
 
-#include <badger/slist.h>
+#include <badger/encoders.h>
 #include <badger/service.h>
+#include <badger/slist.h>
 
 #include <zmq.h>
 
@@ -11,6 +12,9 @@ struct badger_server
 	char *uri;
 	void *zmq_context;
 	void *zmq_socket;
+
+	badger_encoder_func encoder_func;
+	void *encoder_data;
 
 	slist_t *services;
 };

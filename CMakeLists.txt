@@ -16,6 +16,7 @@ find_library(ZMQ zmq)
 
 option(DEBUG "Enable debugging" on)
 option(XOR_ENCODER "Enable the XOR packet encoder" on)
+option(AES_ENCODER "Enable the AES packet encoder" on)
 
 if(DEBUG)
 	if(UNIX)

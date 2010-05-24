@@ -7,5 +7,6 @@
 
 // badger encoder options
 #cmakedefine XOR_ENCODER
+#cmakedefine AES_ENCODER
 
 #endif

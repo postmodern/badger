@@ -98,7 +98,7 @@ int badger_server_unpack(const badger_server_t *server,const unsigned char *pack
 			}
 
 			// process the payload
-			badger_server_process(server,&payload);
+			badger_server_dispatch(server,&payload);
 
 		case MSGPACK_UNPACK_CONTINUE:
 			msgpack_zone_free(zone);
@@ -161,7 +161,7 @@ cleanup:
 	return -1;
 }
 
-int badger_server_process(const badger_server_t *server,const msgpack_object *payload)
+int badger_server_dispatch(const badger_server_t *server,const msgpack_object *payload)
 {
 	const uint32_t length = payload->via.array.size;
 

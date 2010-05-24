@@ -14,6 +14,14 @@ set(LIBRARY_SOVERSION "0")
 find_library(MSGPACK msgpack)
 find_library(ZMQ zmq)
 
+option(DEBUG "Enable debugging" on)
+
+if(DEBUG)
+	if(UNIX)
+		add_definitions("-ggdb")
+	endif(UNIX)
+endif(DEBUG)
+
 include(CheckIncludeFiles)
 configure_file(config.h.cmake ${BADGER_SOURCE_DIR}/include/badger/config.h)
 
@@ -37,13 +45,6 @@ set_target_properties(
 )
 
 add_executable(badger_server src/programs/server.c)
-if(UNIX)
-	set_target_properties(
-		badger_server PROPERTIES
-		LINK_FLAGS "-static"
-	)
-endif(UNIX)
-
 target_link_libraries(badger_server ${MSGPACK} ${ZMQ} badger)
 
 install(

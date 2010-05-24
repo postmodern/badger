@@ -3,6 +3,6 @@
 
 #define BADGER_VERSION "${LIBRARY_VERSION}"
 
-#cmakedefine USE_FFI
+#cmakedefine DEBUG
 
 #endif

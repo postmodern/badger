@@ -19,6 +19,12 @@ badger_server_t * badger_server_create()
 	new_server->zmq_context = NULL;
 	new_server->zmq_socket = NULL;
 
+	new_server->encoder_func = NULL;
+	new_server->encoder_data = NULL;
+
+	new_server->decoder_func = NULL;
+	new_server->decoder_data = NULL;
+
 	if (!(new_server->services = slist_create(slist_compare_strings,NULL)))
 	{
 		goto cleanup_new_server;
@@ -124,6 +130,10 @@ void badger_server_destroy(badger_server_t *server)
 	slist_destroy(server->services);
 
 	// zero the server fields before freeing it
+	server->encoder_func = NULL;
+	server->encoder_data = NULL;
+	server->decoder_func = NULL;
+	server->decoder_data = NULL;
 	server->uri = NULL;
 	server->zmq_context = NULL;
 	server->zmq_socket = NULL;

@@ -42,8 +42,6 @@
  *   3. The return-value from a previous function call.
  */
 
-#include <badger/util.h>
-
 #include <stdint.h>
 
 typedef uint8_t badger_packet_type;
@@ -59,6 +57,6 @@ typedef uint8_t badger_packet_type;
 #define BADGER_PACKET_ENOFUNC	 	0xfb
 #define BADGER_PACKET_EARGC		0xfa
 
-#define BADGER_PACKET_MINSIZE		(sizeof(crc32_t) + 7)
+#define BADGER_PACKET_MINSIZE		(4 + 7)
 
 #endif

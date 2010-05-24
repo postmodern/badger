@@ -1,4 +1,5 @@
 #include <badger/packet.h>
+#include "private/util.h"
 #include "private/server.h"
 
 #include <arpa/inet.h>

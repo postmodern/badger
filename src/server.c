@@ -1,7 +1,7 @@
 #include "private/server.h"
+#include "private/util.h"
 #include <badger/server.h>
 #include <badger/packet.h>
-#include <badger/util.h>
 
 #include <malloc.h>
 #include <string.h>

@@ -8,7 +8,7 @@ if(UNIX)
 	include(FindPkgConfig)
 endif(UNIX)
 
-option(DEBUG "Enable debugging" on)
+option(DEBUG "Enable debugging" off)
 option(XOR_ENCODER "Enable the XOR packet encoder" on)
 option(AES_ENCODER "Enable the AES packet encoder" on)
 

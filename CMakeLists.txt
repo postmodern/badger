@@ -33,6 +33,8 @@ if(UNIX)
 
 	if(DEBUG)
 		add_definitions("-ggdb")
+	else(DEBUG)
+		add_definitions("-O3")
 	endif(DEBUG)
 endif(UNIX)
 

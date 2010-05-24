@@ -110,7 +110,7 @@ cleanup:
 	return -1;
 }
 
-int badger_server_listen(const badger_server_t *server)
+void badger_server_listen(const badger_server_t *server)
 {
 	while (1)
 	{

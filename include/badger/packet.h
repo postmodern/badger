@@ -2,7 +2,8 @@
 #define _BADGER_PACKET_H_
 
 /*
- * A Badger packet consists of a checksum and a payload.
+ * A Badger packet consists of a checksum, the Badger Protocol version and
+ * a payload.
  *
  * The checksum is a simple CRC32 checksum of the payload.
  *
@@ -41,6 +42,8 @@
  */
 
 #include <stdint.h>
+
+#define BADGER_PROTOCOL_VERSION		0x01
 
 typedef uint8_t badger_packet_type;
 

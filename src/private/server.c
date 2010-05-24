@@ -77,8 +77,8 @@ int badger_server_unpack(const badger_server_t *server,const unsigned char *pack
 		goto cleanup;
 	}
 
-	const void *packed_payload = (packet + 1 + sizeof(crc32_t));
-	size_t payload_size = (packet_size - 1 - sizeof(crc32_t));
+	const void *packed_payload = badger_packet_payload(packet);
+	size_t payload_size = (packet_size - BADGER_PACKET_HDRSIZE);
 
 	msgpack_zone *zone = msgpack_zone_new(MSGPACK_ZONE_CHUNK_SIZE);
 	size_t offset = 0;

@@ -26,7 +26,7 @@ int badger_packet_valid(const unsigned char *packet,size_t packet_size)
 
 	if (claimed_checksum != actual_checksum)
 	{
-		// ignore corrupted packets
+		// corrupted packets
 		return 0;
 	}
 

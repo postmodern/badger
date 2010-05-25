@@ -64,7 +64,6 @@
 #define BADGER_PACKET_HDRSIZE		(1 + 4)
 #define BADGER_PACKET_MINSIZE		(BADGER_PACKET_HDRSIZE + 7)
 
-typedef uint32_t badger_packet_checksum;
 typedef uint32_t badger_packet_id;
 
 #endif

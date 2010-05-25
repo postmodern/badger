@@ -15,8 +15,8 @@
  * The payload is represented as a packed msgpack Array object.
  *
  * The first two elements of the Array must always be the following:
- *   1. The type of the payload.
- *   2. The timestamp of the packet.
+ *   1. The ID of the packet.
+ *   2. The type of the payload.
  *
  * The type of the payload may be one of the following:
  *   * BADGER_PACKET_PING - Represents a ping sent to the server.
@@ -62,5 +62,8 @@
 
 #define BADGER_PACKET_HDRSIZE		(1 + 4)
 #define BADGER_PACKET_MINSIZE		(BADGER_PACKET_HDRSIZE + 7)
+
+typedef uint32_t badger_packet_checksum;
+typedef uint32_t badger_packet_id;
 
 #endif

@@ -231,6 +231,6 @@ static inline int badger_yield_map(badger_caller_t *caller,unsigned int length)
 	return msgpack_pack_map(&(caller->yield_packer),length);
 }
 
-extern void badger_yield(badger_caller_t *caller);
+extern int badger_yield(badger_caller_t *caller);
 
 #endif

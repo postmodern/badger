@@ -114,7 +114,7 @@ cleanup:
 	return -1;
 }
 
-int badger_server_pack(const badger_server_t *server,const unsigned char *payload,size_t payload_size)
+int badger_server_pack(const badger_server_t *server,const char *payload,size_t payload_size)
 {
 	size_t packed_payload_size = payload_size + BADGER_PACKET_HDRSIZE;
 	unsigned char packed_payload[packed_payload_size];

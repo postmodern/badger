@@ -27,7 +27,7 @@ int badger_func_valid(const badger_func_t *func,int argc,const badger_data_t *ar
 	return 0;
 }
 
-int badger_func_call(const badger_func_t *func,int argc,const badger_data_t *args,badger_ret_t *ret)
+int badger_func_call(const badger_func_t *func,int argc,const badger_data_t *args,badger_caller_t *caller)
 {
-	return func->ptr(argc,args,ret);
+	return func->ptr(argc,args,caller);
 }

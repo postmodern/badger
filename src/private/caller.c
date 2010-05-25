@@ -1,8 +1,11 @@
 #include "private/caller.h"
 
-void badger_caller_init(badger_caller_t *caller,const struct badger_server *server)
+void badger_caller_init(badger_caller_t *caller,badger_packet_id id,unsigned int closure,const struct badger_server *server)
 {
 	caller->server = server;
+
+	caller->id = id;
+	caller->closure = closure;
 
 	msgpack_sbuffer_init(&(caller->return_buffer));
 	msgpack_packer_init(&(caller->return_packer),&(caller->return_buffer),msgpack_sbuffer_write);

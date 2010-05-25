@@ -40,6 +40,7 @@
  *   3. The service that the function is registered within.
  *   4. The name of the function to call.
  *   5. The Array of arguments to pass to the function.
+ *   6. Specifies whether a closure was given with the function call.
  *
  * If the type key is set to BADGER_PACKET_RETURN, then the third
  * element of the Array must be the following:

@@ -13,7 +13,7 @@
 #include <msgpack/pack.h>
 #include <msgpack/unpack.h>
 
-int badger_server_recv(const badger_server_t *server)
+int badger_server_pull(const badger_server_t *server)
 {
 	zmq_msg_t request;
 
@@ -114,7 +114,7 @@ cleanup:
 	return -1;
 }
 
-int badger_server_send(const badger_server_t *server,const msgpack_object *payload)
+int badger_server_push(const badger_server_t *server,const msgpack_object *payload)
 {
 	msgpack_sbuffer sbuf;
 	msgpack_packer packer;

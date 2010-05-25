@@ -114,36 +114,58 @@ cleanup:
 	return -1;
 }
 
-int badger_server_push(const badger_server_t *server,const msgpack_object *payload)
+int badger_server_pack(const badger_server_t *server,const unsigned char *payload,size_t payload_size)
 {
-	msgpack_sbuffer sbuf;
-	msgpack_packer packer;
+	size_t packed_payload_size = payload_size + BADGER_PACKET_HDRSIZE;
+	unsigned char packed_payload[packed_payload_size];
+	int ret;
 
-	msgpack_sbuffer_init(&sbuf);
-	msgpack_packer_init(&packer,&sbuf,msgpack_sbuffer_write);
+	// add the Badger Protocol version
+	packed_payload[0] = BADGER_PROTOCOL_VERSION;
 
-	msgpack_pack_object(&packer,*payload);
+	// add the CRC32 checksum
+	*((crc32_t *)(packed_payload+1)) = badger_crc32(payload,payload_size);
 
-	size_t packet_size = sizeof(crc32_t) + sbuf.size;
+	memcpy(packed_payload+BADGER_PACKET_HDRSIZE,payload,payload_size);
+
+	// encode and push the packet
+	ret = badger_server_encode(server,packed_payload,packed_payload_size);
+
+	// zero the packed payload
+	memset(packed_payload,0,packed_payload_size);
+	return ret;
+}
+
+int badger_server_encode(const badger_server_t *server,const unsigned char *packet,size_t packet_size)
+{
+	if (server->encoder_func)
+	{
+		int ret;
+		unsigned char encoded_packet[packet_size];
+
+		// encode the packet
+		server->encoder_func(encoded_packet,packet,packet_size,server->encoder_data);
+
+		// push the encoded packet
+		ret = badger_server_push(server,encoded_packet,packet_size);
+
+		// zero the encoded packet
+		memset(encoded_packet,0,packet_size);
+		return ret;
+	}
+
+	// push the packet
+	return badger_server_push(server,packet,packet_size);
+}
+
+int badger_server_push(const badger_server_t *server,const unsigned char *packet,size_t packet_size)
+{
 	zmq_msg_t response;
 
-	if (zmq_msg_init_size(&response,packet_size) != 0)
+	if (zmq_msg_init_data(&response,(void *)packet,packet_size,NULL,NULL) != 0)
 	{
 		goto cleanup;
 	}
-
-	void *packet = zmq_msg_data(&response);
-	crc32_t payload_checksum = htonl(badger_crc32(sbuf.data,sbuf.size));
-
-	// set the crc32 payload checksum
-	*((crc32_t *)packet) = payload_checksum;
-
-	// copy the packed msgpack object into the packet
-	memcpy(packet+sizeof(crc32_t),sbuf.data,sbuf.size);
-
-	// zero and destroy the packed msgpack object
-	memset(sbuf.data,0,sbuf.size);
-	msgpack_sbuffer_destroy(&sbuf);
 
 	if (zmq_send(server->zmq_socket,&response,0) != 0)
 	{

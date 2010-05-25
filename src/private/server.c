@@ -195,23 +195,23 @@ int badger_server_dispatch(const badger_server_t *server,const msgpack_object *p
 
 	if (fields[0].type != MSGPACK_OBJECT_POSITIVE_INTEGER)
 	{
-		// the type field must be a positive integer
+		// the ID field must be a positive integer
+		goto ignore;
+	}
+
+	if (!fields[0].via.u64)
+	{
+		// the ID field must not be empty
 		goto ignore;
 	}
 
 	if (fields[1].type != MSGPACK_OBJECT_POSITIVE_INTEGER)
 	{
-		// the timestamp field must be a positive integer
+		// the type field must be a positive integer
 		goto ignore;
 	}
 
-	if (!fields[1].via.u64)
-	{
-		// the timestamp field must not be empty
-		goto ignore;
-	}
-
-	switch (fields[0].via.u64)
+	switch (fields[1].via.u64)
 	{
 		// valid payload types
 		case BADGER_PACKET_PING:
@@ -222,7 +222,7 @@ int badger_server_dispatch(const badger_server_t *server,const msgpack_object *p
 			goto ignore;
 	}
 
-	switch (fields[0].via.u64)
+	switch (fields[1].via.u64)
 	{
 		case BADGER_PACKET_PING:
 			// send a pong

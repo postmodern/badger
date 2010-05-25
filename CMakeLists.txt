@@ -14,7 +14,7 @@ set(LIBRARY_SOVERSION "0")
 
 set(BADGER_LIBS msgpack zmq uuid pthread stdc++)
 set(BADGER_SRC	src/private/util.c src/slist.c
-		src/func.c src/service.c src/private/caller.c
+		src/func.c src/service.c src/caller.c src/private/caller.c
 		src/private/packet.c src/private/server.c
 		src/encoders.c src/server.c
 		src/badger.c

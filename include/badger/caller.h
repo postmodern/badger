@@ -30,6 +30,7 @@ extern int badger_return_raw(badger_caller_t *caller,const void *data,size_t len
 extern int badger_return_string(badger_caller_t *caller,const char *str);
 extern int badger_return_array(badger_caller_t *caller,unsigned int length);
 extern int badger_return_map(badger_caller_t *caller,unsigned int length);
+extern int badger_return(badger_caller_t *caller);
 
 extern int badger_yield_nil(badger_caller_t *caller);
 extern int badger_yield_boolean(badger_caller_t *caller,unsigned int value);

@@ -32,7 +32,7 @@ int badger_server_pull(badger_server_t *server)
 	}
 
 	// decode the packet
-	badger_server_decode(server,&request);
+	badger_server_decode(server,zmq_msg_data(&request),zmq_msg_size(&request));
 
 	// close the message
 	zmq_msg_close(&request);
@@ -44,10 +44,8 @@ cleanup:
 	return -1;
 }
 
-int badger_server_decode(badger_server_t *server,zmq_msg_t *request)
+int badger_server_decode(badger_server_t *server,const unsigned char *packet,size_t packet_size)
 {
-	size_t packet_size = zmq_msg_size(request);
-
 	if (packet_size < BADGER_PACKET_MINSIZE)
 	{
 		// ignore short packets
@@ -57,20 +55,20 @@ int badger_server_decode(badger_server_t *server,zmq_msg_t *request)
 	if (server->decoder_func)
 	{
 		int ret;
-		unsigned char packet[packet_size];
+		unsigned char decoded_packet[packet_size];
 
 		// decode the packet
-		server->decoder_func(packet,zmq_msg_data(request),packet_size,server->decoder_data);
+		server->decoder_func(decoded_packet,packet,packet_size,server->decoder_data);
 
 		// unpack the payload
-		ret = badger_server_unpack(server,packet,packet_size);
+		ret = badger_server_unpack(server,decoded_packet,packet_size);
 
 		// zero the decoded packet
-		memset(packet,0,packet_size);
+		memset(decoded_packet,0,packet_size);
 		return ret;
 	}
 
-	return badger_server_unpack(server,zmq_msg_data(request),packet_size);
+	return badger_server_unpack(server,packet,packet_size);
 }
 
 int badger_server_unpack(badger_server_t *server,const unsigned char *packet,size_t packet_size)

@@ -352,7 +352,13 @@ int badger_server_call(badger_server_t *server,badger_request_id id,const msgpac
 	badger_caller_t caller;
 
 	badger_caller_init(&caller,id,server);
+
+	// call the function
 	badger_func_call(func,argc,args,&caller);
+
+	// send back the return data
+	badger_server_pack(server,caller.ret.buffer.data,caller.ret.buffer.size);
+
 	badger_caller_fini(&caller);
 	return 0;
 }

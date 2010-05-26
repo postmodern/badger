@@ -108,18 +108,6 @@ int badger_return_map(badger_caller_t *caller,unsigned int length)
 	return msgpack_pack_map(&(caller->ret.packer),length);
 }
 
-int badger_return(badger_caller_t *caller)
-{
-	int ret;
-
-	// pack, encode and push the return data
-	ret = badger_server_pack(caller->server,caller->ret.buffer.data,caller->ret.buffer.size);
-
-	// clear the return buffer
-	badger_response_clear(&(caller->ret));
-	return ret;
-}
-
 int badger_yield_nil(badger_caller_t *caller)
 {
 	return msgpack_pack_nil(&(caller->yield.packer));

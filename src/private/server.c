@@ -197,9 +197,15 @@ int badger_server_dispatch(badger_server_t *server,const msgpack_object *payload
 		goto ignore;
 	}
 
-	if (!fields[0].via.u64)
+	if (fields[0].via.u64 < BADGER_REQUEST_ID_MIN)
 	{
-		// the ID field must not be empty
+		// the ID field must not be less than 1
+		goto ignore;
+	}
+
+	if (fields[0].via.u64 > BADGER_REQUEST_ID_MAX)
+	{
+		// the ID field must not overflow badger_request_id
 		goto ignore;
 	}
 

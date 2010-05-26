@@ -15,7 +15,10 @@ badger_server_t * badger_server_create()
 		goto cleanup;
 	}
 
+	new_server->mode = badger_mode_none;
 	new_server->uri = NULL;
+
+	new_server->running = 0;
 	new_server->zmq_context = NULL;
 	new_server->zmq_socket = NULL;
 
@@ -55,8 +58,10 @@ void badger_server_decoder(badger_server_t *server,badger_decoder_func decoder,v
 	server->decoder_data = data;
 }
 
-int badger_server_open(badger_server_t *server,const char *uri)
+int badger_server_open(badger_server_t *server,badger_mode mode,const char *uri)
 {
+	server->mode = mode;
+
 	if (server->uri)
 	{
 		free(server->uri);
@@ -81,11 +86,25 @@ int badger_server_open(badger_server_t *server,const char *uri)
 		goto cleanup_context;
 	}
 
-	if (zmq_bind(server->zmq_socket,uri) != 0)
+	switch (server->mode)
 	{
-		goto cleanup_socket;
+		case badger_mode_connect:
+			if (zmq_connect(server->zmq_socket,server->uri) == -1)
+			{
+				goto cleanup_socket;
+			}
+			break;
+		case badger_mode_listen:
+			if (zmq_bind(server->zmq_socket,server->uri) == -1)
+			{
+				goto cleanup_socket;
+			}
+			break;
+		default:
+			goto cleanup_socket;
 	}
 
+	server->running = 1;
 	return 0;
 
 cleanup_socket:
@@ -99,33 +118,29 @@ cleanup:
 	return -1;
 }
 
-void badger_server_listen(const badger_server_t *server)
+void badger_server_loop(badger_server_t *server)
 {
-	while (1)
+	while (server->running)
 	{
 		badger_server_pull(server);
 	}
 }
 
+void badger_server_break(badger_server_t *server)
+{
+	server->running = 0;
+}
+
 int badger_server_close(badger_server_t *server)
 {
-	if (server->zmq_socket)
+	if (server->zmq_context)
 	{
-		if (zmq_close(server->zmq_socket) != 0)
+		if (zmq_term(server->zmq_context) == -1)
 		{
 			return -1;
 		}
 
 		server->zmq_socket = NULL;
-	}
-
-	if (server->zmq_context)
-	{
-		if (zmq_term(server->zmq_context) != 0)
-		{
-			return -1;
-		}
-
 		server->zmq_context = NULL;
 	}
 

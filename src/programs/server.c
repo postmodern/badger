@@ -4,10 +4,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <getopt.h>
+#include <unistd.h>
 
 int main(int argc,char *argv[])
 {
 	struct option options[] = {
+		{"connect", required_argument, NULL, 'c'},
+		{"listen", required_argument, NULL, 'l'},
 		{"version", no_argument, NULL, 'V'},
 		{"help", no_argument, NULL, 'h'},
 		{NULL, 0, NULL, 0}
@@ -15,10 +18,21 @@ int main(int argc,char *argv[])
 	int option_index = 0;
 	int i;
 
-	while ((i = getopt_long(argc,argv,"Vh",options,&option_index)) != -1)
+	badger_mode server_mode = badger_mode_none;
+	const char *server_uri = NULL;
+
+	while ((i = getopt_long(argc,argv,"l:c:Vh",options,&option_index)) != -1)
 	{
 		switch (i)
 		{
+			case 'c':
+				server_mode = badger_mode_connect;
+				server_uri = optarg;
+				break;
+			case 'l':
+				server_mode = badger_mode_listen;
+				server_uri = optarg;
+				break;
 			case 'V':
 				printf("%s: %s\n",argv[0],badger_version());
 				return 0;
@@ -26,6 +40,12 @@ int main(int argc,char *argv[])
 				printf("%s usage: %s [options]\n",argv[0],argv[0]);
 				return 0;
 		}
+	}
+
+	if (server_mode == badger_mode_none || !server_uri)
+	{
+		fprintf(stderr,"%s: must specify either the -c or -l option\n",argv[0]);
+		return -1;
 	}
 
 	badger_init();
@@ -38,13 +58,16 @@ int main(int argc,char *argv[])
 		return -1;
 	}
 
-	if (badger_server_open(server,argv[1]) == -1)
+	if (badger_server_open(server,server_mode,server_uri) == -1)
 	{
+		badger_server_destroy(server);
+		return -1;
 	}
 
-	badger_server_listen(server);
-
+	badger_server_loop(server);
+	
 	badger_server_close(server);
+
 	badger_server_destroy(server);
 
 	badger_fini();

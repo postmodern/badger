@@ -4,6 +4,9 @@
 #include <badger/errno.h>
 #include "private/util.h"
 #include "private/packet.h"
+#include "private/request.h"
+#include "private/response.h"
+#include "private/caller.h"
 #include "private/server.h"
 
 #include <alloca.h>
@@ -13,16 +16,16 @@
 #include <msgpack/pack.h>
 #include <msgpack/unpack.h>
 
-int badger_server_pull(const badger_server_t *server)
+int badger_server_pull(badger_server_t *server)
 {
 	zmq_msg_t request;
 
-	if (zmq_msg_init(&request) != 0)
+	if (zmq_msg_init(&request) == -1)
 	{
 		goto cleanup;
 	}
 
-	if (zmq_recv(server->zmq_socket,&request,0) != 0)
+	if (zmq_recv(server->zmq_socket,&request,0) == -1)
 	{
 		goto cleanup_zmq_msg;
 	}
@@ -40,7 +43,7 @@ cleanup:
 	return -1;
 }
 
-int badger_server_decode(const badger_server_t *server,zmq_msg_t *request)
+int badger_server_decode(badger_server_t *server,zmq_msg_t *request)
 {
 	size_t packet_size = zmq_msg_size(request);
 
@@ -69,7 +72,7 @@ int badger_server_decode(const badger_server_t *server,zmq_msg_t *request)
 	return badger_server_unpack(server,zmq_msg_data(request),packet_size);
 }
 
-int badger_server_unpack(const badger_server_t *server,const unsigned char *packet,size_t packet_size)
+int badger_server_unpack(badger_server_t *server,const unsigned char *packet,size_t packet_size)
 {
 	if (!badger_packet_valid(packet,packet_size))
 	{
@@ -181,7 +184,7 @@ cleanup:
 	return -1;
 }
 
-int badger_server_dispatch(const badger_server_t *server,const msgpack_object *payload)
+int badger_server_dispatch(badger_server_t *server,const msgpack_object *payload)
 {
 	const uint32_t length = payload->via.array.size;
 
@@ -214,8 +217,8 @@ int badger_server_dispatch(const badger_server_t *server,const msgpack_object *p
 	switch (fields[1].via.u64)
 	{
 		// valid payload types
-		case BADGER_PACKET_PING:
-		case BADGER_PACKET_CALL:
+		case BADGER_REQUEST_PING:
+		case BADGER_REQUEST_CALL:
 			break;
 		default:
 			// ignore unknown payload types
@@ -224,10 +227,10 @@ int badger_server_dispatch(const badger_server_t *server,const msgpack_object *p
 
 	switch (fields[1].via.u64)
 	{
-		case BADGER_PACKET_PING:
+		case BADGER_REQUEST_PING:
 			// send a pong
 			break;
-		case BADGER_PACKET_CALL:
+		case BADGER_REQUEST_CALL:
 			if (length < 5)
 			{
 				// function call payloads must have atleast five fields
@@ -235,7 +238,7 @@ int badger_server_dispatch(const badger_server_t *server,const msgpack_object *p
 			}
 
 			// call the function
-			return badger_server_call(server,fields+2);
+			return badger_server_call(server,fields);
 		default:
 			// ignore other packet types
 			goto ignore;
@@ -247,54 +250,59 @@ ignore:
 	return -1;
 }
 
-int badger_server_call(const badger_server_t *server,const msgpack_object *fields)
+int badger_server_call(badger_server_t *server,const msgpack_object *fields)
 {
-	if (fields[0].type != MSGPACK_OBJECT_RAW)
+	badger_request_id id = fields[0].via.u64;
+
+	if (fields[2].type != MSGPACK_OBJECT_RAW)
 	{
 		// the service field must be a string
 		return -1;
 	}
 
-	if (!fields[0].via.raw.size)
+	if (!fields[2].via.raw.size)
 	{
 		// the service field must have atleast one character
 		return -1;
 	}
 
-	if (!fields[0].via.raw.ptr[0])
+	if (!fields[2].via.raw.ptr[0])
 	{
 		// the service field must not be empty
 		return -1;
 	}
 
-	if (fields[1].type != MSGPACK_OBJECT_RAW)
+	if (fields[3].type != MSGPACK_OBJECT_RAW)
 	{
 		// the name field must be a string
 		return -1;
 	}
 
-	if (!fields[1].via.raw.size)
+	if (!fields[3].via.raw.size)
 	{
 		// the name field must have atleast one character
 		return -1;
 	}
 
-	if (!fields[1].via.raw.ptr[0])
+	if (!fields[3].via.raw.ptr[0])
 	{
 		// the name field must not be empty
 		return -1;
 	}
 
-	if (fields[2].type != MSGPACK_OBJECT_ARRAY)
+	if (fields[4].type != MSGPACK_OBJECT_ARRAY)
 	{
 		// the arguments field must be an Array
 		return -1;
 	}
 
-	size_t service_length = fields[0].via.raw.size;
+	int argc = (int)fields[4].via.array.size;
+	const badger_data_t *args = fields[4].via.array.ptr;
+
+	size_t service_length = fields[2].via.raw.size;
 	char service_name[service_length + 1];
 
-	memcpy(service_name,fields[0].via.raw.ptr,service_length);
+	memcpy(service_name,fields[2].via.raw.ptr,service_length);
 	service_name[service_length] = '\0';
 
 	const badger_service_t *service;
@@ -305,10 +313,10 @@ int badger_server_call(const badger_server_t *server,const msgpack_object *field
 		return -1;
 	}
 
-	size_t name_length = fields[1].via.raw.size;
+	size_t name_length = fields[3].via.raw.size;
 	char name[name_length + 1];
 
-	memcpy(name,fields[1].via.raw.ptr,name_length);
+	memcpy(name,fields[3].via.raw.ptr,name_length);
 	name[name_length] = '\0';
 
 	const badger_func_t *func;
@@ -318,9 +326,6 @@ int badger_server_call(const badger_server_t *server,const msgpack_object *field
 		// function not found
 		return -1;
 	}
-
-	int argc = (int)fields[2].via.array.size;
-	const badger_data_t *args = fields[2].via.array.ptr;
 
 	switch (badger_func_valid(func,argc,args))
 	{
@@ -332,6 +337,10 @@ int badger_server_call(const badger_server_t *server,const msgpack_object *field
 			return -1;
 	}
 
-	badger_func_call(func,argc,args,NULL);
+	badger_caller_t caller;
+
+	badger_caller_init(&caller,id,server);
+	badger_func_call(func,argc,args,&caller);
+	badger_caller_fini(&caller);
 	return 0;
 }

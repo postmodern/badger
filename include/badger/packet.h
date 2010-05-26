@@ -40,7 +40,6 @@
  *   3. The service that the function is registered within.
  *   4. The name of the function to call.
  *   5. The Array of arguments to pass to the function.
- *   6. Specifies whether a closure was given with the function call.
  *
  * If the type key is set to BADGER_PACKET_RETURN, then the third
  * element of the Array must be the following:
@@ -51,20 +50,7 @@
 
 #define BADGER_PROTOCOL_VERSION		0x01
 
-#define BADGER_PACKET_PING		0x01
-#define BADGER_PACKET_PONG		0x02
-#define BADGER_PACKET_CALL		0x03
-#define BADGER_PACKET_YIELD		0x04
-#define BADGER_PACKET_RETURN		0x05
-#define BADGER_PACKET_ETYPE		0xff
-#define BADGER_PACKET_ESHORT		0xfe
-#define BADGER_PACKET_ENOSERVICE 	0xfd
-#define BADGER_PACKET_ENOFUNC	 	0xfc
-#define BADGER_PACKET_EARGC		0xfb
-
 #define BADGER_PACKET_HDRSIZE		(1 + 4)
 #define BADGER_PACKET_MINSIZE		(BADGER_PACKET_HDRSIZE + 7)
-
-typedef uint32_t badger_packet_id;
 
 #endif

@@ -10,10 +10,6 @@
 #include "private/server.h"
 
 #include <time.h>
-#include <alloca.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <msgpack/sbuffer.h>
 #include <msgpack/pack.h>
 #include <msgpack/unpack.h>
 

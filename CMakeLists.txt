@@ -12,11 +12,19 @@ option(AES_ENCODER "Enable the AES packet encoder" on)
 set(LIBRARY_VERSION "0.1.0")
 set(LIBRARY_SOVERSION "0")
 
+if(UNIX)
+	set(LINK_FLAGS -static)
+	
+	if(!DEBUG)
+		set(LINK_FLAGS ${LINK_FLAGS} -s)
+	endif(!DEBUG)
+endif(UNIX)
+
 set(BADGER_LIBS msgpack zmq uuid pthread stdc++)
 set(BADGER_SRC	src/private/util.c src/slist.c
 		src/func.c src/service.c src/caller.c src/private/caller.c
-		src/private/packet.c src/private/server.c
-		src/encoders.c src/server.c
+		src/private/packet.c src/private/response.c
+		src/private/server.c src/encoders.c src/server.c
 		src/badger.c
 )
 if(AES_ENCODER)
@@ -46,12 +54,10 @@ set_target_properties(
 )
 
 add_executable(badger src/programs/server.c)
-if(UNIX)
-	set_target_properties(
-		badger PROPERTIES
-		LINK_FLAGS "-static -s"
-	)
-endif(UNIX)
+set_target_properties(
+	badger PROPERTIES
+	LINK_FLAGS ${LINK_FLAGS}
+)
 target_link_libraries(badger badger-static ${BADGER_LIBS})
 
 install(

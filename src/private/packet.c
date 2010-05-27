@@ -7,6 +7,7 @@ int badger_packet_valid(const unsigned char *packet,size_t packet_size)
 	if (packet_size < BADGER_PACKET_MINSIZE)
 	{
 		// short packet
+		badger_debug("badger_packet_valid: the received badger packet was less than BADGER_PACKET_MINSIZE\n");
 		return 0;
 	}
 
@@ -18,6 +19,7 @@ int badger_packet_valid(const unsigned char *packet,size_t packet_size)
 	if (packet_version != BADGER_PROTOCOL_VERSION)
 	{
 		// unsupported protocol
+		badger_debug("badger_packet_valid: the received badger packet had an unknown Badger Protocol version (%u)\n",packet_version);
 		return 0;
 	}
 
@@ -27,6 +29,7 @@ int badger_packet_valid(const unsigned char *packet,size_t packet_size)
 	if (claimed_checksum != actual_checksum)
 	{
 		// corrupted packets
+		badger_debug("badger_packet_valid: the received badger packet had an invalid checksum (%u), expected (%u)\n",claimed_checksum,actual_checksum);
 		return 0;
 	}
 

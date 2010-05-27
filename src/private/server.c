@@ -19,11 +19,13 @@ int badger_server_pull(badger_server_t *server)
 
 	if (zmq_msg_init(&request) == -1)
 	{
+		badger_debug("badger_server_pull: zmq_msg_init failed\n");
 		goto cleanup;
 	}
 
 	if (zmq_recv(server->zmq_socket,&request,0) == -1)
 	{
+		badger_debug("badger_server_pull: zmq_recv failed\n");
 		goto cleanup_zmq_msg;
 	}
 
@@ -45,6 +47,7 @@ int badger_server_decode(badger_server_t *server,const unsigned char *packet,siz
 	if (packet_size < BADGER_PACKET_MINSIZE)
 	{
 		// ignore short packets
+		badger_debug("badger_server_decode: the packet length (%lu) was less than BADGER_PACKET_MINSIZE (%u)\n",packet_size,BADGER_PACKET_MINSIZE);
 		return -1;
 	}
 
@@ -72,6 +75,7 @@ int badger_server_unpack(badger_server_t *server,const unsigned char *packet,siz
 	if (!badger_packet_valid(packet,packet_size))
 	{
 		// ignore invalid packets
+		badger_debug("badger_server_unpack: packet was not valid\n");
 		goto cleanup;
 	}
 
@@ -90,6 +94,7 @@ int badger_server_unpack(badger_server_t *server,const unsigned char *packet,siz
 			if (payload.type != MSGPACK_OBJECT_ARRAY)
 			{
 				// invalid payload
+				badger_debug("badger_server_unpack: unpacked MsgPack object was not an Array\n");
 				goto cleanup_msgpack_object;
 			}
 
@@ -101,6 +106,7 @@ int badger_server_unpack(badger_server_t *server,const unsigned char *packet,siz
 			break;
 		case MSGPACK_UNPACK_PARSE_ERROR:
 			// invalid payload
+			badger_debug("badger_server_unpack: parse error encountered in msgpack_unpack\n");
 			goto cleanup_msgpack_object;
 	}
 
@@ -162,11 +168,13 @@ int badger_server_push(const badger_server_t *server,const unsigned char *packet
 
 	if (zmq_msg_init_data(&response,(void *)packet,packet_size,NULL,NULL) != 0)
 	{
+		badger_debug("badger_server_push: zmq_msg_init_data failed\n");
 		goto cleanup;
 	}
 
 	if (zmq_send(server->zmq_socket,&response,0) != 0)
 	{
+		badger_debug("badger_server_push: zmq_send failed\n");
 		goto cleanup_zmq_msg;
 	}
 
@@ -186,6 +194,7 @@ int badger_server_dispatch(badger_server_t *server,const msgpack_object *payload
 	if (length < 2)
 	{
 		// there must be a minimum of two fields in the payload
+		badger_debug("badger_server_dispatch: packet payload has less than two fields\n");
 		goto ignore;
 	}
 
@@ -194,24 +203,28 @@ int badger_server_dispatch(badger_server_t *server,const msgpack_object *payload
 	if (fields[0].type != MSGPACK_OBJECT_POSITIVE_INTEGER)
 	{
 		// the ID field must be a positive integer
+		badger_debug("badger_server_dispatch: request ID field of the packet payload was not a positive integer\n");
 		goto ignore;
 	}
 
 	if (fields[0].via.u64 < BADGER_REQUEST_ID_MIN)
 	{
 		// the ID field must not be less than 1
+		badger_debug("badger_server_dispatch: request ID of the packet payload was less than BADGER_REQUEST_ID_MIN\n");
 		goto ignore;
 	}
 
 	if (fields[0].via.u64 > BADGER_REQUEST_ID_MAX)
 	{
 		// the ID field must not overflow badger_request_id
+		badger_debug("badger_server_dispatch: request ID of the packet payload was greater than BADGER_REQUEST_ID_MAX\n");
 		goto ignore;
 	}
 
 	if (fields[1].type != MSGPACK_OBJECT_POSITIVE_INTEGER)
 	{
 		// the type field must be a positive integer
+		badger_debug("badger_server_dispatch: request type field of the packet payload was not a positive integer\n");
 		goto ignore;
 	}
 
@@ -223,6 +236,7 @@ int badger_server_dispatch(badger_server_t *server,const msgpack_object *payload
 			break;
 		default:
 			// ignore unknown payload types
+			badger_debug("badger_server_dispatch: request type of the packet payload was not recognized\n");
 			goto ignore;
 	}
 
@@ -236,6 +250,7 @@ int badger_server_dispatch(badger_server_t *server,const msgpack_object *payload
 			if (length < 5)
 			{
 				// function call payloads must have atleast five fields
+				badger_debug("badger_server_dispatch: the packet payload had less than five fields needed for a CALL request\n");
 				goto ignore;
 			}
 
@@ -275,42 +290,49 @@ int badger_server_call(badger_server_t *server,badger_request_id id,const msgpac
 	if (fields[0].type != MSGPACK_OBJECT_RAW)
 	{
 		// the service field must be a string
+		badger_debug("badger_server_call: the service field of the CALL request was not a String\n");
 		return -1;
 	}
 
 	if (!fields[0].via.raw.size)
 	{
 		// the service field must have atleast one character
+		badger_debug("badger_server_call: the service field of the CALL request had an empty length\n");
 		return -1;
 	}
 
 	if (!fields[0].via.raw.ptr[0])
 	{
 		// the service field must not be empty
+		badger_debug("badger_server_call: the service field of the CALL request was empty\n");
 		return -1;
 	}
 
 	if (fields[1].type != MSGPACK_OBJECT_RAW)
 	{
 		// the name field must be a string
+		badger_debug("badger_server_call: the name field of the CALL request was not a String\n");
 		return -1;
 	}
 
 	if (!fields[1].via.raw.size)
 	{
 		// the name field must have atleast one character
+		badger_debug("badger_server_call: the name field of the CALL request had an empty length\n");
 		return -1;
 	}
 
 	if (!fields[1].via.raw.ptr[0])
 	{
 		// the name field must not be empty
+		badger_debug("badger_server_call: the name field of the CALL request was empty\n");
 		return -1;
 	}
 
 	if (fields[2].type != MSGPACK_OBJECT_ARRAY)
 	{
 		// the arguments field must be an Array
+		badger_debug("badger_server_call: the arguments field of the CALL request was not an Array\n");
 		return -1;
 	}
 
@@ -328,6 +350,7 @@ int badger_server_call(badger_server_t *server,badger_request_id id,const msgpac
 	if (!(service = slist_search(server->services,service_name)))
 	{
 		// service not found
+		badger_debug("badger_server_call: could not find the requested service (%s)\n",service_name);
 		return -1;
 	}
 
@@ -342,6 +365,7 @@ int badger_server_call(badger_server_t *server,badger_request_id id,const msgpac
 	if (!(func = badger_service_search(service,name)))
 	{
 		// function not found
+		badger_debug("badger_server_call: could not find the requested function (%s) from the service (%s)\n",name,service->name);
 		return -1;
 	}
 

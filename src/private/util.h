@@ -1,8 +1,17 @@
 #ifndef _BADGER_UTIL_H_
 #define _BADGER_UTIL_H_
 
-#include <sys/types.h>
+#include <badger/config.h>
+
 #include <stdint.h>
+#include <stdio.h>
+#include <sys/types.h>
+
+#ifdef DEBUG
+#define badger_debug(format,...)	fprintf(stderr,format,##__VA_ARGS__)
+#else
+#define badger_debug(format,...)
+#endif
 
 typedef uint32_t crc32_t;
 

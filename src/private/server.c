@@ -128,7 +128,7 @@ int badger_server_pack(const badger_server_t *server,const char *payload,size_t 
 	packed_payload[0] = BADGER_PROTOCOL_VERSION;
 
 	// add the CRC32 checksum
-	*((crc32_t *)(packed_payload+1)) = badger_crc32(payload,payload_size);
+	*((crc32_t *)(packed_payload+1)) = htonl(badger_crc32(payload,payload_size));
 
 	memcpy(packed_payload+BADGER_PACKET_HDRSIZE,payload,payload_size);
 

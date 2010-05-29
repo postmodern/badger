@@ -166,17 +166,23 @@ int badger_server_push(const badger_server_t *server,const unsigned char *packet
 {
 	zmq_msg_t response;
 
-	if (zmq_msg_init_data(&response,(void *)packet,packet_size,NULL,NULL) != 0)
+	if (zmq_msg_init_size(&response,packet_size) != 0)
 	{
 		badger_debug("badger_server_push: zmq_msg_init_data failed\n");
 		goto cleanup;
 	}
+
+	// copy in the packet
+	memcpy(zmq_msg_data(&response),packet,packet_size);
 
 	if (zmq_send(server->zmq_socket,&response,0) != 0)
 	{
 		badger_debug("badger_server_push: zmq_send failed\n");
 		goto cleanup_zmq_msg;
 	}
+
+	// zero the zmq msg before freeing it
+	memset(zmq_msg_data(&response),0,packet_size);
 
 	zmq_msg_close(&response);
 	return 0;

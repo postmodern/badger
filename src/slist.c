@@ -110,7 +110,7 @@ int slist_add(slist_t *slist,const void *key,void *data)
 	return 1;
 }
 
-void * slist_search(slist_t *slist,const void *key)
+void * slist_search(const slist_t *slist,const void *key)
 {
 	slist_node_t *next_node = slist->head;
 

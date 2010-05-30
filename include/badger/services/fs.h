@@ -14,6 +14,12 @@ extern int badger_fs_unlink(int argc,const badger_data_t *args,badger_caller_t *
 extern const badger_function_t badger_fs_open_func;
 extern int badger_fs_open(int argc,const badger_data_t *args,badger_caller_t *caller);
 
+extern const badger_function_t badger_fs_read_func;
+extern int badger_fs_read(int argc,const badger_data_t *args,badger_caller_t *caller);
+
+extern const badger_function_t badger_fs_write_func;
+extern int badger_fs_write(int argc,const badger_data_t *args,badger_caller_t *caller);
+
 extern const badger_function_t badger_fs_close_func;
 extern int badger_fs_close(int argc,const badger_data_t *args,badger_caller_t *caller);
 

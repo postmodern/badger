@@ -7,6 +7,8 @@
 #define BADGER_ERRNO_ARGC		-3
 #define BADGER_ERRNO_FUNC		-2
 #define BADGER_ERRNO_SERVICE		-1
+
+#define BADGER_ERROR			-1
 #define BADGER_SUCCESS			0
 
 #endif

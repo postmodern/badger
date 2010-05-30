@@ -181,7 +181,7 @@ int badger_server_push(const badger_server_t *server,const unsigned char *packet
 	}
 
 	// zero the zmq msg before freeing it
-	memset(zmq_msg_data(&response),0,packet_size);
+	// memset(zmq_msg_data(&response),0,packet_size);
 
 	zmq_msg_close(&response);
 	return 0;

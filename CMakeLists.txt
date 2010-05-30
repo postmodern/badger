@@ -64,19 +64,23 @@ set_target_properties(
 	SOVERSION ${LIBRARY_SOVERSION}
 )
 
-add_library(badger_sys STATIC src/services/sys.c)
-set_target_properties(
-	badger_sys PROPERTIES
-	VERSION ${LIBRARY_VERSION}
-	SOVERSION ${LIBRARY_SOVERSION}
-)
+if(SYS_SERVICE)
+	add_library(badger_sys STATIC src/services/sys.c)
+	set_target_properties(
+		badger_sys PROPERTIES
+		VERSION ${LIBRARY_VERSION}
+		SOVERSION ${LIBRARY_SOVERSION}
+	)
+endif(SYS_SERVICE)
 
-add_library(badger_fs STATIC src/services/fs.c)
-set_target_properties(
-	badger_fs PROPERTIES
-	VERSION ${LIBRARY_VERSION}
-	SOVERSION ${LIBRARY_SOVERSION}
-)
+if(FS_SERVICE)
+	add_library(badger_fs STATIC src/services/fs.c)
+	set_target_properties(
+		badger_fs PROPERTIES
+		VERSION ${LIBRARY_VERSION}
+		SOVERSION ${LIBRARY_SOVERSION}
+	)
+endif(FS_SERVICE)
 
 add_executable(badger src/programs/badger.c)
 set_target_properties(

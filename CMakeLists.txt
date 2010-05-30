@@ -6,8 +6,8 @@ include(install_paths)
 include(CheckIncludeFiles)
 
 option(DEBUG "Enable debugging" off)
-option(XOR_ENCODER "Enable the XOR packet encoder" on)
-option(AES_ENCODER "Enable the AES packet encoder" on)
+option(XOR_ENCODER "Enables the XOR packet encoder" on)
+option(AES_ENCODER "Enables the AES packet encoder" on)
 
 set(LIBRARY_VERSION "0.1.0")
 set(LIBRARY_SOVERSION "0")

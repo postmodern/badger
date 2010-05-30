@@ -20,6 +20,7 @@ badger_service_t badger_sys_service = {
 		&badger_sys_getgid_func,
 		&badger_sys_getegid_func,
 		&badger_sys_getlogin_func,
+		&badger_sys_getusershell_func,
 		&badger_sys_popen_func,
 		NULL
 	}
@@ -144,6 +145,14 @@ const badger_function_t badger_sys_getlogin_func = {"getlogin",badger_sys_getlog
 int badger_sys_getlogin(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
 	badger_return_string(caller,getlogin());
+	return BADGER_SUCCESS;
+}
+
+const badger_function_t badger_sys_getusershell_func = {"getusershell",badger_sys_getusershell,0};
+
+int badger_sys_getusershell(int argc,const badger_data_t *args,badger_caller_t *caller)
+{
+	badger_return_string(caller,getusershell());
 	return BADGER_SUCCESS;
 }
 

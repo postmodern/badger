@@ -11,6 +11,7 @@ badger_service_t badger_fs_service = {
 		&badger_fs_stat_func,
 		&badger_fs_unlink_func,
 		&badger_fs_open_func,
+		&badger_fs_seek_func,
 		&badger_fs_read_func,
 		&badger_fs_write_func,
 		&badger_fs_close_func,
@@ -90,6 +91,38 @@ int badger_fs_open(int argc,const badger_data_t *args,badger_caller_t *caller)
 	}
 
 	badger_return_int(caller,fd);
+	return BADGER_SUCCESS;
+}
+
+const badger_function_t badger_fs_seek_func = {"seek",badger_fs_read,3,{badger_data_int,badger_data_uint,badger_data_string}};
+
+int badger_fs_seek(int argc,const badger_data_t *args,badger_caller_t *caller)
+{
+	size_t whence_length = badger_string_length(args+2);
+	const char *whence_name = badger_string(args+2);
+	int whence = 0;
+
+	if ((whence_length == 3) && (!memcmp(whence_name,"set",3)))
+	{
+		whence = SEEK_SET;
+	}
+	else if ((whence_length == 7) && (!memcmp(whence_name,"current",7)))
+	{
+		whence = SEEK_CUR;
+	}
+	else if ((whence_length == 3) && (!memcmp(whence_name,"end",3)))
+	{
+		whence = SEEK_END;
+	}
+
+	size_t offset;
+
+	if ((offset = lseek(badger_int(args),badger_uint(args+1),whence)) == -1)
+	{
+		return BADGER_ERROR;
+	}
+
+	badger_return_uint(caller,offset);
 	return BADGER_SUCCESS;
 }
 

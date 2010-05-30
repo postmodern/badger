@@ -129,7 +129,7 @@ int badger_sys_getegid(int argc,const badger_data_t *args,badger_caller_t *calle
 	return BADGER_SUCCESS;
 }
 
-const badger_func_t badger_sys_popen_func = {"popen",badger_sys_popen,1};
+const badger_func_t badger_sys_popen_func = {"popen",badger_sys_popen,1,{badger_data_string}};
 
 int badger_sys_popen(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
@@ -147,7 +147,9 @@ int badger_sys_popen(int argc,const badger_data_t *args,badger_caller_t *caller)
 	{
 		if ((length = fread(buffer,1,1024,proc)))
 		{
+			badger_yield_open(caller,1);
 			badger_yield_raw(caller,buffer,length);
+			badger_yield_close(caller);
 		}
 	}
 

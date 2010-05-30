@@ -18,7 +18,7 @@ const badger_func_t badger_sys_time_func = {"time",badger_sys_time,0};
 int badger_sys_time(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
 	badger_return_uint(caller,time(NULL));
-	return 0;
+	return BADGER_SUCCESS;
 }
 
 const badger_func_t badger_sys_chdir_func = {"chdir",badger_sys_chdir,1,{badger_data_string}};

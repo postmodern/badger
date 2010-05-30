@@ -22,7 +22,7 @@ if(UNIX)
 	endif(!DEBUG)
 endif(UNIX)
 
-set(BADGER_LIBS msgpack zmq uuid pthread stdc++)
+set(BADGER_LIBS badger-static msgpack zmq uuid pthread stdc++)
 if(SYS_SERVICE)
 	set(BADGER_LIBS badger_sys ${BADGER_LIBS})
 endif(SYS_SERVICE)
@@ -71,7 +71,7 @@ set_target_properties(
 	badger PROPERTIES
 	LINK_FLAGS ${LINK_FLAGS}
 )
-target_link_libraries(badger badger-static ${BADGER_LIBS})
+target_link_libraries(badger ${BADGER_LIBS})
 
 install(
 	TARGETS badger-static

@@ -1,6 +1,8 @@
 #include "private/response.h"
+#include "private/util.h"
 
 #include <string.h>
+#include <assert.h>
 
 void badger_response_init(badger_response_t *response,badger_request_id id,badger_response_type type)
 {

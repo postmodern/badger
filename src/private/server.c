@@ -227,6 +227,8 @@ int badger_server_dispatch(badger_server_t *server,const msgpack_object *payload
 		goto ignore;
 	}
 
+	badger_request_id id = fields[0].via.u64;
+
 	if (fields[1].type != MSGPACK_OBJECT_POSITIVE_INTEGER)
 	{
 		// the type field must be a positive integer
@@ -234,7 +236,6 @@ int badger_server_dispatch(badger_server_t *server,const msgpack_object *payload
 		goto ignore;
 	}
 
-	badger_request_id id = fields[0].via.u64;
 	const msgpack_object *extra_fields = NULL;
 
 	if (length > 2)

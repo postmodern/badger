@@ -51,6 +51,9 @@ extern int badger_yield_raw(badger_caller_t *caller,const void *data,size_t leng
 extern int badger_yield_string(badger_caller_t *caller,const char *str);
 extern int badger_yield_array(badger_caller_t *caller,unsigned int length);
 extern int badger_yield_map(badger_caller_t *caller,unsigned int length);
+
+extern void badger_yield_open(badger_caller_t *caller,uint32_t args);
+extern int badger_yield_close(badger_caller_t *caller);
 extern int badger_yield(badger_caller_t *caller);
 
 #endif

@@ -247,14 +247,27 @@ int badger_yield_map(badger_caller_t *caller,unsigned int length)
 	return msgpack_pack_map(&(caller->yield.packer),length);
 }
 
-int badger_yield(badger_caller_t *caller)
+void badger_yield_open(badger_caller_t *caller,uint32_t args)
+{
+	badger_response_init(&(caller->yield),caller->ret.id,BADGER_RESPONSE_YIELD);
+
+	msgpack_pack_array(&(caller->yield.packer),args);
+}
+
+int badger_yield_close(badger_caller_t *caller)
 {
 	int ret;
 
 	// pack, encode and push the yield data
 	ret = badger_server_pack(caller->server,caller->yield.buffer.data,caller->yield.buffer.size);
 
-	// reset the yield buffer
-	badger_response_reset(&(caller->yield),BADGER_RESPONSE_YIELD);
+	// clear the yield buffer
+	badger_response_clear(&(caller->yield));
 	return ret;
+}
+
+int badger_yield(badger_caller_t *caller)
+{
+	badger_yield_open(caller,0);
+	return badger_yield_close(caller);
 }

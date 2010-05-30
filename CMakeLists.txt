@@ -6,8 +6,10 @@ include(install_paths)
 include(CheckIncludeFiles)
 
 option(DEBUG "Enable debugging" off)
-option(XOR_ENCODER "Enables the XOR packet encoder" on)
-option(AES_ENCODER "Enables the AES packet encoder" on)
+option(XOR_ENCODER "Enable the XOR packet encoder" on)
+option(AES_ENCODER "Enable the AES packet encoder" on)
+
+option(SYS_SERVICE "Enables the 'sys' service" on)
 
 set(LIBRARY_VERSION "0.1.0")
 set(LIBRARY_SOVERSION "0")
@@ -49,6 +51,13 @@ endif(UNIX)
 add_library(badger-static STATIC ${BADGER_SRC})
 set_target_properties(
 	badger-static PROPERTIES
+	VERSION ${LIBRARY_VERSION}
+	SOVERSION ${LIBRARY_SOVERSION}
+)
+
+add_library(badger_sys STATIC src/services/sys.c)
+set_target_properties(
+	badger_sys PROPERTIES
 	VERSION ${LIBRARY_VERSION}
 	SOVERSION ${LIBRARY_SOVERSION}
 )

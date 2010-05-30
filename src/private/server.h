@@ -14,6 +14,9 @@ int badger_server_push(const badger_server_t *server,const unsigned char *payloa
 
 int badger_server_dispatch(badger_server_t *server,const msgpack_object *payload);
 
+const badger_service_t * badger_server_get_service(badger_server_t *server,badger_request_id id,const msgpack_object *fields);
+const badger_function_t * badger_server_get_function(badger_server_t *server,badger_request_id id,const msgpack_object *fields);
+
 int badger_server_pong(badger_server_t *server,badger_request_id id,const msgpack_object *fields);
 int badger_server_services(badger_server_t *server,badger_request_id id,const msgpack_object *fields);
 int badger_server_functions(badger_server_t *server,badger_request_id id,const msgpack_object *fields);

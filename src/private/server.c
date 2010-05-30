@@ -298,6 +298,96 @@ int badger_server_pong(badger_server_t *server,badger_request_id id,const msgpac
 	return ret;
 }
 
+const badger_service_t * badger_server_get_service(badger_server_t *server,badger_request_id id,const msgpack_object *fields)
+{
+	if (fields[0].type != MSGPACK_OBJECT_RAW)
+	{
+		// the service field must be a String
+		badger_debug("badger_server_get_service: the service field of the FUNCTIONS request was not a String\n");
+		return NULL;
+	}
+
+	if (!fields[0].via.raw.size)
+	{
+		// the service field must have atleast one character
+		badger_debug("badger_server_get_service: the service field of the FUNCTIONS request had an empty length\n");
+		return NULL;
+	}
+
+	if (!fields[0].via.raw.ptr[0])
+	{
+		// the service field must not be empty
+		badger_debug("badger_server_get_service: the service field of the FUNCTIONS request was empty\n");
+		return NULL;
+	}
+
+	size_t name_length = fields[0].via.raw.size;
+	char name[name_length + 1];
+
+	memcpy(name,fields[0].via.raw.ptr,name_length);
+	name[name_length] = '\0';
+
+	const badger_service_t *service;
+
+	if (!(service = slist_search(server->services,name)))
+	{
+		// service not found
+		badger_debug("badger_server_get_service: could not find the requested service (%s)\n",name);
+		return NULL;
+	}
+
+	return service;
+}
+
+const badger_function_t * badger_server_get_function(badger_server_t *server,badger_request_id id,const msgpack_object *fields)
+{
+	const badger_service_t *service;
+
+	if (!(service = badger_server_get_service(server,id,fields)))
+	{
+		// service not found
+		return NULL;
+	}
+
+	if (fields[1].type != MSGPACK_OBJECT_RAW)
+	{
+		// the name field must be a String
+		badger_debug("badger_server_get_function: the name field of the CALL request was not a String\n");
+		return NULL;
+	}
+
+	if (!fields[1].via.raw.size)
+	{
+		// the name field must have atleast one character
+		badger_debug("badger_server_get_function: the name field of the CALL request had an empty length\n");
+		return NULL;
+	}
+
+	if (!fields[1].via.raw.ptr[0])
+	{
+		// the name field must not be empty
+		badger_debug("badger_server_get_function: the name field of the CALL request was empty\n");
+		return NULL;
+	}
+
+	size_t name_length = fields[1].via.raw.size;
+	char name[name_length + 1];
+
+	memcpy(name,fields[1].via.raw.ptr,name_length);
+	name[name_length] = '\0';
+
+	const badger_function_t *function;
+
+	if (!(function = badger_service_search(service,name)))
+	{
+		// function not found
+		badger_debug("badger_server_get_function: could not find the requested function (%s) from the service (%s)\n",name,service->name);
+		return NULL;
+	}
+
+	return function;
+}
+
 int badger_server_services(badger_server_t *server,badger_request_id id,const msgpack_object *fields)
 {
 	badger_response_t response;
@@ -331,39 +421,11 @@ int badger_server_services(badger_server_t *server,badger_request_id id,const ms
 
 int badger_server_functions(badger_server_t *server,badger_request_id id,const msgpack_object *fields)
 {
-	if (fields[0].type != MSGPACK_OBJECT_RAW)
-	{
-		// the service field must be a String
-		badger_debug("badger_server_functions: the service field of the FUNCTIONS request was not a String\n");
-		return -1;
-	}
-
-	if (!fields[0].via.raw.size)
-	{
-		// the service field must have atleast one character
-		badger_debug("badger_server_functions: the service field of the FUNCTIONS request had an empty length\n");
-		return -1;
-	}
-
-	if (!fields[0].via.raw.ptr[0])
-	{
-		// the service field must not be empty
-		badger_debug("badger_server_functions: the service field of the FUNCTIONS request was empty\n");
-		return -1;
-	}
-
-	size_t service_length = fields[0].via.raw.size;
-	char service_name[service_length + 1];
-
-	memcpy(service_name,fields[0].via.raw.ptr,service_length);
-	service_name[service_length] = '\0';
-
 	const badger_service_t *service;
 
-	if (!(service = slist_search(server->services,service_name)))
+	if (!(service = badger_server_get_service(server,id,fields)))
 	{
 		// service not found
-		badger_debug("badger_server_functions: could not find the requested service (%s)\n",service_name);
 		return -1;
 	}
 
@@ -402,54 +464,11 @@ int badger_server_functions(badger_server_t *server,badger_request_id id,const m
 
 int badger_server_prototype(badger_server_t *server,badger_request_id id,const msgpack_object *fields)
 {
-	if (fields[0].type != MSGPACK_OBJECT_RAW)
-	{
-		// the service field must be a String
-		badger_debug("badger_server_prototype: the service field of the FUNCTIONS request was not a String\n");
-		return -1;
-	}
-
-	if (!fields[0].via.raw.size)
-	{
-		// the service field must have atleast one character
-		badger_debug("badger_server_prototype: the service field of the FUNCTIONS request had an empty length\n");
-		return -1;
-	}
-
-	if (!fields[0].via.raw.ptr[0])
-	{
-		// the service field must not be empty
-		badger_debug("badger_server_prototype: the service field of the FUNCTIONS request was empty\n");
-		return -1;
-	}
-
-	size_t service_length = fields[0].via.raw.size;
-	char service_name[service_length + 1];
-
-	memcpy(service_name,fields[0].via.raw.ptr,service_length);
-	service_name[service_length] = '\0';
-
-	const badger_service_t *service;
-
-	if (!(service = slist_search(server->services,service_name)))
-	{
-		// service not found
-		badger_debug("badger_server_prototype: could not find the requested service (%s)\n",service_name);
-		return -1;
-	}
-
-	size_t name_length = fields[1].via.raw.size;
-	char name[name_length + 1];
-
-	memcpy(name,fields[1].via.raw.ptr,name_length);
-	name[name_length] = '\0';
-
 	const badger_function_t *function;
 
-	if (!(function = badger_service_search(service,name)))
+	if (!(function = badger_server_get_function(server,id,fields)))
 	{
 		// function not found
-		badger_debug("badger_server_function: could not find the requested function (%s) from the service (%s)\n",name,service->name);
 		return -1;
 	}
 
@@ -526,45 +545,11 @@ int badger_server_prototype(badger_server_t *server,badger_request_id id,const m
 
 int badger_server_call(badger_server_t *server,badger_request_id id,const msgpack_object *fields)
 {
-	if (fields[0].type != MSGPACK_OBJECT_RAW)
-	{
-		// the service field must be a String
-		badger_debug("badger_server_call: the service field of the CALL request was not a String\n");
-		return -1;
-	}
+	const badger_function_t *function;
 
-	if (!fields[0].via.raw.size)
+	if (!(function = badger_server_get_function(server,id,fields)))
 	{
-		// the service field must have atleast one character
-		badger_debug("badger_server_call: the service field of the CALL request had an empty length\n");
-		return -1;
-	}
-
-	if (!fields[0].via.raw.ptr[0])
-	{
-		// the service field must not be empty
-		badger_debug("badger_server_call: the service field of the CALL request was empty\n");
-		return -1;
-	}
-
-	if (fields[1].type != MSGPACK_OBJECT_RAW)
-	{
-		// the name field must be a String
-		badger_debug("badger_server_call: the name field of the CALL request was not a String\n");
-		return -1;
-	}
-
-	if (!fields[1].via.raw.size)
-	{
-		// the name field must have atleast one character
-		badger_debug("badger_server_call: the name field of the CALL request had an empty length\n");
-		return -1;
-	}
-
-	if (!fields[1].via.raw.ptr[0])
-	{
-		// the name field must not be empty
-		badger_debug("badger_server_call: the name field of the CALL request was empty\n");
+		// function not found
 		return -1;
 	}
 
@@ -577,36 +562,6 @@ int badger_server_call(badger_server_t *server,badger_request_id id,const msgpac
 
 	int argc = (int)fields[2].via.array.size;
 	const badger_data_t *args = fields[2].via.array.ptr;
-
-	size_t service_length = fields[0].via.raw.size;
-	char service_name[service_length + 1];
-
-	memcpy(service_name,fields[0].via.raw.ptr,service_length);
-	service_name[service_length] = '\0';
-
-	const badger_service_t *service;
-
-	if (!(service = slist_search(server->services,service_name)))
-	{
-		// service not found
-		badger_debug("badger_server_call: could not find the requested service (%s)\n",service_name);
-		return -1;
-	}
-
-	size_t name_length = fields[1].via.raw.size;
-	char name[name_length + 1];
-
-	memcpy(name,fields[1].via.raw.ptr,name_length);
-	name[name_length] = '\0';
-
-	const badger_function_t *function;
-
-	if (!(function = badger_service_search(service,name)))
-	{
-		// function not found
-		badger_debug("badger_server_call: could not find the requested function (%s) from the service (%s)\n",name,service->name);
-		return -1;
-	}
 
 	switch (badger_function_valid(function,argc,args))
 	{

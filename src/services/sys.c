@@ -133,6 +133,12 @@ const badger_function_t badger_sys_popen_func = {"popen",badger_sys_popen,1,{bad
 
 int badger_sys_popen(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
+	size_t command_length = badger_string_length(args);
+	char command[command_length + 1];
+
+	memcpy(command,badger_string(args),command_length);
+	command[command_length] = '\0';
+
 	FILE *proc;
 
 	if (!(proc = popen(badger_string(args),"r")))

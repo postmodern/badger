@@ -315,21 +315,21 @@ const badger_service_t * badger_server_get_service(badger_server_t *server,badge
 	if (fields[0].type != MSGPACK_OBJECT_RAW)
 	{
 		// the service field must be a String
-		badger_debug("badger_server_get_service: the service field of the FUNCTIONS request was not a String\n");
+		badger_debug("badger_server_get_service: the service field of the request was not a String\n");
 		return NULL;
 	}
 
 	if (!fields[0].via.raw.size)
 	{
 		// the service field must have atleast one character
-		badger_debug("badger_server_get_service: the service field of the FUNCTIONS request had an empty length\n");
+		badger_debug("badger_server_get_service: the service field of the request had an empty length\n");
 		return NULL;
 	}
 
 	if (!fields[0].via.raw.ptr[0])
 	{
 		// the service field must not be empty
-		badger_debug("badger_server_get_service: the service field of the FUNCTIONS request was empty\n");
+		badger_debug("badger_server_get_service: the service field of the request was empty\n");
 		return NULL;
 	}
 
@@ -364,21 +364,21 @@ const badger_function_t * badger_server_get_function(badger_server_t *server,bad
 	if (fields[1].type != MSGPACK_OBJECT_RAW)
 	{
 		// the name field must be a String
-		badger_debug("badger_server_get_function: the name field of the CALL request was not a String\n");
+		badger_debug("badger_server_get_function: the name field of the request was not a String\n");
 		return NULL;
 	}
 
 	if (!fields[1].via.raw.size)
 	{
 		// the name field must have atleast one character
-		badger_debug("badger_server_get_function: the name field of the CALL request had an empty length\n");
+		badger_debug("badger_server_get_function: the name field of the request had an empty length\n");
 		return NULL;
 	}
 
 	if (!fields[1].via.raw.ptr[0])
 	{
 		// the name field must not be empty
-		badger_debug("badger_server_get_function: the name field of the CALL request was empty\n");
+		badger_debug("badger_server_get_function: the name field of the request was empty\n");
 		return NULL;
 	}
 

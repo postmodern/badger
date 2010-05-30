@@ -6,16 +6,17 @@
 
 const badger_func_t * badger_service_search(const badger_service_t *service,const char *name)
 {
-	const badger_func_t *next_func = service->funcs;
+	unsigned int i = 0;
+	const badger_func_t *func;
 
-	while (next_func->name)
+	while ((func = service->funcs[i]))
 	{
-		if (!strcmp(name,next_func->name))
+		if (!strcmp(name,func->name))
 		{
-			return next_func;
+			return func;
 		}
 
-		++next_func;
+		++i;
 	}
 
 	return NULL;

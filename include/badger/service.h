@@ -7,7 +7,7 @@ struct badger_service
 {
 	const char *name;
 
-	const badger_func_t funcs[];
+	const badger_func_t *funcs[];
 };
 typedef struct badger_service badger_service_t;
 

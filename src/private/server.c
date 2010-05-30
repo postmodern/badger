@@ -373,7 +373,7 @@ int badger_server_functions(badger_server_t *server,badger_request_id id,const m
 	unsigned int length = 0;
 	unsigned int i = 0;
 
-	while (service->funcs[i].name)
+	while ((service->funcs[i]))
 	{
 		++length;
 		++i;
@@ -383,10 +383,10 @@ int badger_server_functions(badger_server_t *server,badger_request_id id,const m
 
 	for (i=0;i<length;i++)
 	{
-		size_t name_length = strlen(service->funcs[i].name) + 1;
+		size_t name_length = strlen(service->funcs[i]->name) + 1;
 
 		msgpack_pack_raw(&(response.packer),name_length);
-		msgpack_pack_raw_body(&(response.packer),service->funcs[i].name,name_length);
+		msgpack_pack_raw_body(&(response.packer),service->funcs[i]->name,name_length);
 
 		++i;
 	}

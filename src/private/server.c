@@ -9,6 +9,7 @@
 #include "private/caller.h"
 #include "private/server.h"
 
+#include <assert.h>
 #include <msgpack/pack.h>
 #include <msgpack/unpack.h>
 
@@ -472,7 +473,46 @@ int badger_server_prototype(badger_server_t *server,badger_request_id id,const m
 
 	for (i=0;i<argc;i++)
 	{
-		msgpack_pack_unsigned_int(&(response.packer),function->arg_types[i]);
+		const char *type_name;
+
+		switch (function->arg_types[i])
+		{
+			case badger_data_nil:
+				type_name = "raw";
+				break;
+			case badger_data_boolean:
+				type_name = "boolean";
+				break;
+			case badger_data_uint:
+				type_name = "uint";
+				break;
+			case badger_data_int:
+				type_name = "int";
+				break;
+			case badger_data_double:
+				type_name = "double";
+				break;
+			case badger_data_string:
+				type_name = "string";
+				break;
+			case badger_data_array:
+				type_name = "array";
+				break;
+			case badger_data_map:
+				type_name = "map";
+				break;
+			case badger_data_any:
+				type_name = "any";
+				break;
+			default:
+				badger_debug("badger_server_prototype: unknown badger data type (%u)\n",function->arg_types[i]);
+				assert(0);
+		}
+
+		uint32_t type_name_length = strlen(type_name);
+
+		msgpack_pack_raw(&(response.packer),type_name_length);
+		msgpack_pack_raw_body(&(response.packer),type_name,type_name_length);
 	}
 
 	int ret;

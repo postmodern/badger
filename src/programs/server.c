@@ -1,5 +1,6 @@
 #include <badger/badger.h>
 #include <badger/server.h>
+#include <badger/services.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -57,6 +58,10 @@ int main(int argc,char *argv[])
 		fprintf(stderr,"malloc failed");
 		return -1;
 	}
+
+#ifdef SYS_SERVICE
+	badger_server_register(server,&badger_sys_service);
+#endif
 
 	if (badger_server_open(server,server_mode,server_uri) == -1)
 	{

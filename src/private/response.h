@@ -22,6 +22,5 @@ typedef struct badger_response badger_response_t;
 
 void badger_response_init(badger_response_t *response,badger_request_id id,badger_response_type type);
 void badger_response_clear(badger_response_t *response);
-void badger_response_reset(badger_response_t *response,badger_response_type type);
 
 #endif

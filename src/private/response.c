@@ -55,11 +55,3 @@ void badger_response_clear(badger_response_t *response)
 	}
 	msgpack_sbuffer_destroy(&(response->buffer));
 }
-
-void badger_response_reset(badger_response_t *response,badger_response_type type)
-{
-	badger_request_id id = response->id;
-
-	badger_response_clear(response);
-	badger_response_init(response,id,type);
-}

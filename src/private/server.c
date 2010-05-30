@@ -305,14 +305,12 @@ int badger_server_services(badger_server_t *server,badger_request_id id,const ms
 
 	msgpack_pack_array(&(response.packer),slist_length(server->services));
 
-	slist_node_t *next_node = server->services->head;
-	badger_service_t *service;
-	size_t name_length;
+	const slist_node_t *next_node = server->services->head;
 
 	while (next_node)
 	{
-		service = (badger_service_t *)(next_node->data);
-		name_length = strlen(service->name) + 1;
+		const badger_service_t *service = (badger_service_t *)(next_node->data);
+		size_t name_length = strlen(service->name) + 1;
 
 		msgpack_pack_raw(&(response.packer),name_length);
 		msgpack_pack_raw_body(&(response.packer),service->name,name_length);
@@ -383,13 +381,11 @@ int badger_server_functions(badger_server_t *server,badger_request_id id,const m
 
 	msgpack_pack_array(&(response.packer),length);
 
-	size_t name_length;
-
 	i = 0;
 
 	while (service->funcs[i].name)
 	{
-		name_length = strlen(service->funcs[i].name) + 1;
+		size_t name_length = strlen(service->funcs[i].name) + 1;
 
 		msgpack_pack_raw(&(response.packer),name_length);
 		msgpack_pack_raw_body(&(response.packer),service->funcs[i].name,name_length);

@@ -66,6 +66,13 @@ int main(int argc,char *argv[])
 	}
 #endif
 
+#ifdef FS_SERVICE
+	if (badger_server_register(server,&badger_fs_service) == -1)
+	{
+		goto cleanup_server;
+	}
+#endif
+
 	if (badger_server_open(server,server_mode,server_uri) == -1)
 	{
 		goto cleanup_server;

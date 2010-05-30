@@ -10,6 +10,7 @@ option(XOR_ENCODER "Enable the XOR packet encoder" on)
 option(AES_ENCODER "Enable the AES packet encoder" on)
 
 option(SYS_SERVICE "Enables the 'sys' service" on)
+option(FS_SERVICE "Enables the 'fs' service" on)
 
 set(LIBRARY_VERSION "0.1.0")
 set(LIBRARY_SOVERSION "0")
@@ -26,6 +27,9 @@ set(BADGER_LIBS badger_core msgpack zmq uuid pthread stdc++)
 if(SYS_SERVICE)
 	set(BADGER_LIBS badger_sys ${BADGER_LIBS})
 endif(SYS_SERVICE)
+if(FS_SERVICE)
+	set(BADGER_LIBS badger_fs ${BADGER_LIBS})
+endif(FS_SERVICE)
 
 set(BADGER_SRC
 	src/private/util.c src/slist.c
@@ -63,6 +67,13 @@ set_target_properties(
 add_library(badger_sys STATIC src/services/sys.c)
 set_target_properties(
 	badger_sys PROPERTIES
+	VERSION ${LIBRARY_VERSION}
+	SOVERSION ${LIBRARY_SOVERSION}
+)
+
+add_library(badger_fs STATIC src/services/fs.c)
+set_target_properties(
+	badger_fs PROPERTIES
 	VERSION ${LIBRARY_VERSION}
 	SOVERSION ${LIBRARY_SOVERSION}
 )

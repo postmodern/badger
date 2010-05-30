@@ -7,4 +7,8 @@
 #include <badger/services/sys.h>
 #endif
 
+#ifdef FS_SERVICE
+#include <badger/services/fs.h>
+#endif
+
 #endif

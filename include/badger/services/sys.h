@@ -35,6 +35,9 @@ extern int badger_sys_getgid(int argc,const badger_data_t *args,badger_caller_t 
 extern const badger_function_t badger_sys_getegid_func;
 int badger_sys_getegid(int argc,const badger_data_t *args,badger_caller_t *caller);
 
+extern const badger_function_t badger_sys_getlogin_func;
+extern int badger_sys_getlogin(int argc,const badger_data_t *args,badger_caller_t *caller);
+
 extern const badger_function_t badger_sys_popen_func;
 int badger_sys_popen(int argc,const badger_data_t *args,badger_caller_t *caller);
 

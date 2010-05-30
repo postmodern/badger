@@ -235,23 +235,49 @@ int badger_server_dispatch(badger_server_t *server,const msgpack_object *payload
 	}
 
 	badger_request_id id = fields[0].via.u64;
-	const msgpack_object *extra_fields = fields + 2;
+	const msgpack_object *extra_fields = NULL;
+
+	if (length > 2)
+	{
+		extra_fields = fields + 2;
+	}
 
 	switch (fields[1].via.u64)
 	{
 		case BADGER_REQUEST_PING:
-			return badger_server_pong(server,id,NULL);
+			return badger_server_pong(server,id,extra_fields);
 		case BADGER_REQUEST_SERVICES:
-			return badger_server_services(server,id,NULL);
+			if (length != 2)
+			{
+				// SERVICES payloads must have exactly two fields
+				badger_debug("badger_server_dispatch: the SERVICES packet payload did not have exactly two fields\n");
+				goto ignore;
+			}
+
+			return badger_server_services(server,id,extra_fields);
 		case BADGER_REQUEST_FUNCTIONS:
+			if (length != 3)
+			{
+				// FUNCTIONS payloads must have exactly three fields
+				badger_debug("badger_server_dispatch: the FUNCTIONS packet payload did not have exactly three fields\n");
+				goto ignore;
+			}
+
 			return badger_server_functions(server,id,extra_fields);
 		case BADGER_REQUEST_PROTOTYPE:
+			if (length != 4)
+			{
+				// PROTOTYPE payloads must have exactly three fields
+				badger_debug("badger_server_dispatch: the PROTOTYPE packet payload did not have exactly four fields\n");
+				goto ignore;
+			}
+
 			return badger_server_prototype(server,id,extra_fields);
 		case BADGER_REQUEST_CALL:
-			if (length < 5)
+			if (length != 5)
 			{
-				// function call payloads must have atleast five fields
-				badger_debug("badger_server_dispatch: the packet payload had less than five fields needed for a CALL request\n");
+				// CALL payloads must have atleast five fields
+				badger_debug("badger_server_dispatch: the CALL packet payload did not have exactly five fields\n");
 				goto ignore;
 			}
 

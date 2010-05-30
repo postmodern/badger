@@ -305,7 +305,7 @@ int badger_server_services(badger_server_t *server,badger_request_id id,const ms
 
 	msgpack_pack_array(&(response.packer),slist_length(server->services));
 
-	slist_node_t *next_node;
+	slist_node_t *next_node = server->services->head;
 	badger_service_t *service;
 	size_t name_length;
 

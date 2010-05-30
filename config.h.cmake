@@ -5,6 +5,8 @@
 
 #cmakedefine DEBUG
 
+#cmakedefine HAS_FFI
+
 // badger encoders
 #cmakedefine ENCODERS_XOR
 #cmakedefine ENCODERS_AES
@@ -12,5 +14,6 @@
 // badger services
 #cmakedefine SERVICES_SYS
 #cmakedefine SERVICES_FS
+#cmakedefine SERVICES_FFI
 
 #endif

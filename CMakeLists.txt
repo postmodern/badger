@@ -11,6 +11,7 @@ option(ENCODERS_AES "Enable the AES packet encoder" on)
 
 option(SERVICES_SYS "Enables the 'sys' service" on)
 option(SERVICES_FS "Enables the 'fs' service" on)
+option(SERVICES_FFI "Enables the 'ffi' service" off)
 
 set(LIBRARY_VERSION "0.1.0")
 set(LIBRARY_SOVERSION "0")
@@ -24,12 +25,22 @@ if(UNIX)
 endif(UNIX)
 
 set(BADGER_LIBS badger_core msgpack zmq uuid pthread stdc++)
+
 if(SERVICES_SYS)
 	set(BADGER_LIBS badger_sys ${BADGER_LIBS})
 endif(SERVICES_SYS)
+
 if(SERVICES_FS)
 	set(BADGER_LIBS badger_fs ${BADGER_LIBS})
 endif(SERVICES_FS)
+
+if(SERVICES_FFI)
+	check_include_file(ffi.h HAS_FFI)
+
+	if(HAS_FFI)
+		set(BADGER_LIBS ffi ${BADGER_LIBS})
+	endif(HAS_FFI)
+endif(SERVICES_FFI)
 
 set(BADGER_SRC
 	src/private/util.c src/slist.c src/data.c

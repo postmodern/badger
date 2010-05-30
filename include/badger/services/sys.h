@@ -17,6 +17,9 @@ extern int badger_sys_getcwd(int argc,const badger_data_t *args,badger_caller_t 
 extern const badger_func_t badger_sys_gethostname_func;
 extern int badger_sys_gethostname(int argc,const badger_data_t *args,badger_caller_t *caller);
 
+extern const badger_func_t badger_sys_getdomainname_func;
+extern int badger_sys_getdomainname(int argc,const badger_data_t *args,badger_caller_t *caller);
+
 extern const badger_func_t badger_sys_getpid_func;
 extern int badger_sys_getpid(int argc,const badger_data_t *args,badger_caller_t *caller);
 

@@ -10,6 +10,7 @@ badger_service_t badger_sys_service = {
 		&badger_sys_chdir_func,
 		&badger_sys_getcwd_func,
 		&badger_sys_gethostname_func,
+		&badger_sys_getdomainname_func,
 		&badger_sys_getpid_func,
 		&badger_sys_getuid_func,
 		&badger_sys_geteuid_func,
@@ -67,6 +68,21 @@ int badger_sys_gethostname(int argc,const badger_data_t *args,badger_caller_t *c
 	}
 
 	badger_return_string(caller,hostname);
+	return BADGER_SUCCESS;
+}
+
+const badger_func_t badger_sys_getdomainname_func = {"getdomainname",badger_sys_getdomainname,0};
+
+int badger_sys_getdomainname(int argc,const badger_data_t *args,badger_caller_t *caller)
+{
+	char domainname[64];
+
+	if (getdomainname(domainname,64) == -1)
+	{
+		return BADGER_ERROR;
+	}
+
+	badger_return_string(caller,domainname);
 	return BADGER_SUCCESS;
 }
 

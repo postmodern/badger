@@ -250,6 +250,7 @@ int badger_yield_map(badger_caller_t *caller,unsigned int length)
 void badger_yield_open(badger_caller_t *caller,uint32_t args)
 {
 	badger_response_init(&(caller->yield),caller->ret.id,BADGER_RESPONSE_YIELD);
+	caller->yielded = 1;
 
 	msgpack_pack_array(&(caller->yield.packer),args);
 }
@@ -263,6 +264,8 @@ int badger_yield_close(badger_caller_t *caller)
 
 	// clear the yield buffer
 	badger_response_clear(&(caller->yield));
+
+	caller->yielded = 0;
 	return ret;
 }
 

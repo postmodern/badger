@@ -5,9 +5,9 @@ void badger_caller_init(badger_caller_t *caller,badger_request_id id,struct badg
 {
 	caller->server = server;
 	caller->returned = 0;
+	caller->yielded = 0;
 
 	badger_response_init(&(caller->ret),id,BADGER_RESPONSE_RETURN);
-	badger_response_init(&(caller->yield),id,BADGER_RESPONSE_YIELD);
 }
 
 void badger_caller_returned(badger_caller_t *caller)
@@ -41,5 +41,9 @@ int badger_caller_return(badger_caller_t *caller)
 void badger_caller_fini(badger_caller_t *caller)
 {
 	badger_response_clear(&(caller->ret));
-	badger_response_clear(&(caller->yield));
+
+	if (caller->yielded)
+	{
+		badger_response_clear(&(caller->yield));
+	}
 }

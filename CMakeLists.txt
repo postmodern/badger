@@ -66,7 +66,7 @@ set_target_properties(
 	SOVERSION ${LIBRARY_SOVERSION}
 )
 
-add_executable(badger src/programs/server.c)
+add_executable(badger src/programs/badger.c)
 set_target_properties(
 	badger PROPERTIES
 	LINK_FLAGS ${LINK_FLAGS}

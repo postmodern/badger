@@ -1,7 +1,9 @@
 #include <badger/services/sys.h>
 
 #include <time.h>
+#include <sys/types.h>
 #include <unistd.h>
+#include <stdio.h>
 
 badger_service_t badger_sys_service = {
 	"sys",
@@ -16,6 +18,7 @@ badger_service_t badger_sys_service = {
 		&badger_sys_geteuid_func,
 		&badger_sys_getgid_func,
 		&badger_sys_getegid_func,
+		&badger_sys_popen_func,
 		NULL
 	}
 };
@@ -123,5 +126,38 @@ const badger_func_t badger_sys_getegid_func = {"getegid",badger_sys_getegid,0};
 int badger_sys_getegid(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
 	badger_return_uint(caller,getegid());
+	return BADGER_SUCCESS;
+}
+
+const badger_func_t badger_sys_popen_func = {"popen",badger_sys_popen,1};
+
+int badger_sys_popen(int argc,const badger_data_t *args,badger_caller_t *caller)
+{
+	FILE *proc;
+
+	if (!(proc = popen(badger_string(args),"r")))
+	{
+		return BADGER_ERROR;
+	}
+
+	unsigned char buffer[1024];
+	size_t length;
+
+	while (!feof(proc))
+	{
+		if ((length = fread(buffer,1,1024,proc)))
+		{
+			badger_yield_raw(caller,buffer,length);
+		}
+	}
+
+	int status;
+
+	if ((status = pclose(proc)) == -1)
+	{
+		return BADGER_ERROR;
+	}
+
+	badger_return_int(caller,status);
 	return BADGER_SUCCESS;
 }

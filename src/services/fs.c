@@ -46,3 +46,21 @@ int badger_fs_close(int argc,const badger_data_t *args,badger_caller_t *caller)
 
 	return BADGER_SUCCESS;
 }
+
+const badger_function_t badger_fs_unlink_func = {"unlink",badger_fs_close,1,{badger_data_string}};
+
+int badger_fs_unlink(int argc,const badger_data_t *args,badger_caller_t *caller)
+{
+	size_t path_length = badger_string_length(args);
+	char path[path_length + 1];
+
+	memcpy(path,badger_string(args),path_length);
+	path[path_length] = '\0';
+
+	if (unlink(path) == -1)
+	{
+		return BADGER_ERROR;
+	}
+
+	return BADGER_SUCCESS;
+}

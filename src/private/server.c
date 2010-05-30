@@ -331,7 +331,7 @@ int badger_server_functions(badger_server_t *server,badger_request_id id,const m
 {
 	if (fields[0].type != MSGPACK_OBJECT_RAW)
 	{
-		// the service field must be a string
+		// the service field must be a String
 		badger_debug("badger_server_functions: the service field of the FUNCTIONS request was not a String\n");
 		return -1;
 	}
@@ -404,7 +404,7 @@ int badger_server_call(badger_server_t *server,badger_request_id id,const msgpac
 {
 	if (fields[0].type != MSGPACK_OBJECT_RAW)
 	{
-		// the service field must be a string
+		// the service field must be a String
 		badger_debug("badger_server_call: the service field of the CALL request was not a String\n");
 		return -1;
 	}
@@ -425,7 +425,7 @@ int badger_server_call(badger_server_t *server,badger_request_id id,const msgpac
 
 	if (fields[1].type != MSGPACK_OBJECT_RAW)
 	{
-		// the name field must be a string
+		// the name field must be a String
 		badger_debug("badger_server_call: the name field of the CALL request was not a String\n");
 		return -1;
 	}

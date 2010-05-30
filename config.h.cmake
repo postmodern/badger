@@ -5,8 +5,11 @@
 
 #cmakedefine DEBUG
 
-// badger encoder options
+// badger encoders
 #cmakedefine XOR_ENCODER
 #cmakedefine AES_ENCODER
+
+// badger services
+#cmakedefine SYS_SERVICE
 
 #endif

@@ -247,6 +247,7 @@ int badger_server_dispatch(badger_server_t *server,const msgpack_object *payload
 	}
 
 	badger_request_id id = fields[0].via.u64;
+	const msgpack_object *extra_fields = fields + 2;
 
 	switch (fields[1].via.u64)
 	{
@@ -255,7 +256,7 @@ int badger_server_dispatch(badger_server_t *server,const msgpack_object *payload
 		case BADGER_REQUEST_SERVICES:
 			return badger_server_services(server,id,NULL);
 		case BADGER_REQUEST_FUNCTIONS:
-			return badger_server_functions(server,id,fields+2);
+			return badger_server_functions(server,id,extra_fields);
 		case BADGER_REQUEST_CALL:
 			if (length < 5)
 			{
@@ -265,7 +266,7 @@ int badger_server_dispatch(badger_server_t *server,const msgpack_object *payload
 			}
 
 			// call the function
-			return badger_server_call(server,id,fields+2);
+			return badger_server_call(server,id,extra_fields);
 		default:
 			// ignore other packet types
 			goto ignore;

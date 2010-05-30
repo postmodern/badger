@@ -163,6 +163,20 @@ int slist_remove(slist_t *slist,const void *key)
 	return 0;
 }
 
+size_t slist_length(const slist_t *slist)
+{
+	slist_node_t *next_node = slist->head;
+	size_t length = 0;
+
+	while (next_node)
+	{
+		++length;
+		next_node = next_node->next;
+	}
+
+	return length;
+}
+
 void slist_destroy(slist_t *slist)
 {
 	slist_node_t *next_node = slist->head;

@@ -55,6 +55,7 @@ extern slist_t * slist_create(slist_compare_func compare_func,slist_destroy_func
 extern int slist_add(slist_t *slist,const void *key,void *data);
 extern void * slist_search(const slist_t *slist,const void *key);
 extern int slist_remove(slist_t *slist,const void *key);
+extern size_t slist_length(const slist_t *slist);
 extern void slist_destroy(slist_t *slist);
 
 #endif

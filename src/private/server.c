@@ -252,6 +252,10 @@ int badger_server_dispatch(badger_server_t *server,const msgpack_object *payload
 	{
 		case BADGER_REQUEST_PING:
 			return badger_server_pong(server,id,fields);
+		case BADGER_REQUEST_SERVICES:
+			return badger_server_services(server,id,fields);
+		case BADGER_REQUEST_FUNCTIONS:
+			return badger_server_functions(server,id,fields+2);
 		case BADGER_REQUEST_CALL:
 			if (length < 5)
 			{
@@ -289,6 +293,110 @@ int badger_server_pong(badger_server_t *server,badger_request_id id,const msgpac
 
 	badger_response_clear(&response);
 	return ret;
+}
+
+int badger_server_services(badger_server_t *server,badger_request_id id,const msgpack_object *fields)
+{
+	badger_response_t response;
+
+	// initialize the services response
+	badger_response_init(&response,id,BADGER_RESPONSE_SERVICES);
+
+	msgpack_pack_array(&(response.packer),slist_length(server->services));
+
+	slist_node_t *next_node;
+	badger_service_t *service;
+	size_t name_length;
+
+	while (next_node)
+	{
+		service = (badger_service_t *)(next_node->data);
+		name_length = strlen(service->name) + 1;
+
+		msgpack_pack_raw(&(response.packer),name_length);
+		msgpack_pack_raw_body(&(response.packer),service->name,name_length);
+
+		next_node = next_node->next;
+	}
+
+	int ret;
+
+	// pack, encode and push the response
+	ret = badger_server_pack(server,response.buffer.data,response.buffer.size);
+
+	badger_response_clear(&response);
+	return ret;
+}
+
+int badger_server_functions(badger_server_t *server,badger_request_id id,const msgpack_object *fields)
+{
+	if (fields[0].type != MSGPACK_OBJECT_RAW)
+	{
+		// the service field must be a string
+		badger_debug("badger_server_functions: the service field of the FUNCTIONS request was not a String\n");
+		return -1;
+	}
+
+	if (!fields[0].via.raw.size)
+	{
+		// the service field must have atleast one character
+		badger_debug("badger_server_functions: the service field of the FUNCTIONS request had an empty length\n");
+		return -1;
+	}
+
+	if (!fields[0].via.raw.ptr[0])
+	{
+		// the service field must not be empty
+		badger_debug("badger_server_functions: the service field of the FUNCTIONS request was empty\n");
+		return -1;
+	}
+
+	size_t service_length = fields[0].via.raw.size;
+	char service_name[service_length + 1];
+
+	memcpy(service_name,fields[0].via.raw.ptr,service_length);
+	service_name[service_length] = '\0';
+
+	const badger_service_t *service;
+
+	if (!(service = slist_search(server->services,service_name)))
+	{
+		// service not found
+		badger_debug("badger_server_functions: could not find the requested service (%s)\n",service_name);
+		return -1;
+	}
+
+	badger_response_t response;
+
+	// initialize the functions response
+	badger_response_init(&response,id,BADGER_RESPONSE_FUNCTIONS);
+
+	unsigned int length = 0;
+	unsigned int i = 0;
+
+	while (service->funcs[i].name)
+	{
+		++length;
+		++i;
+	}
+
+	msgpack_pack_array(&(response.packer),length);
+
+	size_t name_length;
+
+	i = 0;
+
+	while (service->funcs[i].name)
+	{
+		name_length = strlen(service->funcs[i].name) + 1;
+
+		msgpack_pack_raw(&(response.packer),name_length);
+		msgpack_pack_raw_body(&(response.packer),service->funcs[i].name,name_length);
+
+		++i;
+	}
+
+	return 0;
 }
 
 int badger_server_call(badger_server_t *server,badger_request_id id,const msgpack_object *fields)

@@ -368,8 +368,8 @@ int badger_server_functions(badger_server_t *server,badger_request_id id,const m
 	// initialize the functions response
 	badger_response_init(&response,id,BADGER_RESPONSE_FUNCTIONS);
 
-	unsigned int length = 0;
-	unsigned int i = 0;
+	uint32_t length = 0;
+	uint32_t i = 0;
 
 	while ((service->funcs[i]))
 	{
@@ -385,8 +385,6 @@ int badger_server_functions(badger_server_t *server,badger_request_id id,const m
 
 		msgpack_pack_raw(&(response.packer),name_length);
 		msgpack_pack_raw_body(&(response.packer),service->funcs[i]->name,name_length);
-
-		++i;
 	}
 
 	int ret;

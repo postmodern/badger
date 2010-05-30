@@ -25,8 +25,12 @@ const badger_func_t badger_sys_chdir_func = {"chdir",badger_sys_chdir,1,{badger_
 
 int badger_sys_chdir(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
-	chdir(badger_string(args));
-	return 0;
+	if (chdir(badger_string(args)) == -1)
+	{
+		return BADGER_ERROR;
+	}
+
+	return BADGER_SUCCESS;
 }
 
 const badger_func_t badger_sys_getcwd_func = {"getcwd",badger_sys_getcwd,0};

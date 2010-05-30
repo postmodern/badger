@@ -11,5 +11,6 @@
 
 // badger services
 #cmakedefine SYS_SERVICE
+#cmakedefine FS_SERVICE
 
 #endif

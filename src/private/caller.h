@@ -7,8 +7,8 @@
 struct badger_caller
 {
 	struct badger_server *server;
-	unsigned int returned;
-	unsigned int yielded;
+	uint8_t returned;
+	uint8_t yielded;
 
 	badger_response_t ret;
 	badger_response_t yield;

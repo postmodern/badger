@@ -16,6 +16,7 @@ void badger_response_init(badger_response_t *response,badger_request_id id,badge
 	switch (type)
 	{
 		case BADGER_RESPONSE_PONG:
+			break;
 		case BADGER_RESPONSE_SERVICES:
 		case BADGER_RESPONSE_FUNCTIONS:
 		case BADGER_RESPONSE_YIELD:

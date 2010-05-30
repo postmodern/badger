@@ -9,7 +9,6 @@
 #include "private/caller.h"
 #include "private/server.h"
 
-#include <time.h>
 #include <msgpack/pack.h>
 #include <msgpack/unpack.h>
 
@@ -287,9 +286,6 @@ int badger_server_pong(badger_server_t *server,badger_request_id id,const msgpac
 
 	// initialize the pong response
 	badger_response_init(&response,id,BADGER_RESPONSE_PONG);
-
-	// add the current time to the pong response
-	msgpack_pack_unsigned_int(&(response.packer),time(NULL));
 
 	// pack, encode and push the response
 	ret = badger_server_pack(server,response.buffer.data,response.buffer.size);

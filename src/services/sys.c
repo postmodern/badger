@@ -11,6 +11,7 @@ badger_service_t badger_sys_service = {
 		&badger_sys_time_func,
 		&badger_sys_chdir_func,
 		&badger_sys_getcwd_func,
+		&badger_sys_gethostid_func,
 		&badger_sys_gethostname_func,
 		&badger_sys_getdomainname_func,
 		&badger_sys_getpid_func,
@@ -57,6 +58,14 @@ int badger_sys_getcwd(int argc,const badger_data_t *args,badger_caller_t *caller
 	}
 
 	badger_return_string(caller,cwd);
+	return BADGER_SUCCESS;
+}
+
+const badger_function_t badger_sys_gethostid_func = {"gethostid",badger_sys_gethostid,0};
+
+int badger_sys_gethostid(int argc,const badger_data_t *args,badger_caller_t *caller)
+{
+	badger_return_uint(caller,gethostid());
 	return BADGER_SUCCESS;
 }
 

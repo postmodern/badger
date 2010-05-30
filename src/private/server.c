@@ -238,6 +238,8 @@ int badger_server_dispatch(badger_server_t *server,const msgpack_object *payload
 	{
 		// valid payload types
 		case BADGER_REQUEST_PING:
+		case BADGER_REQUEST_SERVICES:
+		case BADGER_REQUEST_FUNCTIONS:
 		case BADGER_REQUEST_CALL:
 			break;
 		default:

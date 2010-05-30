@@ -6,7 +6,8 @@
 #define BADGER_REQUEST_PING		0x01
 #define BADGER_REQUEST_SERVICES		0x02
 #define BADGER_REQUEST_FUNCTIONS	0x03
-#define BADGER_REQUEST_CALL		0x04
+#define BADGER_REQUEST_PROTOTYPE	0x04
+#define BADGER_REQUEST_CALL		0x05
 
 typedef uint8_t badger_request_type;
 typedef uint32_t badger_request_id;

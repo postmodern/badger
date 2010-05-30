@@ -239,6 +239,7 @@ int badger_server_dispatch(badger_server_t *server,const msgpack_object *payload
 		case BADGER_REQUEST_PING:
 		case BADGER_REQUEST_SERVICES:
 		case BADGER_REQUEST_FUNCTIONS:
+		case BADGER_REQUEST_PROTOTYPE:
 		case BADGER_REQUEST_CALL:
 			break;
 		default:
@@ -258,6 +259,8 @@ int badger_server_dispatch(badger_server_t *server,const msgpack_object *payload
 			return badger_server_services(server,id,NULL);
 		case BADGER_REQUEST_FUNCTIONS:
 			return badger_server_functions(server,id,extra_fields);
+		case BADGER_REQUEST_PROTOTYPE:
+			return badger_server_prototype(server,id,extra_fields);
 		case BADGER_REQUEST_CALL:
 			if (length < 5)
 			{
@@ -385,6 +388,91 @@ int badger_server_functions(badger_server_t *server,badger_request_id id,const m
 
 		msgpack_pack_raw(&(response.packer),name_length);
 		msgpack_pack_raw_body(&(response.packer),service->functions[i]->name,name_length);
+	}
+
+	int ret;
+
+	// pack, encode and push the response
+	ret = badger_server_pack(server,response.buffer.data,response.buffer.size);
+
+	badger_response_clear(&response);
+	return 0;
+}
+
+int badger_server_prototype(badger_server_t *server,badger_request_id id,const msgpack_object *fields)
+{
+	if (fields[0].type != MSGPACK_OBJECT_RAW)
+	{
+		// the service field must be a String
+		badger_debug("badger_server_prototype: the service field of the FUNCTIONS request was not a String\n");
+		return -1;
+	}
+
+	if (!fields[0].via.raw.size)
+	{
+		// the service field must have atleast one character
+		badger_debug("badger_server_prototype: the service field of the FUNCTIONS request had an empty length\n");
+		return -1;
+	}
+
+	if (!fields[0].via.raw.ptr[0])
+	{
+		// the service field must not be empty
+		badger_debug("badger_server_prototype: the service field of the FUNCTIONS request was empty\n");
+		return -1;
+	}
+
+	size_t service_length = fields[0].via.raw.size;
+	char service_name[service_length + 1];
+
+	memcpy(service_name,fields[0].via.raw.ptr,service_length);
+	service_name[service_length] = '\0';
+
+	const badger_service_t *service;
+
+	if (!(service = slist_search(server->services,service_name)))
+	{
+		// service not found
+		badger_debug("badger_server_prototype: could not find the requested service (%s)\n",service_name);
+		return -1;
+	}
+
+	size_t name_length = fields[1].via.raw.size;
+	char name[name_length + 1];
+
+	memcpy(name,fields[1].via.raw.ptr,name_length);
+	name[name_length] = '\0';
+
+	const badger_function_t *function;
+
+	if (!(function = badger_service_search(service,name)))
+	{
+		// function not found
+		badger_debug("badger_server_function: could not find the requested function (%s) from the service (%s)\n",name,service->name);
+		return -1;
+	}
+
+	badger_response_t response;
+
+	// initialize the functions response
+	badger_response_init(&response,id,BADGER_RESPONSE_PROTOTYPE);
+
+	int argc = function->argc;
+
+	if (argc == -1)
+	{
+		msgpack_pack_nil(&(response.packer));
+	}
+	else
+	{
+		msgpack_pack_array(&(response.packer),argc);
+	}
+
+	int i;
+
+	for (i=0;i<argc;i++)
+	{
+		msgpack_pack_unsigned_int(&(response.packer),function->arg_types[i]);
 	}
 
 	int ret;

@@ -140,6 +140,8 @@ int badger_fs_read(int argc,const badger_data_t *args,badger_caller_t *caller)
 	}
 
 	badger_return_raw(caller,buffer,count);
+
+	memset(buffer,0,length);
 	return BADGER_SUCCESS;
 }
 

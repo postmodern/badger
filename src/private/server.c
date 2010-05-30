@@ -234,21 +234,6 @@ int badger_server_dispatch(badger_server_t *server,const msgpack_object *payload
 		goto ignore;
 	}
 
-	switch (fields[1].via.u64)
-	{
-		// valid payload types
-		case BADGER_REQUEST_PING:
-		case BADGER_REQUEST_SERVICES:
-		case BADGER_REQUEST_FUNCTIONS:
-		case BADGER_REQUEST_PROTOTYPE:
-		case BADGER_REQUEST_CALL:
-			break;
-		default:
-			// ignore unknown payload types
-			badger_debug("badger_server_dispatch: request type of the packet payload was not recognized\n");
-			goto ignore;
-	}
-
 	badger_request_id id = fields[0].via.u64;
 	const msgpack_object *extra_fields = fields + 2;
 
@@ -274,6 +259,7 @@ int badger_server_dispatch(badger_server_t *server,const msgpack_object *payload
 			return badger_server_call(server,id,extra_fields);
 		default:
 			// ignore other packet types
+			badger_debug("badger_server_dispatch: request type of the packet payload was not recognized\n");
 			goto ignore;
 	}
 

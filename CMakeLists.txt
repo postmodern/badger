@@ -93,6 +93,21 @@ install(
 	TARGETS badger_core
 	ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
 )
+
+if(SYS_SERVICE)
+	install(
+		TARGETS badger_sys
+		ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
+	)
+endif(SYS_SERVICE)
+
+if(FS_SERVICE)
+	install(
+		TARGETS badger_fs
+		ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
+	)
+endif(FS_SERVICE)
+
 install(
 	TARGETS badger
 	RUNTIME DESTINATION ${BIN_INSTALL_DIR}

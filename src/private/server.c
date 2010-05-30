@@ -391,6 +391,12 @@ int badger_server_functions(badger_server_t *server,badger_request_id id,const m
 		++i;
 	}
 
+	int ret;
+
+	// pack, encode and push the response
+	ret = badger_server_pack(server,response.buffer.data,response.buffer.size);
+
+	badger_response_clear(&response);
 	return 0;
 }
 

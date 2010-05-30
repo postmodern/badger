@@ -14,6 +14,7 @@ struct badger_function
 
 	badger_function_ptr ptr;
 
+	badger_data_type ret_type;
 	ssize_t argc;
 	const badger_data_type arg_types[];
 };

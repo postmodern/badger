@@ -21,11 +21,11 @@ void badger_response_init(badger_response_t *response,badger_request_id id,badge
 			break;
 		case BADGER_RESPONSE_SERVICES:
 		case BADGER_RESPONSE_FUNCTIONS:
-		case BADGER_RESPONSE_PROTOTYPE:
 		case BADGER_RESPONSE_YIELD:
 		case BADGER_RESPONSE_RETURN:
 			array_length += 1;
 			break;
+		case BADGER_RESPONSE_PROTOTYPE:
 		case BADGER_RESPONSE_ERROR:
 			array_length += 2;
 			break;

@@ -19,7 +19,7 @@ badger_service_t badger_fs_service = {
 	}
 };
 
-const badger_function_t badger_fs_stat_func = {"stat",badger_fs_close,1,{badger_data_string}};
+const badger_function_t badger_fs_stat_func = {"stat",badger_fs_close,badger_data_array,1,{badger_data_string}};
 
 int badger_fs_stat(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
@@ -55,7 +55,7 @@ int badger_fs_stat(int argc,const badger_data_t *args,badger_caller_t *caller)
 	return BADGER_SUCCESS;
 }
 
-const badger_function_t badger_fs_unlink_func = {"unlink",badger_fs_unlink,1,{badger_data_string}};
+const badger_function_t badger_fs_unlink_func = {"unlink",badger_fs_unlink,badger_data_nil,1,{badger_data_string}};
 
 int badger_fs_unlink(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
@@ -73,7 +73,7 @@ int badger_fs_unlink(int argc,const badger_data_t *args,badger_caller_t *caller)
 	return BADGER_SUCCESS;
 }
 
-const badger_function_t badger_fs_open_func = {"open",badger_fs_open,1,{badger_data_string}};
+const badger_function_t badger_fs_open_func = {"open",badger_fs_open,badger_data_int,1,{badger_data_string}};
 
 int badger_fs_open(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
@@ -94,7 +94,7 @@ int badger_fs_open(int argc,const badger_data_t *args,badger_caller_t *caller)
 	return BADGER_SUCCESS;
 }
 
-const badger_function_t badger_fs_seek_func = {"seek",badger_fs_read,3,{badger_data_int,badger_data_uint,badger_data_string}};
+const badger_function_t badger_fs_seek_func = {"seek",badger_fs_read,badger_data_uint,3,{badger_data_int,badger_data_uint,badger_data_string}};
 
 int badger_fs_seek(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
@@ -126,7 +126,7 @@ int badger_fs_seek(int argc,const badger_data_t *args,badger_caller_t *caller)
 	return BADGER_SUCCESS;
 }
 
-const badger_function_t badger_fs_read_func = {"read",badger_fs_read,2,{badger_data_int,badger_data_uint}};
+const badger_function_t badger_fs_read_func = {"read",badger_fs_read,badger_data_raw,2,{badger_data_int,badger_data_uint}};
 
 int badger_fs_read(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
@@ -145,7 +145,7 @@ int badger_fs_read(int argc,const badger_data_t *args,badger_caller_t *caller)
 	return BADGER_SUCCESS;
 }
 
-const badger_function_t badger_fs_write_func = {"write",badger_fs_write,2,{badger_data_int,badger_data_raw}};
+const badger_function_t badger_fs_write_func = {"write",badger_fs_write,badger_data_int,2,{badger_data_int,badger_data_raw}};
 
 int badger_fs_write(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
@@ -160,7 +160,7 @@ int badger_fs_write(int argc,const badger_data_t *args,badger_caller_t *caller)
 	return BADGER_SUCCESS;
 }
 
-const badger_function_t badger_fs_close_func = {"close",badger_fs_close,1,{badger_data_int}};
+const badger_function_t badger_fs_close_func = {"close",badger_fs_close,badger_data_nil,1,{badger_data_int}};
 
 int badger_fs_close(int argc,const badger_data_t *args,badger_caller_t *caller)
 {

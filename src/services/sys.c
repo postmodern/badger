@@ -86,7 +86,7 @@ int badger_sys_getdomainname(int argc,const badger_data_t *args,badger_caller_t 
 	return BADGER_SUCCESS;
 }
 
-const badger_func_t badger_sys_getpid_func = {"gethostname",badger_sys_getpid,0};
+const badger_func_t badger_sys_getpid_func = {"getpid",badger_sys_getpid,0};
 
 int badger_sys_getpid(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
@@ -94,7 +94,7 @@ int badger_sys_getpid(int argc,const badger_data_t *args,badger_caller_t *caller
 	return BADGER_SUCCESS;
 }
 
-const badger_func_t badger_sys_getuid_func = {"gethostname",badger_sys_getuid,0};
+const badger_func_t badger_sys_getuid_func = {"getuid",badger_sys_getuid,0};
 
 int badger_sys_getuid(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
@@ -102,7 +102,7 @@ int badger_sys_getuid(int argc,const badger_data_t *args,badger_caller_t *caller
 	return BADGER_SUCCESS;
 }
 
-const badger_func_t badger_sys_geteuid_func = {"gethostname",badger_sys_geteuid,0};
+const badger_func_t badger_sys_geteuid_func = {"geteuid",badger_sys_geteuid,0};
 
 int badger_sys_geteuid(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
@@ -110,7 +110,7 @@ int badger_sys_geteuid(int argc,const badger_data_t *args,badger_caller_t *calle
 	return BADGER_SUCCESS;
 }
 
-const badger_func_t badger_sys_getgid_func = {"gethostname",badger_sys_getgid,0};
+const badger_func_t badger_sys_getgid_func = {"getgid",badger_sys_getgid,0};
 
 int badger_sys_getgid(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
@@ -118,7 +118,7 @@ int badger_sys_getgid(int argc,const badger_data_t *args,badger_caller_t *caller
 	return BADGER_SUCCESS;
 }
 
-const badger_func_t badger_sys_getegid_func = {"gethostname",badger_sys_getegid,0};
+const badger_func_t badger_sys_getegid_func = {"getegid",badger_sys_getegid,0};
 
 int badger_sys_getegid(int argc,const badger_data_t *args,badger_caller_t *caller)
 {

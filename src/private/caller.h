@@ -15,6 +15,7 @@ struct badger_caller
 
 void badger_caller_init(badger_caller_t *caller,badger_request_id id,struct badger_server *server);
 void badger_caller_returned(badger_caller_t *caller);
+int badger_caller_return(badger_caller_t *caller);
 void badger_caller_fini(badger_caller_t *caller);
 
 #endif

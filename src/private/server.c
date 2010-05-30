@@ -501,17 +501,25 @@ int badger_server_call(badger_server_t *server,badger_request_id id,const msgpac
 	{
 		const char *error_ptr = strerror(errno);
 		size_t error_length = strlen(error_ptr) + 1;
+		badger_response_t error;
 
-		badger_response_reset(&(caller.ret),BADGER_RESPONSE_ERROR);
+		badger_response_init(&error,id,BADGER_RESPONSE_ERROR);
 
-		msgpack_pack_int(&(caller.ret.packer),errno);
-		msgpack_pack_raw(&(caller.ret.packer),error_length);
-		msgpack_pack_raw_body(&(caller.ret.packer),error_ptr,error_length);
+		// pack the errno code
+		msgpack_pack_int(&(error.packer),errno);
+
+		// pack the error message
+		msgpack_pack_raw(&(error.packer),error_length);
+		msgpack_pack_raw_body(&(error.packer),error_ptr,error_length);
+
+		// send back the error
+		badger_server_pack(server,error.buffer.data,error.buffer.size);
+
+		badger_response_clear(&error);
+		return 0;
 	}
 
-	// send back the return data
-	badger_server_pack(server,caller.ret.buffer.data,caller.ret.buffer.size);
-
+	badger_caller_return(&caller);
 	badger_caller_fini(&caller);
 	return 0;
 }

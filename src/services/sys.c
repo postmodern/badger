@@ -8,6 +8,7 @@ badger_service_t badger_sys_service = {
 	{
 		&badger_sys_time_func,
 		&badger_sys_chdir_func,
+		&badger_sys_getcwd_func,
 		NULL
 	}
 };
@@ -26,4 +27,20 @@ int badger_sys_chdir(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
 	chdir(badger_string(args));
 	return 0;
+}
+
+const badger_func_t badger_sys_getcwd_func = {"getcwd",badger_sys_getcwd,0};
+
+int badger_sys_getcwd(int argc,const badger_data_t *args,badger_caller_t *caller)
+{
+	char cwd[PATH_MAX];
+
+	if (!getcwd(cwd,PATH_MAX))
+	{
+		// copy failed
+		return BADGER_ERROR;
+	}
+
+	badger_return_string(caller,cwd);
+	return BADGER_SUCCESS;
 }

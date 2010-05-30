@@ -381,9 +381,7 @@ int badger_server_functions(badger_server_t *server,badger_request_id id,const m
 
 	msgpack_pack_array(&(response.packer),length);
 
-	i = 0;
-
-	while (service->funcs[i].name)
+	for (i=0;i<length;i++)
 	{
 		size_t name_length = strlen(service->funcs[i].name) + 1;
 

@@ -32,7 +32,7 @@ if(FS_SERVICE)
 endif(FS_SERVICE)
 
 set(BADGER_SRC
-	src/private/util.c src/slist.c
+	src/private/util.c src/slist.c src/data.c
 	src/function.c src/service.c src/caller.c src/private/caller.c
 	src/private/packet.c src/private/response.c
 	src/private/server.c src/encoders.c src/server.c

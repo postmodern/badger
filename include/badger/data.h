@@ -27,6 +27,8 @@ static inline badger_data_type badger_type(const badger_data_t *data)
 	return data->type;
 }
 
+extern const char * badger_data_type_name(badger_data_type type);
+
 static inline unsigned int badger_boolean(const badger_data_t *data)
 {
 	return data->via.boolean;

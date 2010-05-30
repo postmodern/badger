@@ -27,11 +27,12 @@ if(SYS_SERVICE)
 	set(BADGER_LIBS badger_sys ${BADGER_LIBS})
 endif(SYS_SERVICE)
 
-set(BADGER_SRC	src/private/util.c src/slist.c
-		src/func.c src/service.c src/caller.c src/private/caller.c
-		src/private/packet.c src/private/response.c
-		src/private/server.c src/encoders.c src/server.c
-		src/badger.c
+set(BADGER_SRC
+	src/private/util.c src/slist.c
+	src/function.c src/service.c src/caller.c src/private/caller.c
+	src/private/packet.c src/private/response.c
+	src/private/server.c src/encoders.c src/server.c
+	src/badger.c
 )
 if(AES_ENCODER)
 	set(BADGER_SRC src/private/aes.c ${BADGER_SRC})

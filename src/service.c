@@ -1,19 +1,18 @@
 #include <badger/service.h>
-#include <badger/func.h>
 
 #include <stdlib.h>
 #include <string.h>
 
-const badger_func_t * badger_service_search(const badger_service_t *service,const char *name)
+const badger_function_t * badger_service_search(const badger_service_t *service,const char *name)
 {
 	unsigned int i = 0;
-	const badger_func_t *func;
+	const badger_function_t *function;
 
-	while ((func = service->funcs[i]))
+	while ((function = service->functions[i]))
 	{
-		if (!strcmp(name,func->name))
+		if (!strcmp(name,function->name))
 		{
-			return func;
+			return function;
 		}
 
 		++i;

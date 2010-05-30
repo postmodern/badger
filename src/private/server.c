@@ -1,6 +1,6 @@
+#include <badger/server.h>
 #include <badger/packet.h>
 #include <badger/data.h>
-#include <badger/func.h>
 #include <badger/errno.h>
 #include "private/util.h"
 #include "private/packet.h"
@@ -371,7 +371,7 @@ int badger_server_functions(badger_server_t *server,badger_request_id id,const m
 	uint32_t length = 0;
 	uint32_t i = 0;
 
-	while ((service->funcs[i]))
+	while ((service->functions[i]))
 	{
 		++length;
 		++i;
@@ -381,10 +381,10 @@ int badger_server_functions(badger_server_t *server,badger_request_id id,const m
 
 	for (i=0;i<length;i++)
 	{
-		size_t name_length = strlen(service->funcs[i]->name);
+		size_t name_length = strlen(service->functions[i]->name);
 
 		msgpack_pack_raw(&(response.packer),name_length);
-		msgpack_pack_raw_body(&(response.packer),service->funcs[i]->name,name_length);
+		msgpack_pack_raw_body(&(response.packer),service->functions[i]->name,name_length);
 	}
 
 	int ret;
@@ -471,16 +471,16 @@ int badger_server_call(badger_server_t *server,badger_request_id id,const msgpac
 	memcpy(name,fields[1].via.raw.ptr,name_length);
 	name[name_length] = '\0';
 
-	const badger_func_t *func;
+	const badger_function_t *function;
 
-	if (!(func = badger_service_search(service,name)))
+	if (!(function = badger_service_search(service,name)))
 	{
 		// function not found
 		badger_debug("badger_server_call: could not find the requested function (%s) from the service (%s)\n",name,service->name);
 		return -1;
 	}
 
-	switch (badger_func_valid(func,argc,args))
+	switch (badger_function_valid(function,argc,args))
 	{
 		case BADGER_ERRNO_ARGC:
 			// wrong number of arguments
@@ -495,7 +495,7 @@ int badger_server_call(badger_server_t *server,badger_request_id id,const msgpac
 	badger_caller_init(&caller,id,server);
 
 	// call the function
-	if (badger_func_call(func,argc,args,&caller) == BADGER_ERROR)
+	if (badger_function_call(function,argc,args,&caller) == BADGER_ERROR)
 	{
 		const char *error_ptr = strerror(errno);
 		size_t error_length = strlen(error_ptr);

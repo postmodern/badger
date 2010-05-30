@@ -46,7 +46,7 @@ int main(int argc,char *argv[])
 	if (server_mode == badger_mode_none || !server_uri)
 	{
 		fprintf(stderr,"%s: must specify either the -c or -l option\n",argv[0]);
-		return -1;
+		goto cleanup;
 	}
 
 	badger_init();
@@ -56,17 +56,19 @@ int main(int argc,char *argv[])
 	if (!(server = badger_server_create()))
 	{
 		fprintf(stderr,"malloc failed");
-		return -1;
+		goto cleanup;
 	}
 
 #ifdef SYS_SERVICE
-	badger_server_register(server,&badger_sys_service);
+	if (badger_server_register(server,&badger_sys_service) == -1)
+	{
+		goto cleanup_server;
+	}
 #endif
 
 	if (badger_server_open(server,server_mode,server_uri) == -1)
 	{
-		badger_server_destroy(server);
-		return -1;
+		goto cleanup_server;
 	}
 
 	badger_server_loop(server);
@@ -77,4 +79,9 @@ int main(int argc,char *argv[])
 
 	badger_fini();
 	return 0;
+
+cleanup_server:
+	badger_server_destroy(server);
+cleanup:
+	return -1;
 }

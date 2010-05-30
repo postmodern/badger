@@ -5,4 +5,6 @@
 
 extern badger_service_t badger_sys_service;
 
+extern int badger_sys_time(int argc,const badger_data_t *args,badger_caller_t *caller);
+
 #endif

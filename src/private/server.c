@@ -251,9 +251,9 @@ int badger_server_dispatch(badger_server_t *server,const msgpack_object *payload
 	switch (fields[1].via.u64)
 	{
 		case BADGER_REQUEST_PING:
-			return badger_server_pong(server,id,fields);
+			return badger_server_pong(server,id,NULL);
 		case BADGER_REQUEST_SERVICES:
-			return badger_server_services(server,id,fields);
+			return badger_server_services(server,id,NULL);
 		case BADGER_REQUEST_FUNCTIONS:
 			return badger_server_functions(server,id,fields+2);
 		case BADGER_REQUEST_CALL:

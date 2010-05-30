@@ -499,7 +499,17 @@ int badger_server_call(badger_server_t *server,badger_request_id id,const msgpac
 	badger_caller_init(&caller,id,server);
 
 	// call the function
-	badger_func_call(func,argc,args,&caller);
+	if (badger_func_call(func,argc,args,&caller) == BADGER_ERROR)
+	{
+		const char *error_ptr = strerror(errno);
+		size_t error_length = strlen(error_ptr) + 1;
+
+		badger_response_reset(&(caller.ret),BADGER_RESPONSE_ERROR);
+
+		msgpack_pack_int(&(caller.ret.packer),errno);
+		msgpack_pack_raw(&(caller.ret.packer),error_length);
+		msgpack_pack_raw_body(&(caller.ret.packer),error_ptr,error_length);
+	}
 
 	// send back the return data
 	badger_server_pack(server,caller.ret.buffer.data,caller.ret.buffer.size);

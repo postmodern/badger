@@ -2,6 +2,7 @@
 #define _BADGER_CALLER_H_
 
 #include <badger/packet.h>
+#include <badger/errno.h>
 
 #include <msgpack/sbuffer.h>
 #include <msgpack/pack.h>

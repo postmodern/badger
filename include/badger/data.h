@@ -47,6 +47,16 @@ static inline double badger_double(const badger_data_t *data)
 	return data->via.dec;
 }
 
+static inline uint32_t badger_raw_length(const badger_data_t *data)
+{
+	return data->via.raw.size;
+}
+
+static inline const unsigned char * badger_raw(const badger_data_t *data)
+{
+	return (const unsigned char *)(data->via.raw.ptr);
+}
+
 static inline uint32_t badger_string_length(const badger_data_t *data)
 {
 	return data->via.raw.size;

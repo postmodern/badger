@@ -144,7 +144,14 @@ const badger_function_t badger_sys_getlogin_func = {"getlogin",badger_sys_getlog
 
 int badger_sys_getlogin(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
-	badger_return_string(caller,getlogin());
+	char login[256];
+
+	if (getlogin_r(login,256) != 0)
+	{
+		return BADGER_ERROR;
+	}
+
+	badger_return_string(caller,login);
 	return BADGER_SUCCESS;
 }
 

@@ -126,7 +126,7 @@ int badger_return_raw(badger_caller_t *caller,const void *data,size_t length)
 
 int badger_return_string(badger_caller_t *caller,const char *str)
 {
-	return badger_return_raw(caller,str,strlen(str) + 1);
+	return badger_return_raw(caller,str,strlen(str));
 }
 
 int badger_return_array(badger_caller_t *caller,unsigned int length)
@@ -234,7 +234,7 @@ int badger_yield_raw(badger_caller_t *caller,const void *data,size_t length)
 
 int badger_yield_string(badger_caller_t *caller,const char *str)
 {
-	return badger_yield_raw(caller,str,strlen(str) + 1);
+	return badger_yield_raw(caller,str,strlen(str));
 }
 
 int badger_yield_array(badger_caller_t *caller,unsigned int length)

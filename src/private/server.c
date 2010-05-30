@@ -308,7 +308,7 @@ int badger_server_services(badger_server_t *server,badger_request_id id,const ms
 	while (next_node)
 	{
 		const badger_service_t *service = (badger_service_t *)(next_node->data);
-		size_t name_length = strlen(service->name) + 1;
+		size_t name_length = strlen(service->name);
 
 		msgpack_pack_raw(&(response.packer),name_length);
 		msgpack_pack_raw_body(&(response.packer),service->name,name_length);
@@ -381,7 +381,7 @@ int badger_server_functions(badger_server_t *server,badger_request_id id,const m
 
 	for (i=0;i<length;i++)
 	{
-		size_t name_length = strlen(service->funcs[i]->name) + 1;
+		size_t name_length = strlen(service->funcs[i]->name);
 
 		msgpack_pack_raw(&(response.packer),name_length);
 		msgpack_pack_raw_body(&(response.packer),service->funcs[i]->name,name_length);
@@ -500,7 +500,7 @@ int badger_server_call(badger_server_t *server,badger_request_id id,const msgpac
 	if (badger_func_call(func,argc,args,&caller) == BADGER_ERROR)
 	{
 		const char *error_ptr = strerror(errno);
-		size_t error_length = strlen(error_ptr) + 1;
+		size_t error_length = strlen(error_ptr);
 		badger_response_t error;
 
 		badger_response_init(&error,id,BADGER_RESPONSE_ERROR);

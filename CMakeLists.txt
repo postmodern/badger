@@ -41,7 +41,7 @@ if(SERVICES_FFI)
 	endif(UNIX)
 
 	include_directories(${FFI_INCLUDEDIR})
-	set(BADGER_LIBS ffi ${BADGER_LIBS})
+	set(BADGER_LIBS badger_ffi ffi ${BADGER_LIBS})
 endif(SERVICES_FFI)
 
 set(BADGER_SRC
@@ -129,6 +129,13 @@ if(SERVICES_FS)
 		ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
 	)
 endif(SERVICES_FS)
+
+if(FFI_SERVICE)
+	install(
+		TARGETS badger_ffi
+		ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
+	)
+endif(FFI_SERVICE)
 
 install(
 	TARGETS badger

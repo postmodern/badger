@@ -38,6 +38,8 @@ if(SERVICES_FFI)
 	if(UNIX)
 		include(FindPkgConfig)
 		pkg_search_module(FFI REQUIRED libffi)
+
+		set(BADGER_LIBS dl ${BADGER_LIBS})
 	endif(UNIX)
 
 	include_directories(${FFI_INCLUDEDIR})
@@ -96,7 +98,12 @@ if(SERVICES_FS)
 endif(SERVICES_FS)
 
 if(FFI_SERVICE)
-	add_library(badger_ffi STATIC src/services/ffi.c)
+	add_library(
+		badger_ffi STATIC
+		src/private/ffi/function.c
+		src/private/ffi/library.c
+		src/services/ffi.c
+	)
 	set_target_properties(
 		badger_ffi PROPERTIES
 		VERSION ${LIBRARY_VERSION}

@@ -8,7 +8,7 @@ const badger_service_t badger_ffi_service = {
 	"ffi",
 	{
 		&badger_ffi_open_func,
-		&badger_ffi_libs_func,
+		&badger_ffi_libraries_func,
 		&badger_ffi_attach_function_func,
 		&badger_ffi_exposed_functions_func,
 		&badger_ffi_close_func,
@@ -57,9 +57,9 @@ int badger_ffi_open(int argc,const badger_data_t *args,badger_caller_t *caller)
 	return BADGER_SUCCESS;
 }
 
-const badger_function_t badger_ffi_libs_func = {"libs",badger_ffi_libs,badger_data_array,0};
+const badger_function_t badger_ffi_libraries_func = {"libraries",badger_ffi_libraries,badger_data_array,0};
 
-int badger_ffi_libs(int argc,const badger_data_t *args,badger_caller_t *caller)
+int badger_ffi_libraries(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
 	if (!ffi_libraries)
 	{

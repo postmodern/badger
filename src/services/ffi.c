@@ -195,9 +195,9 @@ int badger_ffi_exposed_functions(int argc,const badger_data_t *args,badger_calle
 	return BADGER_SUCCESS;
 }
 
-const badger_function_t badger_ffi_function_func = {"function",badger_ffi_function,badger_data_array,2,{badger_data_string, badger_data_string}};
+const badger_function_t badger_ffi_exposed_function_func = {"exposed_function",badger_ffi_exposed_function,badger_data_array,2,{badger_data_string, badger_data_string}};
 
-int badger_ffi_function(int argc,const badger_data_t *args,badger_caller_t *caller)
+int badger_ffi_exposed_function(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
 	if (!ffi_libraries)
 	{

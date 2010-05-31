@@ -5,8 +5,6 @@
 
 #cmakedefine DEBUG
 
-#cmakedefine HAS_FFI
-
 // badger encoders
 #cmakedefine ENCODERS_XOR
 #cmakedefine ENCODERS_AES

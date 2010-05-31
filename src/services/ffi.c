@@ -9,7 +9,7 @@ const badger_service_t badger_ffi_service = {
 	{
 		&badger_ffi_open_func,
 		&badger_ffi_libs_func,
-		&badger_ffi_register_func,
+		&badger_ffi_attach_function_func,
 		&badger_ffi_functions_func,
 		&badger_ffi_close_func,
 		NULL
@@ -82,9 +82,9 @@ int badger_ffi_libs(int argc,const badger_data_t *args,badger_caller_t *caller)
 	return BADGER_SUCCESS;
 }
 
-const badger_function_t badger_ffi_register_func = {"register",badger_ffi_register,badger_data_boolean,4,{badger_data_string, badger_data_string, badger_data_array, badger_data_string}};
+const badger_function_t badger_ffi_attach_function_func = {"attach_function",badger_ffi_attach_function,badger_data_boolean,4,{badger_data_string, badger_data_string, badger_data_array, badger_data_string}};
 
-int badger_ffi_register(int argc,const badger_data_t *args,badger_caller_t *caller)
+int badger_ffi_attach_function(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
 	if (!ffi_libraries)
 	{

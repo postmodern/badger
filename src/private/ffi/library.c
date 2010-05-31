@@ -23,7 +23,7 @@ ffi_library_t * ffi_library_open(const char *name)
 
 	new_lib->name = new_name;
 
-	if (!(new_lib->handler = dl_open(name,0)))
+	if (!(new_lib->handler = dl_open(name,RTLD_LAZY)))
 	{
 		// dl_open failed
 		badger_debug("ffi_library_open: could not open the given library (%s)\n",name);

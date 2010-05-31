@@ -49,7 +49,7 @@ typedef struct ffi_library ffi_library_t;
 
 ffi_library_t * ffi_library_open(const char *name);
 int ffi_library_register(ffi_library_t *lib,const char *name,const ffi_type *ret,int argc,const ffi_type **arg_types);
-const ffi_function_t * ffi_library_function(const ffi_library_t *lib,const char *name);
+const ffi_function_t * ffi_library_search(const ffi_library_t *lib,const char *name);
 void ffi_library_close(ffi_library_t *lib);
 
 #endif

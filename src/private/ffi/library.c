@@ -60,7 +60,7 @@ int ffi_library_register(ffi_library_t *lib,const char *name,const ffi_type *ret
 	return slist_add(lib->functions,new_function->name,new_function);
 }
 
-const ffi_function_t * ffi_library_function(const ffi_library_t *lib,const char *name)
+const ffi_function_t * ffi_library_search(const ffi_library_t *lib,const char *name)
 {
 	return (const ffi_function_t *)slist_search(lib->functions,name);
 }

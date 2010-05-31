@@ -12,6 +12,7 @@ const badger_service_t badger_ffi_service = {
 		&badger_ffi_libraries_func,
 		&badger_ffi_attach_function_func,
 		&badger_ffi_exposed_functions_func,
+		&badger_ffi_exposed_function_func,
 		&badger_ffi_close_func,
 		NULL
 	}

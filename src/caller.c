@@ -133,6 +133,7 @@ int badger_return_array(badger_caller_t *caller,unsigned int length)
 {
 	badger_caller_returned(caller);
 
+	caller->multi_return = 1;
 	return msgpack_pack_array(&(caller->ret.packer),length);
 }
 
@@ -140,6 +141,7 @@ int badger_return_map(badger_caller_t *caller,unsigned int length)
 {
 	badger_caller_returned(caller);
 
+	caller->multi_return = 1;
 	return msgpack_pack_map(&(caller->ret.packer),length);
 }
 

@@ -5,6 +5,7 @@ void badger_caller_init(badger_caller_t *caller,badger_request_id id,struct badg
 {
 	caller->server = server;
 	caller->returned = 0;
+	caller->multi_return = 0;
 	caller->yielded = 0;
 
 	badger_response_init(&(caller->ret),id,BADGER_RESPONSE_RETURN);
@@ -12,7 +13,7 @@ void badger_caller_init(badger_caller_t *caller,badger_request_id id,struct badg
 
 void badger_caller_returned(badger_caller_t *caller)
 {
-	if (caller->returned)
+	if (caller->returned && !(caller->multi_return))
 	{
 		badger_request_id id = caller->ret.id;
 

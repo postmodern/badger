@@ -27,6 +27,32 @@ int badger_ffi_open(int argc,const badger_data_t *args,badger_caller_t *caller)
 		ffi_libraries = slist_create(slist_compare_strings,(slist_destroy_func)ffi_library_close);
 	}
 
+	size_t name_length = badger_string_length(args);
+	char name[name_length + 1];
+
+	memcpy(name,badger_string(args),name_length);
+	name[name_length] = '\0';
+
+	ffi_library_t *new_library;
+
+	if ((new_library = slist_search(ffi_libraries,name)))
+	{
+		// library already loaded
+		return BADGER_SUCCESS;
+	}
+
+	if (!(new_library = ffi_library_open(name)))
+	{
+		// count not open the library
+		return BADGER_ERROR;
+	}
+
+	if (slist_add(ffi_libraries,new_library->name,new_library) == -1)
+	{
+		// malloc failed
+		return BADGER_ERROR;
+	}
+
 	return BADGER_SUCCESS;
 }
 
@@ -75,7 +101,7 @@ int badger_ffi_register(int argc,const badger_data_t *args,badger_caller_t *call
 
 	if (!(lib = slist_search(ffi_libraries,lib_name)))
 	{
-		// unknown library
+		// library not found
 		return BADGER_ERROR;
 	}
 

@@ -61,7 +61,7 @@ int badger_ffi_register(int argc,const badger_data_t *args,badger_caller_t *call
 {
 	if (!ffi_libraries)
 	{
-		// no libraries defined
+		// no libraries opened
 		return BADGER_ERROR;
 	}
 
@@ -134,8 +134,8 @@ int badger_ffi_functions(int argc,const badger_data_t *args,badger_caller_t *cal
 {
 	if (!ffi_libraries)
 	{
-		badger_return_nil(caller);
-		return BADGER_SUCCESS;
+		// no libraries opened
+		return BADGER_ERROR;
 	}
 
 	size_t name_length = badger_string_length(args);
@@ -148,8 +148,8 @@ int badger_ffi_functions(int argc,const badger_data_t *args,badger_caller_t *cal
 
 	if (!(lib = slist_search(ffi_libraries,name)))
 	{
-		badger_return_nil(caller);
-		return BADGER_SUCCESS;
+		// library not found
+		return BADGER_ERROR;
 	}
 
 	badger_return_array(caller,slist_length(lib->functions));

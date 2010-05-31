@@ -19,6 +19,10 @@ const struct ffi_types_mapping ffi_types_map[] = {
 	{"int16", &ffi_type_sint16},
 	{"int32", &ffi_type_sint32},
 	{"int64", &ffi_type_sint64},
+	{"float", &ffi_type_float},
+	{"double", &ffi_type_double},
+	{"void *", &ffi_type_pointer},
+	{"void", &ffi_type_void},
 	{NULL, NULL}
 };
 

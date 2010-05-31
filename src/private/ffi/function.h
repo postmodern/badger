@@ -6,14 +6,18 @@
 struct ffi_function
 {
 	char *name;
+	void *ptr;
 
-	ffi_type *ret_type;
+	const ffi_type *ret_type;
 
-	int argc;
-	ffi_type **arg_types;
+	size_t argc;
+	const ffi_type **arg_types;
 
 	ffi_cif cif;
 };
-struct ffi_function ffi_function_t;
+typedef struct ffi_function ffi_function_t;
+
+ffi_function_t * ffi_function_create(const char *name,void *ptr,const ffi_type *ret_type,size_t argc,const ffi_type **arg_types);
+void ffi_function_destroy(ffi_function_t *function);
 
 #endif

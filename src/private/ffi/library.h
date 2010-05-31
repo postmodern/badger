@@ -7,8 +7,6 @@
 # include <dlfcn.h>
 #endif
 
-#include <badger/service.h>
-
 #if defined(_WIN32) || defined(__WIN32__)
 
 static void * dl_open(const char* name,int flags);
@@ -38,6 +36,7 @@ enum {
 #endif
 
 #include <badger/slist.h>
+#include "private/ffi/function.h"
 
 struct ffi_library
 {
@@ -49,6 +48,7 @@ struct ffi_library
 typedef struct ffi_library ffi_library_t;
 
 ffi_library_t * ffi_library_open(const char *name);
+const ffi_function_t * ffi_library_function(const ffi_library_t *lib,const char *name);
 void ffi_library_close(ffi_library_t *lib);
 
 #endif

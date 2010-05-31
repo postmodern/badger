@@ -1,4 +1,5 @@
 #include "private/ffi/library.h"
+#include "private/util.h"
 
 #include <malloc.h>
 
@@ -25,6 +26,7 @@ ffi_library_t * ffi_library_open(const char *name)
 	if (!(new_lib->handler = dl_open(name,0)))
 	{
 		// dl_open failed
+		badger_debug("ffi_library_open: could not open the given library (%s)\n",name);
 		goto cleanup_lib;
 	}
 
@@ -39,13 +41,14 @@ cleanup:
 	return NULL;
 }
 
-int ffi_library_register(ffi_library_t *lib,const char *name,const ffi_type *ret,int argc,const ffi_type **arg_types)
+int ffi_library_attach_function(ffi_library_t *lib,const char *name,const ffi_type *ret,int argc,const ffi_type **arg_types)
 {
 	void *ptr;
 
 	if (!(ptr = dl_sym(lib->handler,name)))
 	{
 		// symbol not found
+		badger_debug("ffi_library_attach_function: could not the given symbol (%s)\n",name);
 		return -1;
 	}
 

@@ -3,6 +3,7 @@
 
 #include "private/ffi/types.h"
 #include "private/ffi/library.h"
+#include "private/util.h"
 
 const badger_service_t badger_ffi_service = {
 	"ffi",
@@ -103,6 +104,7 @@ int badger_ffi_attach_function(int argc,const badger_data_t *args,badger_caller_
 	if (!(lib = slist_search(ffi_libraries,lib_name)))
 	{
 		// library not found
+		badger_debug("badger_ffi_attach_function: could not find the the given library (%s)\n",lib_name);
 		return BADGER_ERROR;
 	}
 
@@ -129,6 +131,7 @@ int badger_ffi_attach_function(int argc,const badger_data_t *args,badger_caller_
 		if (!(func_arg_types[i] = ffi_types_parse(arg_name)))
 		{
 			// unknown type
+			badger_debug("badger_ffi_attach_function: unknown FFI argument type (%s)\n",arg_name);
 			return BADGER_ERROR;
 		}
 	}
@@ -144,10 +147,11 @@ int badger_ffi_attach_function(int argc,const badger_data_t *args,badger_caller_
 	if (!(func_ret_type = ffi_types_parse(ret_name)))
 	{
 		// unknown type
+		badger_debug("badger_ffi_attach_function: unknown FFI return type (%s)\n",ret_name);
 		return BADGER_ERROR;
 	}
 
-	if (ffi_library_register(lib,name,func_ret_type,func_argc,func_arg_types) == -1)
+	if (ffi_library_attach_function(lib,name,func_ret_type,func_argc,func_arg_types) == -1)
 	{
 		return BADGER_ERROR;
 	}

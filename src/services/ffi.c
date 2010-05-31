@@ -120,7 +120,7 @@ int badger_ffi_attach_function(int argc,const badger_data_t *args,badger_caller_
 	const badger_data_t *func_args = badger_array(args+2);
 	unsigned int i;
 
-	for (i=0;i<argc;i++)
+	for (i=0;i<func_argc;i++)
 	{
 		size_t arg_name_length = badger_string_length(func_args+i);
 		char arg_name[arg_name_length + 1];

@@ -193,6 +193,60 @@ int badger_ffi_functions(int argc,const badger_data_t *args,badger_caller_t *cal
 	return BADGER_SUCCESS;
 }
 
+const badger_function_t badger_ffi_function_func = {"function",badger_ffi_function,badger_data_array,2,{badger_data_string, badger_data_string}};
+
+int badger_ffi_function(int argc,const badger_data_t *args,badger_caller_t *caller)
+{
+	if (!ffi_libraries)
+	{
+		// no libraries opened
+		return BADGER_ERROR;
+	}
+
+	size_t lib_name_length = badger_string_length(args);
+	char lib_name[lib_name_length + 1];
+
+	memcpy(lib_name,badger_string(args),lib_name_length);
+	lib_name[lib_name_length] = '\0';
+
+	const ffi_library_t *lib;
+
+	if (!(lib = slist_search(ffi_libraries,lib_name)))
+	{
+		// library not found
+		return BADGER_ERROR;
+	}
+
+	size_t name_length = badger_string_length(args+1);
+	char name[name_length + 1];
+
+	memcpy(name,badger_string(args+1),name_length);
+	name[name_length] = '\0';
+
+	const ffi_function_t *function;
+
+	if (!(function = ffi_library_search(lib,name)))
+	{
+		// function not found
+		return BADGER_ERROR;
+	}
+
+	badger_return_array(caller,2);
+
+	size_t func_argc = function->argc;
+	unsigned int i;
+
+	badger_return_array(caller,function->argc);
+
+	for (i=0;i<func_argc;i++)
+	{
+		badger_return_string(caller,ffi_types_name(function->arg_types[i]));
+	}
+
+	badger_return_string(caller,ffi_types_name(function->ret_type));
+	return BADGER_SUCCESS;
+}
+
 const badger_function_t badger_ffi_close_func = {"close",badger_ffi_close,badger_data_nil,1,{badger_data_string}};
 
 int badger_ffi_close(int argc,const badger_data_t *args,badger_caller_t *caller)

@@ -35,11 +35,13 @@ if(SERVICES_FS)
 endif(SERVICES_FS)
 
 if(SERVICES_FFI)
-	check_include_file(ffi.h HAS_FFI)
+	if(UNIX)
+		include(FindPkgConfig)
+		pkg_search_module(FFI REQUIRED libffi)
+	endif(UNIX)
 
-	if(HAS_FFI)
-		set(BADGER_LIBS ffi ${BADGER_LIBS})
-	endif(HAS_FFI)
+	include_directories(${FFI_INCLUDEDIR})
+	set(BADGER_LIBS ffi ${BADGER_LIBS})
 endif(SERVICES_FFI)
 
 set(BADGER_SRC
@@ -92,6 +94,15 @@ if(SERVICES_FS)
 		SOVERSION ${LIBRARY_SOVERSION}
 	)
 endif(SERVICES_FS)
+
+if(FFI_SERVICE)
+	add_library(badger_ffi STATIC src/services/ffi.c)
+	set_target_properties(
+		badger_ffi PROPERTIES
+		VERSION ${LIBRARY_VERSION}
+		SOVERSION ${LIBRARY_SOVERSION}
+	)
+endif(FFI_SERVICE)
 
 add_executable(badger src/programs/badger.c)
 set_target_properties(

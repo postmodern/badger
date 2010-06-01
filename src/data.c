@@ -12,8 +12,8 @@ const char * badger_data_type_name(badger_data_type type)
 			return "uint";
 		case badger_data_int:
 			return "int";
-		case badger_data_double:
-			return "double";
+		case badger_data_float:
+			return "float";
 		case badger_data_string:
 			return "string";
 		case badger_data_array:

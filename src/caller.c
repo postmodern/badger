@@ -109,7 +109,7 @@ int badger_return_int64(badger_caller_t *caller,int64_t i)
 	return msgpack_pack_int64(&(caller->ret.packer),i);
 }
 
-int badger_return_double(badger_caller_t *caller,double d)
+int badger_return_float(badger_caller_t *caller,double d)
 {
 	badger_caller_returned(caller);
 
@@ -237,7 +237,7 @@ int badger_yield_int64(badger_caller_t *caller,int64_t i)
 	return msgpack_pack_int64(&(caller->yield.packer),i);
 }
 
-int badger_yield_double(badger_caller_t *caller,double d)
+int badger_yield_float(badger_caller_t *caller,double d)
 {
 	return msgpack_pack_double(&(caller->yield.packer),d);
 }

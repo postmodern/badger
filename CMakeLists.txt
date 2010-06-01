@@ -97,7 +97,7 @@ if(SERVICES_FS)
 	)
 endif(SERVICES_FS)
 
-if(FFI_SERVICE)
+if(SERVICES_FFI)
 	add_library(
 		badger_ffi STATIC
 		src/private/ffi/types.c
@@ -110,7 +110,7 @@ if(FFI_SERVICE)
 		VERSION ${LIBRARY_VERSION}
 		SOVERSION ${LIBRARY_SOVERSION}
 	)
-endif(FFI_SERVICE)
+endif(SERVICES_FFI)
 
 add_executable(badger src/programs/badger.c)
 set_target_properties(
@@ -138,12 +138,12 @@ if(SERVICES_FS)
 	)
 endif(SERVICES_FS)
 
-if(FFI_SERVICE)
+if(FFI_SERVICES)
 	install(
 		TARGETS badger_ffi
 		ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
 	)
-endif(FFI_SERVICE)
+endif(FFI_SERVICES)
 
 install(
 	TARGETS badger

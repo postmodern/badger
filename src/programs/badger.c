@@ -73,7 +73,7 @@ int main(int argc,char *argv[])
 	}
 #endif
 
-#ifdef FFI_SERVICE
+#ifdef SERVICES_FFI
 	if (badger_server_register(server,&badger_ffi_service) == -1)
 	{
 		goto cleanup_server;

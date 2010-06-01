@@ -11,7 +11,7 @@
 #include <badger/services/fs.h>
 #endif
 
-#ifdef FFI_SERVICE
+#ifdef SERVICES_FFI
 #include <badger/services/ffi.h>
 #endif
 

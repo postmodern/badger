@@ -18,32 +18,6 @@
  *   1. The ID of the packet.
  *   2. The type of the payload.
  *
- * The type of the payload may be one of the following:
- *   * BADGER_PACKET_PING - Represents a ping sent to the server.
- *   * BADGER_PACKET_PONG - Represents a pong in response to a previous ping.
- *   * BADGER_PACKET_CALL - Represents a function call being sent to the
- *     server.
- *   * BADGER_PACKET_RETURN - Represents a return value from a previous
- *     function call, being returned from the server.
- *   * BADGER_PACKET_ETYPE - The last received packet had an unknown type.
- *   * BADGER_PACKET_ESHORT - The last received packet did not have the
- *     expected number of fields.
- *   * BADGER_PACKET_ENOSERVICE - The last received call packet referenced an
- *     unknown service.
- *   * BADGER_PACKET_ENOFUNC - The last received call packet referenced an
- *     unknown function.
- *   * BADGER_PACKET_EARGC - The last received call packet had an invalid
- *     number of arguments.
- *
- * If the type of the payload is BADGER_PACKET_CALL, than the next three
- * elements of the Array must be the following:
- *   3. The service that the function is registered within.
- *   4. The name of the function to call.
- *   5. The Array of arguments to pass to the function.
- *
- * If the type key is set to BADGER_PACKET_RETURN, then the third
- * element of the Array must be the following:
- *   3. The return-value from a previous function call.
  */
 
 #include <stdint.h>

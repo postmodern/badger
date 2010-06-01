@@ -15,11 +15,7 @@ void badger_caller_returned(badger_caller_t *caller)
 {
 	if (caller->returned && !(caller->multi_return))
 	{
-		badger_request_id id = caller->ret.id;
-
-		badger_response_clear(&(caller->ret));
-		badger_response_init(&(caller->ret),id,BADGER_RESPONSE_RETURN);
-
+		badger_response_reset(&(caller->ret),BADGER_RESPONSE_RETURN);
 		caller->returned = 0;
 	}
 	else

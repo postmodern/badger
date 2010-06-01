@@ -145,6 +145,16 @@ int badger_return_map(badger_caller_t *caller,unsigned int length)
 	return msgpack_pack_map(&(caller->ret.packer),length);
 }
 
+int badger_return_error(badger_caller_t *caller,const char *message)
+{
+	badger_response_reset(&(caller->ret),BADGER_RESPONSE_ERROR);
+
+	size_t message_length = strlen(message);
+
+	msgpack_pack_raw(&(caller->ret.packer),message_length);
+	return msgpack_pack_raw_body(&(caller->ret.packer),message,message_length);
+}
+
 int badger_yield_nil(badger_caller_t *caller)
 {
 	return msgpack_pack_nil(&(caller->yield.packer));

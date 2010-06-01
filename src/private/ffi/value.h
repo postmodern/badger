@@ -13,8 +13,10 @@ union ffi_value
 	uint16_t u16;
 	int32_t s32;
 	uint32_t u32;
-	int64_t i64;
+	int64_t s64;
 	uint64_t u64;
+	signed int si;
+	unsigned int ui;
 	signed long sl;
 	unsigned long ul;
 	signed long long sll;

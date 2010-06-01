@@ -312,7 +312,7 @@ int badger_ffi_invoke(int argc,const badger_data_t *args,badger_caller_t *caller
 	const badger_data_t *given_args = badger_array(args+2);
 	size_t func_argc = function->argc;
 
-	if (badger_array_length(given_args) != func_argc)
+	if (badger_array_length(args+2) != func_argc)
 	{
 		// argc mismatch
 		badger_return_error(caller,"invalid number of arguments");

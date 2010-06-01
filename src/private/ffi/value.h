@@ -22,8 +22,8 @@ union ffi_value
 	signed long long sll;
 	unsigned long long ull;
 	void* ptr;
-	float f32;
-	double f64;
+	float f;
+	double fl;
 };
 typedef union ffi_value ffi_value_t;
 

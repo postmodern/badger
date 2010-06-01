@@ -155,6 +155,11 @@ int badger_return_error(badger_caller_t *caller,const char *message)
 	return msgpack_pack_raw_body(&(caller->ret.packer),message,message_length);
 }
 
+int badger_return_errno(badger_caller_t *caller)
+{
+	return badger_return_error(caller,strerror(errno));
+}
+
 int badger_yield_nil(badger_caller_t *caller)
 {
 	return msgpack_pack_nil(&(caller->yield.packer));

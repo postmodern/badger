@@ -3,18 +3,22 @@
 
 #include "private/ffi/function.h"
 
+#include <stdint.h>
+
 union ffi_value
 {
-	signed char s8;
-	unsigned char u8;
-	signed short s16;
-	unsigned short u16;
-	signed int s32;
-	unsigned int u32;
-	signed long long i64;
-	unsigned long long u64;
+	int8_t s8;
+	uint8_t u8;
+	int16_t s16;
+	uint16_t u16;
+	int32_t s32;
+	uint32_t u32;
+	int64_t i64;
+	uint64_t u64;
 	signed long sl;
 	unsigned long ul;
+	signed long long sll;
+	unsigned long long ull;
 	void* ptr;
 	float f32;
 	double f64;

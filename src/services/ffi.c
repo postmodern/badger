@@ -14,7 +14,7 @@ const badger_service_t badger_ffi_service = {
 		&badger_ffi_attach_function_func,
 		&badger_ffi_exposed_functions_func,
 		&badger_ffi_exposed_function_func,
-		&badger_ffi_call_func,
+		&badger_ffi_invoke_func,
 		&badger_ffi_close_func,
 		NULL
 	}
@@ -256,9 +256,9 @@ int badger_ffi_exposed_function(int argc,const badger_data_t *args,badger_caller
 	return BADGER_SUCCESS;
 }
 
-const badger_function_t badger_ffi_call_func = {"call",badger_ffi_call,badger_data_any,3,{badger_data_string,badger_data_string,badger_data_array}};
+const badger_function_t badger_ffi_invoke_func = {"invoke",badger_ffi_invoke,badger_data_any,3,{badger_data_string,badger_data_string,badger_data_array}};
 
-int badger_ffi_call(int argc,const badger_data_t *args,badger_caller_t *caller)
+int badger_ffi_invoke(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
 	if (!ffi_libraries)
 	{

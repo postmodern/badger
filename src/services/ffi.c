@@ -41,24 +41,29 @@ int badger_ffi_open(int argc,const badger_data_t *args,badger_caller_t *caller)
 
 	if ((new_library = slist_search(ffi_libraries,name)))
 	{
-		// library already loaded
-		return BADGER_SUCCESS;
+		goto success;
 	}
 
 	if (!(new_library = ffi_library_open(name)))
 	{
 		// count not open the library
-		return BADGER_ERROR;
+		badger_debug("badger_ffi_open: could not open the library %s\n",name);
+		goto error;
 	}
 
 	if (slist_add(ffi_libraries,new_library->name,new_library) == -1)
 	{
 		// malloc failed
-		return BADGER_ERROR;
+		goto error;
 	}
 
+success:
 	badger_return_true(caller);
 	return BADGER_SUCCESS;
+
+error:
+	badger_return_error(caller,"could not open the library");
+	return BADGER_ERROR;
 }
 
 const badger_function_t badger_ffi_libraries_func = {"libraries",badger_ffi_libraries,badger_data_array,0};
@@ -93,6 +98,7 @@ int badger_ffi_attach_function(int argc,const badger_data_t *args,badger_caller_
 	if (!ffi_libraries)
 	{
 		// no libraries opened
+		badger_return_error(caller,"no libraries have been loaded");
 		return BADGER_ERROR;
 	}
 
@@ -107,7 +113,7 @@ int badger_ffi_attach_function(int argc,const badger_data_t *args,badger_caller_
 	if (!(lib = slist_search(ffi_libraries,lib_name)))
 	{
 		// library not found
-		badger_debug("badger_ffi_attach_function: could not find the the given library (%s)\n",lib_name);
+		badger_return_error(caller,"could not find the given library");
 		return BADGER_ERROR;
 	}
 
@@ -134,7 +140,7 @@ int badger_ffi_attach_function(int argc,const badger_data_t *args,badger_caller_
 		if (!(func_arg_types[i] = ffi_types_parse(arg_name)))
 		{
 			// unknown type
-			badger_debug("badger_ffi_attach_function: unknown FFI argument type (%s)\n",arg_name);
+			badger_return_error(caller,"unknown FFI argument type");
 			return BADGER_ERROR;
 		}
 	}
@@ -150,12 +156,13 @@ int badger_ffi_attach_function(int argc,const badger_data_t *args,badger_caller_
 	if (!(func_ret_type = ffi_types_parse(ret_name)))
 	{
 		// unknown type
-		badger_debug("badger_ffi_attach_function: unknown FFI return type (%s)\n",ret_name);
+		badger_return_error(caller,"unknown FFI return type");
 		return BADGER_ERROR;
 	}
 
 	if (ffi_library_attach_function(lib,name,func_ret_type,func_argc,func_arg_types) == -1)
 	{
+		badger_return_error(caller,"could not find function");
 		return BADGER_ERROR;
 	}
 
@@ -170,6 +177,7 @@ int badger_ffi_exposed_functions(int argc,const badger_data_t *args,badger_calle
 	if (!ffi_libraries)
 	{
 		// no libraries opened
+		badger_return_error(caller,"no libraries have been loaded");
 		return BADGER_ERROR;
 	}
 
@@ -184,6 +192,7 @@ int badger_ffi_exposed_functions(int argc,const badger_data_t *args,badger_calle
 	if (!(lib = slist_search(ffi_libraries,name)))
 	{
 		// library not found
+		badger_return_error(caller,"could not find the given library");
 		return BADGER_ERROR;
 	}
 
@@ -209,6 +218,7 @@ int badger_ffi_exposed_function(int argc,const badger_data_t *args,badger_caller
 	if (!ffi_libraries)
 	{
 		// no libraries opened
+		badger_return_error(caller,"no libraries have been loaded");
 		return BADGER_ERROR;
 	}
 
@@ -223,6 +233,7 @@ int badger_ffi_exposed_function(int argc,const badger_data_t *args,badger_caller
 	if (!(lib = slist_search(ffi_libraries,lib_name)))
 	{
 		// library not found
+		badger_return_error(caller,"could not find the given library");
 		return BADGER_ERROR;
 	}
 
@@ -237,6 +248,7 @@ int badger_ffi_exposed_function(int argc,const badger_data_t *args,badger_caller
 	if (!(function = ffi_library_search(lib,name)))
 	{
 		// function not found
+		badger_return_error(caller,"could not find the given function");
 		return BADGER_ERROR;
 	}
 
@@ -263,6 +275,7 @@ int badger_ffi_invoke(int argc,const badger_data_t *args,badger_caller_t *caller
 	if (!ffi_libraries)
 	{
 		// no libraries opened
+		badger_return_error(caller,"no libraries have been loaded");
 		return BADGER_ERROR;
 	}
 
@@ -277,6 +290,7 @@ int badger_ffi_invoke(int argc,const badger_data_t *args,badger_caller_t *caller
 	if (!(lib = slist_search(ffi_libraries,lib_name)))
 	{
 		// library not found
+		badger_return_error(caller,"could not find the given library");
 		return BADGER_ERROR;
 	}
 
@@ -291,6 +305,7 @@ int badger_ffi_invoke(int argc,const badger_data_t *args,badger_caller_t *caller
 	if (!(function = ffi_library_search(lib,name)))
 	{
 		// function not found
+		badger_return_error(caller,"could not find the given function");
 		return BADGER_ERROR;
 	}
 
@@ -300,6 +315,7 @@ int badger_ffi_invoke(int argc,const badger_data_t *args,badger_caller_t *caller
 	if (badger_array_length(given_args) != func_argc)
 	{
 		// argc mismatch
+		badger_return_error(caller,"invalid number of arguments");
 		return BADGER_ERROR;
 	}
 
@@ -335,6 +351,7 @@ int badger_ffi_invoke(int argc,const badger_data_t *args,badger_caller_t *caller
 						break;
 					default:
 						// invalid given argument type
+						badger_return_error(caller,"incompatible argument type for FFI int");
 						goto cleanup_func_args;
 				}
 				break;
@@ -349,6 +366,7 @@ int badger_ffi_invoke(int argc,const badger_data_t *args,badger_caller_t *caller
 						break;
 					default:
 						// invalid given argument type
+						badger_return_error(caller,"incompatible argument type for FFI uint8");
 						goto cleanup_func_args;
 				}
 				break;
@@ -363,6 +381,7 @@ int badger_ffi_invoke(int argc,const badger_data_t *args,badger_caller_t *caller
 						break;
 					default:
 						// invalid given argument type
+						badger_return_error(caller,"incompatible argument type for FFI uint16");
 						goto cleanup_func_args;
 				}
 				break;
@@ -377,6 +396,7 @@ int badger_ffi_invoke(int argc,const badger_data_t *args,badger_caller_t *caller
 						break;
 					default:
 						// invalid given argument type
+						badger_return_error(caller,"incompatible argument type for FFI uint32");
 						goto cleanup_func_args;
 				}
 				break;
@@ -391,6 +411,7 @@ int badger_ffi_invoke(int argc,const badger_data_t *args,badger_caller_t *caller
 						break;
 					default:
 						// invalid given argument type
+						badger_return_error(caller,"incompatible argument type for FFI uint64");
 						goto cleanup_func_args;
 				}
 				break;
@@ -405,6 +426,7 @@ int badger_ffi_invoke(int argc,const badger_data_t *args,badger_caller_t *caller
 						break;
 					default:
 						// invalid given argument type
+						badger_return_error(caller,"incompatible argument type for FFI int8");
 						goto cleanup_func_args;
 				}
 				break;
@@ -419,6 +441,7 @@ int badger_ffi_invoke(int argc,const badger_data_t *args,badger_caller_t *caller
 						break;
 					default:
 						// invalid given argument type
+						badger_return_error(caller,"incompatible argument type for FFI int16");
 						goto cleanup_func_args;
 				}
 				break;
@@ -433,6 +456,7 @@ int badger_ffi_invoke(int argc,const badger_data_t *args,badger_caller_t *caller
 						break;
 					default:
 						// invalid given argument type
+						badger_return_error(caller,"incompatible argument type for FFI int32");
 						goto cleanup_func_args;
 				}
 				break;
@@ -447,6 +471,7 @@ int badger_ffi_invoke(int argc,const badger_data_t *args,badger_caller_t *caller
 						break;
 					default:
 						// invalid given argument type
+						badger_return_error(caller,"incompatible argument type for FFI int64");
 						goto cleanup_func_args;
 				}
 				break;
@@ -458,6 +483,7 @@ int badger_ffi_invoke(int argc,const badger_data_t *args,badger_caller_t *caller
 						break;
 					default:
 						// invalid given argument type
+						badger_return_error(caller,"incompatible argument type for FFI float");
 						goto cleanup_func_args;
 				}
 				break;
@@ -470,6 +496,7 @@ int badger_ffi_invoke(int argc,const badger_data_t *args,badger_caller_t *caller
 						break;
 					default:
 						// invalid given argument type
+						badger_return_error(caller,"incompatible argument type for FFI double");
 						goto cleanup_func_args;
 				}
 				break;
@@ -496,11 +523,15 @@ int badger_ffi_invoke(int argc,const badger_data_t *args,badger_caller_t *caller
 						break;
 					default:
 						// invalid given argument type
+						badger_return_error(caller,"incompatible argument type for FFI pointer");
 						goto cleanup_func_args;
 				}
 				break;
 			default:
 				// unsupported FFI type
+				badger_debug("badger_ffi_invoke: unknown FFI type (%u)\n",function->arg_types[i]->type);
+
+				badger_return_error(caller,"unknown FFI type");
 				goto cleanup_func_args;
 		}
 	}
@@ -589,6 +620,8 @@ int badger_ffi_close(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
 	if (!ffi_libraries)
 	{
+		// no libraries opened
+		badger_return_error(caller,"no libraries have been loaded");
 		return BADGER_ERROR;
 	}
 
@@ -600,6 +633,8 @@ int badger_ffi_close(int argc,const badger_data_t *args,badger_caller_t *caller)
 
 	if (slist_remove(ffi_libraries,name) == -1)
 	{
+		// no libraries opened
+		badger_return_error(caller,"could not remove library");
 		return BADGER_ERROR;
 	}
 

@@ -27,4 +27,6 @@ union ffi_value
 };
 typedef union ffi_value ffi_value_t;
 
+void ffi_value_clear(ffi_value_t *value);
+
 #endif

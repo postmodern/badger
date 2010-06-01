@@ -34,6 +34,8 @@ ffi_function_t * ffi_function_create(const char *name,void *ptr,const ffi_type *
 	new_function->ret_type = ret_type;
 	new_function->argc = argc;
 	new_function->arg_types = new_arg_types;
+
+	ffi_prep_cif(&(new_function->cif),FFI_DEFAULT_ABI,new_function->argc,(ffi_type *)new_function->ret_type,(ffi_type **)new_function->arg_types);
 	return new_function;
 
 cleanup_arg_types:

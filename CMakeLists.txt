@@ -101,6 +101,7 @@ if(SERVICES_FFI)
 	add_library(
 		badger_ffi STATIC
 		src/private/ffi/types.c
+		src/private/ffi/value.c
 		src/private/ffi/function.c
 		src/private/ffi/library.c
 		src/services/ffi.c

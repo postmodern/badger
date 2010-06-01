@@ -564,26 +564,12 @@ int badger_server_call(badger_server_t *server,badger_request_id id,const msgpac
 	badger_caller_init(&caller,id,server);
 
 	// call the function
-	if (badger_function_call(function,argc,args,&caller) == BADGER_ERROR)
+	switch (badger_function_call(function,argc,args,&caller))
 	{
-		const char *error_ptr = strerror(errno);
-		size_t error_length = strlen(error_ptr);
-		badger_response_t error;
-
-		badger_response_init(&error,id,BADGER_RESPONSE_ERROR);
-
-		// pack the errno code
-		msgpack_pack_int(&(error.packer),errno);
-
-		// pack the error message
-		msgpack_pack_raw(&(error.packer),error_length);
-		msgpack_pack_raw_body(&(error.packer),error_ptr,error_length);
-
-		// send back the error
-		badger_server_pack(server,error.buffer.data,error.buffer.size);
-
-		badger_response_clear(&error);
-		return 0;
+		case BADGER_SUCCESS:
+			break;
+		case BADGER_ERROR:
+			break;
 	}
 
 	badger_caller_return(&caller);

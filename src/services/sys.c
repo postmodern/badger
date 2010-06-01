@@ -40,6 +40,7 @@ int badger_sys_chdir(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
 	if (chdir(badger_string(args)) == -1)
 	{
+		badger_return_errno(caller);
 		return BADGER_ERROR;
 	}
 
@@ -55,6 +56,7 @@ int badger_sys_getcwd(int argc,const badger_data_t *args,badger_caller_t *caller
 	if (!getcwd(cwd,PATH_MAX))
 	{
 		// copy failed
+		badger_return_errno(caller);
 		return BADGER_ERROR;
 	}
 
@@ -78,6 +80,7 @@ int badger_sys_gethostname(int argc,const badger_data_t *args,badger_caller_t *c
 
 	if (gethostname(hostname,HOST_NAME_MAX) == -1)
 	{
+		badger_return_errno(caller);
 		return BADGER_ERROR;
 	}
 
@@ -93,6 +96,7 @@ int badger_sys_getdomainname(int argc,const badger_data_t *args,badger_caller_t 
 
 	if (getdomainname(domainname,64) == -1)
 	{
+		badger_return_errno(caller);
 		return BADGER_ERROR;
 	}
 
@@ -148,6 +152,7 @@ int badger_sys_getlogin(int argc,const badger_data_t *args,badger_caller_t *call
 
 	if (getlogin_r(login,256) != 0)
 	{
+		badger_return_errno(caller);
 		return BADGER_ERROR;
 	}
 
@@ -177,6 +182,7 @@ int badger_sys_popen(int argc,const badger_data_t *args,badger_caller_t *caller)
 
 	if (!(proc = popen(badger_string(args),"r")))
 	{
+		badger_return_errno(caller);
 		return BADGER_ERROR;
 	}
 
@@ -197,6 +203,7 @@ int badger_sys_popen(int argc,const badger_data_t *args,badger_caller_t *caller)
 
 	if ((status = pclose(proc)) == -1)
 	{
+		badger_return_errno(caller);
 		return BADGER_ERROR;
 	}
 

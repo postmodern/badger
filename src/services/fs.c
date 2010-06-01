@@ -33,6 +33,7 @@ int badger_fs_stat(int argc,const badger_data_t *args,badger_caller_t *caller)
 
 	if (stat(path,&file) == -1)
 	{
+		badger_return_errno(caller);
 		return BADGER_ERROR;
 	}
 
@@ -67,6 +68,7 @@ int badger_fs_unlink(int argc,const badger_data_t *args,badger_caller_t *caller)
 
 	if (unlink(path) == -1)
 	{
+		badger_return_errno(caller);
 		return BADGER_ERROR;
 	}
 
@@ -87,6 +89,7 @@ int badger_fs_open(int argc,const badger_data_t *args,badger_caller_t *caller)
 
 	if ((fd = open(path,O_RDWR)) == -1)
 	{
+		badger_return_errno(caller);
 		return BADGER_ERROR;
 	}
 
@@ -119,6 +122,7 @@ int badger_fs_seek(int argc,const badger_data_t *args,badger_caller_t *caller)
 
 	if ((offset = lseek(badger_int(args),badger_uint(args+1),whence)) == -1)
 	{
+		badger_return_errno(caller);
 		return BADGER_ERROR;
 	}
 
@@ -136,6 +140,7 @@ int badger_fs_read(int argc,const badger_data_t *args,badger_caller_t *caller)
 
 	if ((count = read(badger_int(args),buffer,length)) == -1)
 	{
+		badger_return_errno(caller);
 		return BADGER_ERROR;
 	}
 
@@ -153,6 +158,7 @@ int badger_fs_write(int argc,const badger_data_t *args,badger_caller_t *caller)
 
 	if ((count = write(badger_int(args),badger_raw(args+2),badger_raw_length(args+2))) == -1)
 	{
+		badger_return_errno(caller);
 		return BADGER_ERROR;
 	}
 
@@ -166,6 +172,7 @@ int badger_fs_close(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
 	if (close(badger_int(args)) == -1)
 	{
+		badger_return_errno(caller);
 		return BADGER_ERROR;
 	}
 

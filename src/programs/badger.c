@@ -59,14 +59,14 @@ int main(int argc,char *argv[])
 		goto cleanup;
 	}
 
-#ifdef SYS_SERVICE
+#ifdef SERVICES_SYS
 	if (badger_server_register(server,&badger_sys_service) == -1)
 	{
 		goto cleanup_server;
 	}
 #endif
 
-#ifdef FS_SERVICE
+#ifdef SERVICES_FS
 	if (badger_server_register(server,&badger_fs_service) == -1)
 	{
 		goto cleanup_server;

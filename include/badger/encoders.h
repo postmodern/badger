@@ -8,7 +8,7 @@
 typedef void (*badger_encoder_func)(unsigned char *dest,const unsigned char *src,size_t length,void *data);
 typedef void (*badger_decoder_func)(unsigned char *dest,const unsigned char *src,size_t length,void *data);
 
-#ifdef XOR_ENCODER
+#ifdef ENCODERS_XOR
 
 struct badger_xor
 {

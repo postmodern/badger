@@ -6,11 +6,11 @@
 #cmakedefine DEBUG
 
 // badger encoders
-#cmakedefine XOR_ENCODER
-#cmakedefine AES_ENCODER
+#cmakedefine ENCODERS_XOR
+#cmakedefine ENCODERS_AES
 
 // badger services
-#cmakedefine SYS_SERVICE
-#cmakedefine FS_SERVICE
+#cmakedefine SERVICES_SYS
+#cmakedefine SERVICES_FS
 
 #endif

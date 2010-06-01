@@ -3,11 +3,11 @@
 
 #include <badger/config.h>
 
-#ifdef SYS_SERVICE
+#ifdef SERVICES_SYS
 #include <badger/services/sys.h>
 #endif
 
-#ifdef FS_SERVICE
+#ifdef SERVICES_FS
 #include <badger/services/fs.h>
 #endif
 

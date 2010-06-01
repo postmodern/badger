@@ -6,11 +6,11 @@ include(InstallPaths)
 include(CheckIncludeFiles)
 
 option(DEBUG "Enable debugging" off)
-option(XOR_ENCODER "Enable the XOR packet encoder" on)
-option(AES_ENCODER "Enable the AES packet encoder" on)
+option(ENCODERS_XOR "Enable the XOR packet encoder" on)
+option(ENCODERS_AES "Enable the AES packet encoder" on)
 
-option(SYS_SERVICE "Enables the 'sys' service" on)
-option(FS_SERVICE "Enables the 'fs' service" on)
+option(SERVICES_SYS "Enables the 'sys' service" on)
+option(SERVICES_FS "Enables the 'fs' service" on)
 
 set(LIBRARY_VERSION "0.1.0")
 set(LIBRARY_SOVERSION "0")
@@ -24,12 +24,12 @@ if(UNIX)
 endif(UNIX)
 
 set(BADGER_LIBS badger_core msgpack zmq uuid pthread stdc++)
-if(SYS_SERVICE)
+if(SERVICES_SYS)
 	set(BADGER_LIBS badger_sys ${BADGER_LIBS})
-endif(SYS_SERVICE)
-if(FS_SERVICE)
+endif(SERVICES_SYS)
+if(SERVICES_FS)
 	set(BADGER_LIBS badger_fs ${BADGER_LIBS})
-endif(FS_SERVICE)
+endif(SERVICES_FS)
 
 set(BADGER_SRC
 	src/private/util.c src/slist.c src/data.c
@@ -38,9 +38,9 @@ set(BADGER_SRC
 	src/private/server.c src/encoders.c src/server.c
 	src/badger.c
 )
-if(AES_ENCODER)
+if(ENCODERS_AES)
 	set(BADGER_SRC src/private/aes.c ${BADGER_SRC})
-endif(AES_ENCODER)
+endif(ENCODERS_AES)
 
 configure_file(config.h.cmake ${BADGER_SOURCE_DIR}/include/badger/config.h)
 
@@ -64,23 +64,23 @@ set_target_properties(
 	SOVERSION ${LIBRARY_SOVERSION}
 )
 
-if(SYS_SERVICE)
+if(SERVICES_SYS)
 	add_library(badger_sys STATIC src/services/sys.c)
 	set_target_properties(
 		badger_sys PROPERTIES
 		VERSION ${LIBRARY_VERSION}
 		SOVERSION ${LIBRARY_SOVERSION}
 	)
-endif(SYS_SERVICE)
+endif(SERVICES_SYS)
 
-if(FS_SERVICE)
+if(SERVICES_FS)
 	add_library(badger_fs STATIC src/services/fs.c)
 	set_target_properties(
 		badger_fs PROPERTIES
 		VERSION ${LIBRARY_VERSION}
 		SOVERSION ${LIBRARY_SOVERSION}
 	)
-endif(FS_SERVICE)
+endif(SERVICES_FS)
 
 add_executable(badger src/programs/badger.c)
 set_target_properties(
@@ -94,19 +94,19 @@ install(
 	ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
 )
 
-if(SYS_SERVICE)
+if(SERVICES_SYS)
 	install(
 		TARGETS badger_sys
 		ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
 	)
-endif(SYS_SERVICE)
+endif(SERVICES_SYS)
 
-if(FS_SERVICE)
+if(SERVICES_FS)
 	install(
 		TARGETS badger_fs
 		ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
 	)
-endif(FS_SERVICE)
+endif(SERVICES_FS)
 
 install(
 	TARGETS badger

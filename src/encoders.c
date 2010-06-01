@@ -1,6 +1,6 @@
 #include <badger/encoders.h>
 
-#ifdef XOR_ENCODER
+#ifdef ENCODERS_XOR
 
 void badger_xor_encoder(unsigned char *dest,const unsigned char *src,size_t length,badger_xor_t *data)
 {

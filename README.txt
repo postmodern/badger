@@ -28,7 +28,9 @@ Features
 * Implements a Remote Procedure Call (RPC) design-pattern.
 * Supports multiple optional Services:
   * sys - misc system related functions.
-  * fs - file-system related functions.
+  * fs - remote file-system related functions.
+  * ffi - dynamically load libraries on the remote system and call functions
+    from them.
 
 Requirements
 ------------

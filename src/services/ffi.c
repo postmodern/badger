@@ -309,237 +309,36 @@ int badger_ffi_invoke(int argc,const badger_data_t *args,badger_caller_t *caller
 		return BADGER_ERROR;
 	}
 
+	size_t given_argc = badger_array_length(args+2);
 	const badger_data_t *given_args = badger_array(args+2);
-	size_t func_argc = function->argc;
 
-	if (badger_array_length(args+2) != func_argc)
+	switch (badger_ffi_function_valid(function,given_argc,given_args))
 	{
-		// argc mismatch
-		badger_return_error(caller,"invalid number of arguments");
-		return BADGER_ERROR;
+		case BADGER_ERRNO_ARGC:
+			badger_return_error(caller,"invalid number of arguments");
+			return BADGER_ERROR;
+		case BADGER_ERRNO_ARG_TYPE:
+			badger_return_error(caller,"invalid argument type given");
+			return BADGER_ERROR;
 	}
 
-	ffi_value_t func_args[func_argc];
-	void *func_arg_ptrs[func_argc];
-
+	ffi_value_t func_args[given_argc];
 	unsigned int i;
 
-	for (i=0;i<func_argc;i++)
+	for (i=0;i<given_argc;i++)
 	{
-		// zero the function arg
-		ffi_value_clear(func_args+i);
-		func_arg_ptrs[i] = func_args+i;
-	}
-
-	for (i=0;i<func_argc;i++)
-	{
-		const badger_data_t *given_arg = given_args+i;
-
-		size_t raw_length;
-		unsigned char *raw_ptr;
-
-		switch (function->arg_types[i]->type)
+		switch (badger_ffi_value_init(func_args+i,function->arg_types[i],given_args+i))
 		{
-			case FFI_TYPE_INT:
-				switch (badger_type(given_arg))
-				{
-					case badger_data_int:
-						func_args[i].ui = badger_int(given_arg);
-						break;
-					case badger_data_uint:
-						func_args[i].ui = badger_uint(given_arg);
-						break;
-					default:
-						// invalid given argument type
-						badger_return_error(caller,"incompatible argument type for FFI int");
-						goto cleanup_func_args;
-				}
-				break;
-			case FFI_TYPE_UINT8:
-				switch (badger_type(given_arg))
-				{
-					case badger_data_int:
-						func_args[i].u8 = badger_int(given_arg);
-						break;
-					case badger_data_uint:
-						func_args[i].u8 = badger_uint(given_arg);
-						break;
-					default:
-						// invalid given argument type
-						badger_return_error(caller,"incompatible argument type for FFI uint8");
-						goto cleanup_func_args;
-				}
-				break;
-			case FFI_TYPE_UINT16:
-				switch (badger_type(given_arg))
-				{
-					case badger_data_int:
-						func_args[i].u16 = badger_int(given_arg);
-						break;
-					case badger_data_uint:
-						func_args[i].u16 = badger_uint(given_arg);
-						break;
-					default:
-						// invalid given argument type
-						badger_return_error(caller,"incompatible argument type for FFI uint16");
-						goto cleanup_func_args;
-				}
-				break;
-			case FFI_TYPE_UINT32:
-				switch (badger_type(given_arg))
-				{
-					case badger_data_int:
-						func_args[i].u32 = badger_int(given_arg);
-						break;
-					case badger_data_uint:
-						func_args[i].u32 = badger_uint(given_arg);
-						break;
-					default:
-						// invalid given argument type
-						badger_return_error(caller,"incompatible argument type for FFI uint32");
-						goto cleanup_func_args;
-				}
-				break;
-			case FFI_TYPE_UINT64:
-				switch (badger_type(given_arg))
-				{
-					case badger_data_int:
-						func_args[i].u64 = badger_int(given_arg);
-						break;
-					case badger_data_uint:
-						func_args[i].u64 = badger_uint(given_arg);
-						break;
-					default:
-						// invalid given argument type
-						badger_return_error(caller,"incompatible argument type for FFI uint64");
-						goto cleanup_func_args;
-				}
-				break;
-			case FFI_TYPE_SINT8:
-				switch (badger_type(given_arg))
-				{
-					case badger_data_int:
-						func_args[i].s8 = badger_int(given_arg);
-						break;
-					case badger_data_uint:
-						func_args[i].s8 = badger_uint(given_arg);
-						break;
-					default:
-						// invalid given argument type
-						badger_return_error(caller,"incompatible argument type for FFI int8");
-						goto cleanup_func_args;
-				}
-				break;
-			case FFI_TYPE_SINT16:
-				switch (badger_type(given_arg))
-				{
-					case badger_data_int:
-						func_args[i].s16 = badger_int(given_arg);
-						break;
-					case badger_data_uint:
-						func_args[i].s16 = badger_uint(given_arg);
-						break;
-					default:
-						// invalid given argument type
-						badger_return_error(caller,"incompatible argument type for FFI int16");
-						goto cleanup_func_args;
-				}
-				break;
-			case FFI_TYPE_SINT32:
-				switch (badger_type(given_arg))
-				{
-					case badger_data_int:
-						func_args[i].s32 = badger_int(given_arg);
-						break;
-					case badger_data_uint:
-						func_args[i].s32 = badger_uint(given_arg);
-						break;
-					default:
-						// invalid given argument type
-						badger_return_error(caller,"incompatible argument type for FFI int32");
-						goto cleanup_func_args;
-				}
-				break;
-			case FFI_TYPE_SINT64:
-				switch (badger_type(given_arg))
-				{
-					case badger_data_int:
-						func_args[i].s64 = badger_int(given_arg);
-						break;
-					case badger_data_uint:
-						func_args[i].s64 = badger_uint(given_arg);
-						break;
-					default:
-						// invalid given argument type
-						badger_return_error(caller,"incompatible argument type for FFI int64");
-						goto cleanup_func_args;
-				}
-				break;
-			case FFI_TYPE_FLOAT:
-				switch (badger_type(given_arg))
-				{
-					case badger_data_float:
-						func_args[i].f = badger_float(given_arg);
-						break;
-					default:
-						// invalid given argument type
-						badger_return_error(caller,"incompatible argument type for FFI float");
-						goto cleanup_func_args;
-				}
-				break;
-			case FFI_TYPE_DOUBLE:
-			case FFI_TYPE_LONGDOUBLE:
-				switch (badger_type(given_arg))
-				{
-					case badger_data_float:
-						func_args[i].fl = badger_float(given_arg);
-						break;
-					default:
-						// invalid given argument type
-						badger_return_error(caller,"incompatible argument type for FFI double");
-						goto cleanup_func_args;
-				}
-				break;
-			case FFI_TYPE_POINTER:
-				switch (badger_type(given_arg))
-				{
-					case badger_data_uint:
-						func_args[i].ptr = (void *)badger_uint(given_arg);
-						break;
-					case badger_data_raw:
-						raw_length = badger_raw_length(given_arg);
-
-						if (!(raw_ptr = malloc(raw_length + 1)))
-						{
-							// malloc failed
-							goto cleanup_func_args;
-						}
-
-						// copy the raw buffer and append a \0 byte to it (just in case)
-						memcpy(raw_ptr,badger_raw(given_arg),raw_length);
-						raw_ptr[raw_length] = '\0';
-
-						func_args[i].ptr = raw_ptr;
-						break;
-					default:
-						// invalid given argument type
-						badger_return_error(caller,"incompatible argument type for FFI pointer");
-						goto cleanup_func_args;
-				}
-				break;
-			default:
-				// unsupported FFI type
-				badger_debug("badger_ffi_invoke: unknown FFI type (%u)\n",function->arg_types[i]->type);
-
-				badger_return_error(caller,"unknown FFI type");
+			case BADGER_ERRNO_ARG_TYPE:
+				badger_return_error(caller,"incompatible argument type");
+			case BADGER_ERROR:
 				goto cleanup_func_args;
 		}
 	}
 
 	ffi_value_t func_ret;
-	ffi_cif *cif = (ffi_cif *)&(function->cif);
 
-	ffi_call(cif,FFI_FN(function->ptr),&func_ret,func_arg_ptrs);
+	ffi_function_call(function,given_argc,func_args,&func_ret);
 
 	switch (function->ret_type->type)
 	{
@@ -583,32 +382,17 @@ int badger_ffi_invoke(int argc,const badger_data_t *args,badger_caller_t *caller
 	}
 
 	ffi_value_clear(&func_ret);
+
+	for (i=0;i<given_argc;i++)
+	{
+		badger_ffi_value_fini(func_args+i,function->arg_types[i],given_args+i);
+	}
 	return BADGER_SUCCESS;
 
 cleanup_func_args:
-	for (i=0;i<func_argc;i++)
+	for (i=0;i<given_argc;i++)
 	{
-		const badger_data_t *given_arg = given_args+i;
-
-		switch (function->arg_types[i]->type)
-		{
-			case FFI_TYPE_POINTER:
-				switch (badger_type(given_arg))
-				{
-					case badger_data_raw:
-						// zero the copied raw buffer before freeing it
-						memset(func_args[i].ptr,0,badger_raw_length(given_arg));
-						free(func_args[i].ptr);
-						break;
-					default:
-						break;
-				}
-				break;
-			default:
-				break;
-		}
-
-		ffi_value_clear(func_args+i);
+		badger_ffi_value_fini(func_args+i,function->arg_types[i],given_args+i);
 	}
 
 	return BADGER_ERROR;

@@ -1,7 +1,8 @@
 #ifndef _PRIVATE_FFI_VALUE_H_
 #define _PRIVATE_FFI_VALUE_H_
 
-#include "private/ffi/function.h"
+#include "private/ffi/types.h"
+#include <badger/data.h>
 
 #include <stdint.h>
 
@@ -28,5 +29,8 @@ union ffi_value
 typedef union ffi_value ffi_value_t;
 
 void ffi_value_clear(ffi_value_t *value);
+
+int badger_ffi_value_init(ffi_value_t *value,const ffi_type *type,const badger_data_t *data);
+void badger_ffi_value_fini(ffi_value_t *value,const ffi_type *type,const badger_data_t *data);
 
 #endif

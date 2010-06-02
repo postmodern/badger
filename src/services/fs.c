@@ -31,7 +31,7 @@ badger_service_t badger_fs_service = {
 	NULL,
 	{
 		&badger_fs_stat_func,
-		&badger_fs_unlink_func,
+		&badger_fs_remove_func,
 		&badger_fs_open_func,
 		&badger_fs_seek_func,
 		&badger_fs_read_func,
@@ -78,9 +78,9 @@ int badger_fs_stat(int argc,const badger_data_t *args,badger_caller_t *caller)
 	return BADGER_SUCCESS;
 }
 
-const badger_function_t badger_fs_unlink_func = {"unlink",badger_fs_unlink,badger_data_nil,1,{badger_data_string}};
+const badger_function_t badger_fs_remove_func = {"remove",badger_fs_remove,badger_data_nil,1,{badger_data_string}};
 
-int badger_fs_unlink(int argc,const badger_data_t *args,badger_caller_t *caller)
+int badger_fs_remove(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
 	size_t path_length = badger_string_length(args);
 	char path[path_length + 1];
@@ -88,7 +88,7 @@ int badger_fs_unlink(int argc,const badger_data_t *args,badger_caller_t *caller)
 	memcpy(path,badger_string(args),path_length);
 	path[path_length] = '\0';
 
-	if (unlink(path) == -1)
+	if (remove(path) == -1)
 	{
 		badger_return_errno(caller);
 		return BADGER_ERROR;

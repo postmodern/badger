@@ -11,6 +11,7 @@ option(ENCODERS_AES "Enable the AES packet encoder" on)
 
 option(SERVICES_SYS "Enables the 'sys' service" on)
 option(SERVICES_FS "Enables the 'fs' service" on)
+option(SERVICES_FFI "Enables the 'ffi' service" off)
 
 set(LIBRARY_VERSION "0.1.0")
 set(LIBRARY_SOVERSION "0")
@@ -24,12 +25,26 @@ if(UNIX)
 endif(UNIX)
 
 set(BADGER_LIBS badger_core msgpack zmq uuid pthread stdc++)
+
 if(SERVICES_SYS)
 	set(BADGER_LIBS badger_sys ${BADGER_LIBS})
 endif(SERVICES_SYS)
+
 if(SERVICES_FS)
 	set(BADGER_LIBS badger_fs ${BADGER_LIBS})
 endif(SERVICES_FS)
+
+if(SERVICES_FFI)
+	if(UNIX)
+		include(FindPkgConfig)
+		pkg_search_module(FFI REQUIRED libffi)
+
+		set(BADGER_LIBS dl ${BADGER_LIBS})
+	endif(UNIX)
+
+	include_directories(${FFI_INCLUDEDIR})
+	set(BADGER_LIBS badger_ffi ffi ${BADGER_LIBS})
+endif(SERVICES_FFI)
 
 set(BADGER_SRC
 	src/private/util.c src/slist.c src/data.c
@@ -82,6 +97,22 @@ if(SERVICES_FS)
 	)
 endif(SERVICES_FS)
 
+if(SERVICES_FFI)
+	add_library(
+		badger_ffi STATIC
+		src/private/ffi/types.c
+		src/private/ffi/value.c
+		src/private/ffi/function.c
+		src/private/ffi/library.c
+		src/services/ffi.c
+	)
+	set_target_properties(
+		badger_ffi PROPERTIES
+		VERSION ${LIBRARY_VERSION}
+		SOVERSION ${LIBRARY_SOVERSION}
+	)
+endif(SERVICES_FFI)
+
 add_executable(badger src/programs/badger.c)
 set_target_properties(
 	badger PROPERTIES
@@ -107,6 +138,13 @@ if(SERVICES_FS)
 		ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
 	)
 endif(SERVICES_FS)
+
+if(FFI_SERVICES)
+	install(
+		TARGETS badger_ffi
+		ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
+	)
+endif(FFI_SERVICES)
 
 install(
 	TARGETS badger

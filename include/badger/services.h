@@ -32,4 +32,8 @@
 #include <badger/services/fs.h>
 #endif
 
+#ifdef SERVICES_FFI
+#include <badger/services/ffi.h>
+#endif
+
 #endif

@@ -3,9 +3,12 @@
 
 #include <badger/function.h>
 
+typedef int (*badger_service_init)();
+
 struct badger_service
 {
 	const char *name;
+	badger_service_init init_func;
 
 	const badger_function_t *functions[];
 };

@@ -64,6 +64,15 @@ cleanup:
 
 int badger_server_register(badger_server_t *server,const badger_service_t *service)
 {
+	if (service->init_func)
+	{
+		if (service->init_func() != BADGER_SUCCESS)
+		{
+			badger_debug("badger_server_register: could not initialize the server %s\n",service->name);
+			return BADGER_ERROR;
+		}
+	}
+
 	return slist_add(server->services,service->name,(badger_server_t *)service);
 }
 

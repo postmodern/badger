@@ -28,6 +28,7 @@
 
 badger_service_t badger_fs_service = {
 	"fs",
+	NULL,
 	{
 		&badger_fs_stat_func,
 		&badger_fs_unlink_func,

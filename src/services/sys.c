@@ -28,6 +28,7 @@
 
 badger_service_t badger_sys_service = {
 	"sys",
+	NULL,
 	{
 		&badger_sys_time_func,
 		&badger_sys_chdir_func,

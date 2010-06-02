@@ -26,6 +26,8 @@
 
 extern const badger_service_t badger_ffi_service;
 
+extern int badger_ffi_init();
+
 extern const badger_function_t badger_ffi_open_func;
 extern int badger_ffi_open(int argc,const badger_data_t *args,badger_caller_t *caller);
 

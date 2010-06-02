@@ -29,6 +29,7 @@
 
 const badger_service_t badger_ffi_service = {
 	"ffi",
+	badger_ffi_init,
 	{
 		&badger_ffi_open_func,
 		&badger_ffi_libraries_func,
@@ -43,15 +44,16 @@ const badger_service_t badger_ffi_service = {
 
 slist_t *ffi_libraries = NULL;
 
+int badger_ffi_init()
+{
+	ffi_libraries = slist_create(slist_compare_strings,(slist_destroy_func)ffi_library_close);
+	return BADGER_SUCCESS;
+}
+
 const badger_function_t badger_ffi_open_func = {"open",badger_ffi_open,badger_data_boolean,1,{badger_data_string}};
 
 int badger_ffi_open(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
-	if (!ffi_libraries)
-	{
-		ffi_libraries = slist_create(slist_compare_strings,(slist_destroy_func)ffi_library_close);
-	}
-
 	size_t name_length = badger_string_length(args);
 	char name[name_length + 1];
 
@@ -91,12 +93,6 @@ const badger_function_t badger_ffi_libraries_func = {"libraries",badger_ffi_libr
 
 int badger_ffi_libraries(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
-	if (!ffi_libraries)
-	{
-		badger_return_array(caller,0);
-		return BADGER_SUCCESS;
-	}
-
 	badger_return_array(caller,slist_length(ffi_libraries));
 
 	slist_node_t *next_node = ffi_libraries->head;
@@ -116,13 +112,6 @@ const badger_function_t badger_ffi_attach_function_func = {"attach_function",bad
 
 int badger_ffi_attach_function(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
-	if (!ffi_libraries)
-	{
-		// no libraries opened
-		badger_return_error(caller,"no libraries have been loaded");
-		return BADGER_ERROR;
-	}
-
 	size_t lib_name_length = badger_string_length(args);
 	char lib_name[lib_name_length + 1];
 
@@ -195,13 +184,6 @@ const badger_function_t badger_ffi_exposed_functions_func = {"exposed_functions"
 
 int badger_ffi_exposed_functions(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
-	if (!ffi_libraries)
-	{
-		// no libraries opened
-		badger_return_error(caller,"no libraries have been loaded");
-		return BADGER_ERROR;
-	}
-
 	size_t name_length = badger_string_length(args);
 	char name[name_length + 1];
 
@@ -236,13 +218,6 @@ const badger_function_t badger_ffi_exposed_function_func = {"exposed_function",b
 
 int badger_ffi_exposed_function(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
-	if (!ffi_libraries)
-	{
-		// no libraries opened
-		badger_return_error(caller,"no libraries have been loaded");
-		return BADGER_ERROR;
-	}
-
 	size_t lib_name_length = badger_string_length(args);
 	char lib_name[lib_name_length + 1];
 
@@ -293,13 +268,6 @@ const badger_function_t badger_ffi_invoke_func = {"invoke",badger_ffi_invoke,bad
 
 int badger_ffi_invoke(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
-	if (!ffi_libraries)
-	{
-		// no libraries opened
-		badger_return_error(caller,"no libraries have been loaded");
-		return BADGER_ERROR;
-	}
-
 	size_t lib_name_length = badger_string_length(args);
 	char lib_name[lib_name_length + 1];
 
@@ -423,13 +391,6 @@ const badger_function_t badger_ffi_close_func = {"close",badger_ffi_close,badger
 
 int badger_ffi_close(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
-	if (!ffi_libraries)
-	{
-		// no libraries opened
-		badger_return_error(caller,"no libraries have been loaded");
-		return BADGER_ERROR;
-	}
-
 	size_t name_length = badger_string_length(args);
 	char name[name_length + 1];
 

@@ -1,6 +1,21 @@
 Badger! Badger! Badger!
 =======================
 
+
+                            ___,,___
+                       _,-='=- =-  -`"--.__,,.._
+                    ,-;// /  - -       -   -= - "=.
+                  ,'///    -     -   -   =  - ==-=\`.
+                 |/// /  =    `. - =   == - =.=_,,._ `=/|
+                ///    -   -    \  - - = ,ndDMHHMM/\b  \\
+              ,' - / /        / /\ =  - /MM(,,._`YQMML  `|
+             <_,=^Kkm / / / / ///H|wnWWdMKKK#""-;. `"0\  |
+                    `""QkmmmmmnWMMM\""WHMKKMM\   `--. \> \
+             hjm          `""'  `->>>    ``WHMb,.    `-_<@)
+                                            `"QMM`.
+                                               `>>>
+
+
 Badger is a fear-less, robust and portable systems management solution.
 
 Features

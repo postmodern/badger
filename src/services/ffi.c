@@ -399,7 +399,7 @@ cleanup_func_args:
 	return BADGER_ERROR;
 }
 
-const badger_function_t badger_ffi_malloc_func = {"malloc",badger_ffi_read,badger_data_uint,1,{badger_data_uint}};
+const badger_function_t badger_ffi_malloc_func = {"malloc",badger_ffi_malloc,badger_data_uint,1,{badger_data_uint}};
 
 int badger_ffi_malloc(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
@@ -503,7 +503,7 @@ int badger_ffi_read(int argc,const badger_data_t *args,badger_caller_t *caller)
 	return BADGER_SUCCESS;
 }
 
-const badger_function_t badger_ffi_write_func = {"write",badger_ffi_write,badger_data_any,4,{badger_data_uint,badger_data_string,badger_data_uint,badger_data_array}};
+const badger_function_t badger_ffi_write_func = {"write",badger_ffi_write,badger_data_boolean,4,{badger_data_uint,badger_data_string,badger_data_uint,badger_data_array}};
 
 int badger_ffi_write(int argc,const badger_data_t *args,badger_caller_t *caller)
 {

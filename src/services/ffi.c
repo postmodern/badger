@@ -395,6 +395,103 @@ cleanup_func_args:
 	return BADGER_ERROR;
 }
 
+const badger_function_t badger_ffi_read_func = {"read",badger_ffi_read,badger_data_any,4,{badger_data_uint,badger_data_string,badger_data_uint,badger_data_uint}};
+
+int badger_ffi_read(int argc,const badger_data_t *args,badger_caller_t *caller)
+{
+	const void *ptr = (const void *)(badger_uint(args));
+	const ffi_type *type;
+
+	if (!(type = ffi_types_parse(badger_string(args+1))))
+	{
+		badger_return_error(caller,"unknown badger FFI type");
+		return BADGER_ERROR;
+	}
+
+	size_t offset = badger_uint(args+2);
+	size_t length = badger_uint(args+3);
+	unsigned int i;
+
+	badger_return_array(caller,length);
+
+	for (i=0;i<length;i++)
+	{
+		const ffi_value_t *value = (ptr + (type->size * (offset + i)));
+
+		switch (type->type)
+		{
+			case FFI_TYPE_INT:
+				badger_return_int(caller,value->si);
+				break;
+			case FFI_TYPE_SINT8:
+				badger_return_int(caller,value->s8);
+				break;
+			case FFI_TYPE_SINT16:
+				badger_return_int(caller,value->s16);
+				break;
+			case FFI_TYPE_SINT32:
+				badger_return_int(caller,value->s32);
+				break;
+			case FFI_TYPE_SINT64:
+				badger_return_int(caller,value->s64);
+				break;
+			case FFI_TYPE_UINT8:
+				badger_return_uint(caller,value->u8);
+				break;
+			case FFI_TYPE_UINT16:
+				badger_return_uint(caller,value->u16);
+				break;
+			case FFI_TYPE_UINT32:
+				badger_return_uint(caller,value->u32);
+				break;
+			case FFI_TYPE_UINT64:
+				badger_return_uint(caller,value->u64);
+				break;
+			case FFI_TYPE_FLOAT:
+				badger_return_float(caller,value->f);
+				break;
+			case FFI_TYPE_DOUBLE:
+			case FFI_TYPE_LONGDOUBLE:
+				badger_return_float(caller,value->fl);
+				break;
+			case FFI_TYPE_POINTER:
+				badger_return_uint(caller,(uint64_t)value->ptr);
+				break;
+		}
+	}
+
+	return BADGER_SUCCESS;
+}
+
+const badger_function_t badger_ffi_write_func = {"write",badger_ffi_write,badger_data_any,4,{badger_data_uint,badger_data_string,badger_data_uint,badger_data_array}};
+
+int badger_ffi_write(int argc,const badger_data_t *args,badger_caller_t *caller)
+{
+	void *ptr = (void *)(badger_uint(args));
+	const ffi_type *type;
+
+	if (!(type = ffi_types_parse(badger_string(args+1))))
+	{
+		badger_return_error(caller,"unknown badger FFI type");
+		return BADGER_ERROR;
+	}
+
+	size_t offset = badger_uint(args+2);
+	size_t length = badger_array_length(args+3);
+	const badger_data_t *array = badger_array(args+3);
+	unsigned int i;
+
+	for (i=0;i<length;i++)
+	{
+		ffi_value_t *value = (ptr + (type->size * (offset + i)));
+
+		badger_ffi_value_init(value,type,array+i);
+	}
+
+	badger_return_true(caller);
+	return BADGER_SUCCESS;
+}
+
 const badger_function_t badger_ffi_close_func = {"close",badger_ffi_close,badger_data_boolean,1,{badger_data_string}};
 
 int badger_ffi_close(int argc,const badger_data_t *args,badger_caller_t *caller)

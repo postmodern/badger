@@ -35,6 +35,10 @@ const badger_service_t badger_ffi_service = {
 		&badger_ffi_libraries_func,
 		&badger_ffi_attach_function_func,
 		&badger_ffi_invoke_func,
+		&badger_ffi_malloc_func,
+		&badger_ffi_free_func,
+		&badger_ffi_read_func,
+		&badger_ffi_write_func,
 		&badger_ffi_close_func,
 		NULL
 	}

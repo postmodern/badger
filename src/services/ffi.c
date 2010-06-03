@@ -399,28 +399,14 @@ cleanup_func_args:
 	return BADGER_ERROR;
 }
 
-const badger_function_t badger_ffi_malloc_func = {"malloc",badger_ffi_read,badger_data_uint,2,{badger_data_string,badger_data_uint}};
+const badger_function_t badger_ffi_malloc_func = {"malloc",badger_ffi_read,badger_data_uint,1,{badger_data_uint}};
 
 int badger_ffi_malloc(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
-	size_t type_name_length = badger_string_length(args);
-	char type_name[type_name_length + 1];
-
-	memcpy(type_name,badger_string(args),type_name_length);
-	type_name[type_name_length] = '\0';
-
-	const ffi_type *type;
-
-	if (!(type = ffi_types_parse(type_name)))
-	{
-		badger_return_error(caller,"unknown badger FFI type");
-		return BADGER_ERROR;
-	}
-
-	size_t length = badger_uint(args+1);
+	size_t length = badger_uint(args);
 	const void *ptr;
 
-	if (!(ptr = calloc(length,type->size)))
+	if (!(ptr = calloc(length,1)))
 	{
 		badger_return_errno(caller);
 		return BADGER_ERROR;

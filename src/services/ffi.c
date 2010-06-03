@@ -403,9 +403,15 @@ const badger_function_t badger_ffi_malloc_func = {"malloc",badger_ffi_read,badge
 
 int badger_ffi_malloc(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
+	size_t type_name_length = badger_string_length(args);
+	char type_name[type_name_length + 1];
+
+	memcpy(type_name,badger_string(args),type_name_length);
+	type_name[type_name_length] = '\0';
+
 	const ffi_type *type;
 
-	if (!(type = ffi_types_parse(badger_string(args))))
+	if (!(type = ffi_types_parse(type_name)))
 	{
 		badger_return_error(caller,"unknown badger FFI type");
 		return BADGER_ERROR;
@@ -441,9 +447,16 @@ const badger_function_t badger_ffi_read_func = {"read",badger_ffi_read,badger_da
 int badger_ffi_read(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
 	const void *ptr = (const void *)(badger_uint(args));
+
+	size_t type_name_length = badger_string_length(args+1);
+	char type_name[type_name_length + 1];
+
+	memcpy(type_name,badger_string(args+1),type_name_length);
+	type_name[type_name_length] = '\0';
+
 	const ffi_type *type;
 
-	if (!(type = ffi_types_parse(badger_string(args+1))))
+	if (!(type = ffi_types_parse(type_name)))
 	{
 		badger_return_error(caller,"unknown badger FFI type");
 		return BADGER_ERROR;
@@ -509,9 +522,16 @@ const badger_function_t badger_ffi_write_func = {"write",badger_ffi_write,badger
 int badger_ffi_write(int argc,const badger_data_t *args,badger_caller_t *caller)
 {
 	void *ptr = (void *)(badger_uint(args));
+
+	size_t type_name_length = badger_string_length(args+1);
+	char type_name[type_name_length + 1];
+
+	memcpy(type_name,badger_string(args+1),type_name_length);
+	type_name[type_name_length] = '\0';
+
 	const ffi_type *type;
 
-	if (!(type = ffi_types_parse(badger_string(args+1))))
+	if (!(type = ffi_types_parse(type_name)))
 	{
 		badger_return_error(caller,"unknown badger FFI type");
 		return BADGER_ERROR;

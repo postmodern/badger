@@ -46,6 +46,12 @@ extern int badger_ffi_exposed_function(int argc,const badger_data_t *args,badger
 extern const badger_function_t badger_ffi_invoke_func;
 extern int badger_ffi_invoke(int argc,const badger_data_t *args,badger_caller_t *caller);
 
+extern const badger_function_t badger_ffi_malloc_func;
+extern int badger_ffi_malloc(int argc,const badger_data_t *args,badger_caller_t *caller);
+
+extern const badger_function_t badger_ffi_free_func;
+extern int badger_ffi_free(int argc,const badger_data_t *args,badger_caller_t *caller);
+
 extern const badger_function_t badger_ffi_read_func;
 extern int badger_ffi_read(int argc,const badger_data_t *args,badger_caller_t *caller);
 

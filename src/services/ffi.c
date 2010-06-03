@@ -395,6 +395,43 @@ cleanup_func_args:
 	return BADGER_ERROR;
 }
 
+const badger_function_t badger_ffi_malloc_func = {"malloc",badger_ffi_read,badger_data_uint,2,{badger_data_string,badger_data_uint}};
+
+int badger_ffi_malloc(int argc,const badger_data_t *args,badger_caller_t *caller)
+{
+	const ffi_type *type;
+
+	if (!(type = ffi_types_parse(badger_string(args))))
+	{
+		badger_return_error(caller,"unknown badger FFI type");
+		return BADGER_ERROR;
+	}
+
+	size_t length = badger_uint(args+1);
+	const void *ptr;
+
+	if (!(ptr = calloc(length,type->size)))
+	{
+		badger_return_errno(caller);
+		return BADGER_ERROR;
+	}
+
+	badger_return_uint(caller,(uint64_t)ptr);
+	return BADGER_SUCCESS;
+}
+
+const badger_function_t badger_ffi_free_func = {"free",badger_ffi_free,badger_data_boolean,1,{badger_data_uint}};
+
+int badger_ffi_free(int argc,const badger_data_t *args,badger_caller_t *caller)
+{
+	void *ptr = (void *)badger_uint(args);
+
+	free(ptr);
+
+	badger_return_true(caller);
+	return BADGER_SUCCESS;
+}
+
 const badger_function_t badger_ffi_read_func = {"read",badger_ffi_read,badger_data_any,4,{badger_data_uint,badger_data_string,badger_data_uint,badger_data_uint}};
 
 int badger_ffi_read(int argc,const badger_data_t *args,badger_caller_t *caller)

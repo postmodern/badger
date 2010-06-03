@@ -89,6 +89,11 @@ const ffi_function_t * ffi_library_search(const ffi_library_t *lib,const char *n
 	return (const ffi_function_t *)slist_search(lib->functions,name);
 }
 
+int ffi_library_detach(ffi_library_t *lib,const char *name)
+{
+	return slist_remove(lib->functions,name);
+}
+
 void ffi_library_close(ffi_library_t *lib)
 {
 	slist_destroy(lib->functions);

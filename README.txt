@@ -36,6 +36,8 @@ Features
 Requirements
 ------------
 
+* CMake (http://cmake.org/)
+
 * core:
   * libzmq (http://www.zeromq.org/)
   * libmsgpack >= 0.5.0 (http://msgpack.sourceforge.net)

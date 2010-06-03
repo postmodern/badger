@@ -34,8 +34,6 @@ const badger_service_t badger_ffi_service = {
 		&badger_ffi_open_func,
 		&badger_ffi_libraries_func,
 		&badger_ffi_attach_function_func,
-		&badger_ffi_exposed_functions_func,
-		&badger_ffi_exposed_function_func,
 		&badger_ffi_invoke_func,
 		&badger_ffi_close_func,
 		NULL
@@ -132,6 +130,16 @@ int badger_ffi_attach_function(int argc,const badger_data_t *args,badger_caller_
 
 	memcpy(name,badger_string(args+1),name_length);
 	name[name_length] = '\0';
+
+	switch (ffi_library_detach(lib,name))
+	{
+		case 0:
+			badger_debug("badger_ffi_attach_function: attaching new function %s\n",name);
+			break;
+		case 1:
+			badger_debug("badger_ffi_attach_function: replacing function %s\n",name);
+			break;
+	}
 
 	size_t func_argc = badger_array_length(args+2);
 	const ffi_type *func_arg_types[func_argc];

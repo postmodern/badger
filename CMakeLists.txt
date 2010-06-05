@@ -4,6 +4,9 @@ project(BADGER C)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/modules)
 include(InstallPaths)
 include(CheckIncludeFiles)
+if(UNIX)
+	include(FindPkgConfig)
+endif(UNIX)
 
 option(DEBUG "Enable debugging" off)
 option(ENCODERS_XOR "Enable the XOR packet encoder" on)
@@ -17,6 +20,9 @@ set(LIBRARY_VERSION "0.1.0")
 set(LIBRARY_SOVERSION "0")
 
 if(UNIX)
+	pkg_search_module(FFI REQUIRED libmsgpack)
+	pkg_search_module(FFI REQUIRED libzmq)
+
 	set(LINK_FLAGS -static)
 	
 	if(!DEBUG)
@@ -39,7 +45,6 @@ endif(SERVICES_FS)
 
 if(SERVICES_FFI)
 	if(UNIX)
-		include(FindPkgConfig)
 		pkg_search_module(FFI REQUIRED libffi)
 
 		set(BADGER_LIBS dl ${BADGER_LIBS})

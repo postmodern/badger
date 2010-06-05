@@ -20,8 +20,8 @@ set(LIBRARY_VERSION "0.1.0")
 set(LIBRARY_SOVERSION "0")
 
 if(UNIX)
-	pkg_search_module(FFI REQUIRED libmsgpack)
-	pkg_search_module(FFI REQUIRED libzmq)
+	pkg_search_module(MSGPACK REQUIRED libmsgpack)
+	pkg_search_module(ZMQ REQUIRED libzmq)
 
 	set(LINK_FLAGS -static)
 	

@@ -24,7 +24,10 @@ if(UNIX)
 	endif(!DEBUG)
 endif(UNIX)
 
-set(BADGER_LIBS badger_core msgpack zmq uuid pthread stdc++)
+set(BADGER_LIBS badger_core msgpack zmq uuid)
+if(UNIX)
+	set(BADGER_LIBS ${BADGER_LIBS} pthread stdc++)
+endif(UNIX)
 
 if(SERVICES_SYS)
 	set(BADGER_LIBS badger_sys ${BADGER_LIBS})

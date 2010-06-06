@@ -33,7 +33,7 @@
 typedef uint8_t badger_request_type;
 typedef uint32_t badger_request_id;
 
-#define BADGER_REQUEST_ID_MIN	1
-#define BADGER_REQUEST_ID_MAX	4294967295
+#define BADGER_REQUEST_ID_MIN	((badger_request_id)1)
+#define BADGER_REQUEST_ID_MAX	((badger_request_id)4294967295)
 
 #endif

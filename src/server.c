@@ -105,13 +105,13 @@ int badger_server_open(badger_server_t *server,badger_mode mode,const char *uri)
 
 	// Initialise 0MQ context, requesting a single application thread
 	// and a single I/O thread
-	if (!(server->zmq_context = zmq_init(1, 1, 0)))
+	if (!(server->zmq_context = zmq_init(1)))
 	{
 		goto cleanup;
 	}
 
-	// Create a ZMQ_P2P socket to receive requests and send replies
-	if (!(server->zmq_socket = zmq_socket(server->zmq_context,ZMQ_P2P)))
+	// Create a ZMQ_PAIR socket to receive requests and send replies
+	if (!(server->zmq_socket = zmq_socket(server->zmq_context,ZMQ_PAIR)))
 	{
 		goto cleanup_context;
 	}

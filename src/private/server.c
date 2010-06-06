@@ -234,21 +234,21 @@ int badger_server_dispatch(badger_server_t *server,const msgpack_object *payload
 		goto ignore;
 	}
 
-	if (fields[0].via.u64 < BADGER_REQUEST_ID_MIN)
+	badger_request_id id = fields[0].via.u64;
+
+	if (id < BADGER_REQUEST_ID_MIN)
 	{
 		// the ID field must not be less than 1
 		badger_debug("badger_server_dispatch: request ID of the packet payload was less than BADGER_REQUEST_ID_MIN\n");
 		goto ignore;
 	}
 
-	if (fields[0].via.u64 > BADGER_REQUEST_ID_MAX)
+	if (id > BADGER_REQUEST_ID_MAX)
 	{
 		// the ID field must not overflow badger_request_id
 		badger_debug("badger_server_dispatch: request ID of the packet payload was greater than BADGER_REQUEST_ID_MAX\n");
 		goto ignore;
 	}
-
-	badger_request_id id = fields[0].via.u64;
 
 	if (fields[1].type != MSGPACK_OBJECT_POSITIVE_INTEGER)
 	{

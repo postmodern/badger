@@ -39,7 +39,7 @@ Requirements
 * CMake (http://cmake.org/)
 
 * core:
-  * libzmq (http://www.zeromq.org/)
+  * libzmq >= 2.0.7 (http://www.zeromq.org/)
   * libmsgpack >= 0.5.0 (http://msgpack.sourceforge.net)
 
 * 'ffi' service:

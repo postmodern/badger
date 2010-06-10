@@ -9,6 +9,8 @@ if(UNIX)
 endif(UNIX)
 
 option(DEBUG "Enable debugging" off)
+option(PACK "Enable UPX packing of the badger executable" off)
+
 option(ENCODERS_XOR "Enable the XOR packet encoder" on)
 option(ENCODERS_AES "Enable the AES packet encoder" on)
 
@@ -26,6 +28,10 @@ if(UNIX)
 	
 	if(!DEBUG)
 		set(LINK_FLAGS ${LINK_FLAGS} -s)
+
+		if(PACK)
+			include(FindSelfPackers)
+		endif(PACK)
 	endif(!DEBUG)
 endif(UNIX)
 

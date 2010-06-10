@@ -87,7 +87,7 @@ Links
 
 * Source: http://github.com/postmodern/badger
 * Bugs: http://github.com/postmodern/badger/issues
-* IRC: irc://irc.freenode.net/badgerbadgerbadger
+* IRC: irc://irc.freenode.net/#badgerbadgerbadger
 
 License
 -------

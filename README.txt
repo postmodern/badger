@@ -21,6 +21,7 @@ Badger is a fear-less, robust and portable systems management solution.
 Features
 --------
 
+* Written in C.
 * Uses ZeroMQ for networking and message delivery.
 * Uses MessagePack for the packet format.
 * Implements a Remote Procedure Call (RPC) design-pattern.

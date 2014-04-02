@@ -1,13 +1,4 @@
-CMakeCache.txt
-CMakeFiles
-Makefile
-cmake_install.cmake
-install_manifest.txt
-include/badger/config.h
+*.o
+src/lib.c
+lib.mrb
 badger
-test/Testing
-test/CTestTestfile.cmake
-test/test_slist_search
-*.a
-*.swp
-*~

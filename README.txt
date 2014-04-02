@@ -1,5 +1,5 @@
 Badger! Badger! Badger!
-=======================
+-----------------------
 
 
                             ___,,___
@@ -16,83 +16,33 @@ Badger! Badger! Badger!
                                                `>>>
 
 
-Badger is a fear-less, robust and portable systems management solution.
+Badger is a fear-less, robust and portable remote system management tool.
 
 Features
 --------
 
-* Written in C.
-* Uses ZeroMQ for networking and message delivery.
-* Uses MessagePack for the packet format.
-* Implements a Remote Procedure Call (RPC) design-pattern.
-* Supports multiple optional Services:
-  * sys - misc system related functions.
-  * fs - remote file-system related functions.
-  * ffi - dynamically load libraries on the remote system and call functions
-    from them.
-* Compiles a portable statically linked executable.
-* Compiles multiple library archives for developers to roll their own badger
-  servers.
+* Written in Ruby.
+* Contains an embedded mruby [1] runtime.
+* Simple JSON RPC message format.
+* Portable statically linked executable.
 
 Requirements
 ------------
 
-* CMake (http://cmake.org/)
-
-* core:
-  * libzmq >= 2.0.7 (http://www.zeromq.org/)
-  * libmsgpack >= 0.5.0 (http://msgpack.sourceforge.net)
-
-* 'ffi' service:
-  * libffi (http://sourceware.org/libffi/)
+* Ruby [2]
+* Rake [3]
 
 Build
 -----
 
-Interactively configure badger:
-
-    $ ccmake .
-
-Build:
-
-    $ make
-
-Install:
-
-    $ make install
-
-Built Files
------------
-
-* Library archives:
-  * libbadger_core - The core server, services and function code.
-  * libbadger_sys - The 'sys' service.
-  * libbadger_fs - The 'fs' service.
-  * libbadger_ffi - The 'ffi' service.
-* Executables:
-  * badger - The statically linked badger server.
-
-Usage
------
-
-Connect to a client which is accepting connections:
-
-    $ ./badger -c tcp://localhost:5555
-
-Listen for clients connecting in:
-
-    $ ./badger -l tcp://eth0:5555
-
-Links
------
-
-* Source: http://github.com/postmodern/badger
-* Bugs: http://github.com/postmodern/badger/issues
-* IRC: irc://irc.freenode.net/#badgerbadgerbadger
+    $ rake
+    $ ./bin/badger
 
 License
 -------
 
-Badger is licensed under the LGPL-3 license. See `COPYING.txt` for more
-details.
+Badger is licensed under the GPL-3 license. See COPYING.txt for more details.
 
+[1]: https://github.com/mruby/mruby#readme
+[2]: https://www.ruby-lang.org/
+[3]: http://rake.rubyforge.org/

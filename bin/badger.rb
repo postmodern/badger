@@ -1,0 +1,1 @@
+puts "badger #{Badger::VERSION}"

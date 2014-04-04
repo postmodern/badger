@@ -29,6 +29,7 @@ Features
 Requirements
 ------------
 
+* libc.a and libm.a
 * Bison (required by mruby)
 * Ruby
 * Rake

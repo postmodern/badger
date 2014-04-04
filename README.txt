@@ -29,8 +29,9 @@ Features
 Requirements
 ------------
 
-* Ruby [2]
-* Rake [3]
+* Bison (required by mruby)
+* Ruby
+* Rake
 
 Build
 -----

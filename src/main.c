@@ -34,10 +34,10 @@ int main(int argc,const char *argv[])
 	if (mrb->exc)
 	{
 		// print exception
-		mrb_p(mrb, mrb_obj_value(mrb->exc));
+		mrb_print_error(mrb);
 	}
 
 	// cleanup
 	mrb_close(mrb);
-	return 0;
+	return mrb->exc != NULL;
 }

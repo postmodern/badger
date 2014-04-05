@@ -2,15 +2,19 @@ def usage
   puts "usage: badger [OPTIONS]"
 end
 
-case ARGV[0]
-when '-V', '--version'
-  puts "badger #{Badger::VERSION}"
-when '-h', '--help'
-  usage
-when nil
-  $stderr.puts "badger: no options specified"
-  exit -1
-else
-  $stderr.puts "badger: unknown option: #{ARGV[0]}"
-  exit -1
+while (arg = ARGV.shift)
+  case arg
+  when '-V', '--version'
+    puts "badger #{Badger::VERSION}"
+    exit
+  when '-h', '--help'
+    usage
+    exit
+  when nil
+    $stderr.puts "badger: no options specified"
+    exit -1
+  else
+    $stderr.puts "badger: unknown option: #{arg}"
+    exit -1
+  end
 end

@@ -1,13 +1,6 @@
 module Badger
   module Transports
-    class TCPConnectBack
-
-      attr_reader :host, :port
-
-      def initialize(host,port)
-        @host = host
-        @port = port
-      end
+    class TCPConnectBack < Transport
 
       def open
         @socket = TCPSocket.new(@host,@port)

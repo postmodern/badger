@@ -1,22 +1,39 @@
 module Badger
   module Transports
-    class TCPServer
+    class TCPServer < Transport
 
-      MAX_CLIENTS = 10
+      DEFAULT_HOST = '0.0.0.0'
 
-      attr_reader :port, :host
+      # The optional host to listen on.
+      #
+      # @return [String, DEFAULT_HOST]
+      attr_reader :host
 
-      def initialize(port,host=nil)
-        @port = port
-        @host = host
+      #
+      # Initializes the TCPServer transport.
+      #
+      # @param [String, nil] host
+      #   The optional host to listen on. Defaults to {DEFAULT_HOST}.
+      #
+      # @param [Integer] port
+      #   The port to listen on.
+      #
+      def initialize(host,port)
+        super(host || DEFAULT_HOST, port)
 
         @clients = {}
       end
 
+      #
+      # Opens the transport.
+      #
       def open
         @server = ::TCPServer.new(@host,@port)
       end
 
+      #
+      # Listens for messages.
+      #
       def listen
         until @server.closed?
           fds = [@server] + @clients.values.map { |client| client.socket }
@@ -44,6 +61,9 @@ module Badger
         end
       end
 
+      #
+      # Closes the transport.
+      #
       def close
         @clients.each_value { |client| client.close }
         @clients.clear

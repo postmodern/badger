@@ -96,7 +96,7 @@ module Badger
         def read_line
           read
 
-          if (idx = @buffer.index?(NL))
+          if (idx = @buffer.index(NL))
             line = @buffer[0, idx+1]
             @buffer = @buffer[idx+1, @buffer.length]
 

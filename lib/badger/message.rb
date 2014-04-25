@@ -1,5 +1,8 @@
 module Badger
   module Message
+    class InvalidMessage < RuntimeError
+    end
+
     #
     # Encodes the message.
     #
@@ -23,7 +26,11 @@ module Badger
     #   The decoded message.
     #
     def self.decode(message)
-      JSON.parse(message.chomp)
+      begin
+        JSON.parse(message.chomp)
+      rescue JSON::ParserError => error
+        raise(InvalidMessage,error.message,error.backtrace)
+      end
     end
   end
 end

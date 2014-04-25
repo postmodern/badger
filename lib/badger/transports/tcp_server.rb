@@ -96,16 +96,16 @@ module Badger
         def read_line
           read
 
-          if @buffer.include?(NL)
-            line, rest = @buffer.split(NL,2)
-            @buffer = rest
+          if (idx = @buffer.index?(NL))
+            line = @buffer[0, idx+1]
+            @buffer = @buffer[idx+1, @buffer.length]
 
             yield line
           end
         end
 
         def write(data)
-          @socket.write(data + NL)
+          @socket.write(data)
         end
 
         def close

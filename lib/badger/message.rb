@@ -10,7 +10,7 @@ module Badger
     #   The JSON encoded mssage.
     #
     def self.encode(message)
-      JSON.generate(message)
+      JSON.generate(message) + "\n"
     end
 
     #
@@ -23,7 +23,7 @@ module Badger
     #   The decoded message.
     #
     def self.decode(message)
-      JSON.parse(data)
+      JSON.parse(message.chomp)
     end
   end
 end

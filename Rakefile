@@ -79,3 +79,13 @@ file BIN => [LIB_MRUBY, *OBJS] do
 end
 
 task :default => BIN
+
+begin
+  require 'yard'
+
+  YARD::Rake::YardocTask.new  
+rescue LoadError => e
+  task :yard do
+    abort(e.message)
+  end
+end

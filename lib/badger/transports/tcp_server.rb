@@ -2,46 +2,6 @@ module Badger
   module Transports
     class TCPServer
 
-      class Client
-
-        attr_reader :socket
-
-        def initialize(socket)
-          @socket = socket
-          @buffer = ""
-        end
-
-        def id
-          @socket.to_i
-        end
-
-        def read
-          if (data = @socket.recv(4096))
-            @buffer << data
-          end
-        end
-
-        def read_line
-          read
-
-          if @buffer.include?("\n")
-            line, rest = @buffer.split("\n",2)
-            @buffer = rest
-
-            yield line
-          end
-        end
-
-        def write(data)
-          @socket.write(data)
-        end
-
-        def close
-          @socket.close
-        end
-
-      end
-
       MAX_CLIENTS = 10
 
       attr_reader :port, :host
@@ -84,6 +44,54 @@ module Badger
         end
       end
 
+      def close
+        @clients.each_value { |client| client.close }
+        @clients.clear
+        @server.close
+      end
+
+      protected
+
+      class Client
+
+        attr_reader :socket
+
+        def initialize(socket)
+          @socket = socket
+          @buffer = ""
+        end
+
+        def id
+          @socket.to_i
+        end
+
+        def read
+          if (data = @socket.recv(4096))
+            @buffer << data
+          end
+        end
+
+        def read_line
+          read
+
+          if @buffer.include?("\n")
+            line, rest = @buffer.split("\n",2)
+            @buffer = rest
+
+            yield line
+          end
+        end
+
+        def write(data)
+          @socket.write(data)
+        end
+
+        def close
+          @socket.close
+        end
+
+      end
+
       def connect
         socket = @server.accept
         client = Client.new(socket)
@@ -95,12 +103,6 @@ module Badger
         if (client = @clients.delete(client.id))
           client.close
         end
-      end
-
-      def close
-        @clients.each_value { |client| client.close }
-        @clients.clear
-        @server.close
       end
 
     end

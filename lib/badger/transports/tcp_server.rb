@@ -74,6 +74,8 @@ module Badger
 
       class Client
 
+        NL = "\n"
+
         attr_reader :socket
 
         def initialize(socket)
@@ -94,8 +96,8 @@ module Badger
         def read_line
           read
 
-          if @buffer.include?("\n")
-            line, rest = @buffer.split("\n",2)
+          if @buffer.include?(NL)
+            line, rest = @buffer.split(NL,2)
             @buffer = rest
 
             yield line
@@ -103,7 +105,7 @@ module Badger
         end
 
         def write(data)
-          @socket.write(data)
+          @socket.write(data + NL)
         end
 
         def close

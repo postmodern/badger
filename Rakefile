@@ -16,11 +16,15 @@ if ENV['DEBUG']
 end
 
 RUBY_SRC = Rake::FileList['lib/{**/}*.rb', 'bin/badger.rb']
-SRC      = Rake::FileList['src/*.c', 'src/lib.c']
+SRC      = Rake::FileList['src/*.c', 'src/lib.c'].uniq
 OBJS     = SRC.ext('.o')
 BIN      = 'badger'
 
 CLEAN.include OBJS, 'lib.mrb', 'src/lib.c', BIN
+
+p RUBY_SRC
+p SRC
+p OBJS
 
 file 'mruby' do
   sh 'git submodule init'

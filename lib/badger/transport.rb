@@ -23,9 +23,14 @@ module Badger
       @port = port
     end
 
+    #
+    # Opens the transport.
+    #
     def open
     end
 
+    #
+    # Listens for incoming requests.
     #
     # @abstract
     #
@@ -33,12 +38,24 @@ module Badger
       raise(NotImplementedError,"#{self.class}##{__method__} not implemented")
     end
 
+    #
+    # Closes the transport.
+    #
     def close
     end
 
-    def process(message)
+    #
+    # Processes a request message.
+    #
+    # @param [String] data
+    #   The raw request.
+    #
+    # @return [String]
+    #   The raw response.
+    #
+    def process(data)
       request = begin
-                  Message.parse(message)
+                  Message.parse(data)
                 rescue Message::InvalidMessage
                   # ignore invalid messages
                   return

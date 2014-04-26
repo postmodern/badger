@@ -2,6 +2,7 @@ module Badger
   module Transports
     class TCPServer < Transport
 
+      # Default host to listen on
       DEFAULT_HOST = '0.0.0.0'
 
       # The optional host to listen on.
@@ -72,27 +73,56 @@ module Badger
 
       protected
 
+      #
+      # Represents a connects to the server.
+      #
       class Client
 
         NL = "\n"
 
+        # The client's socket.
+        #
+        # @return [TCPSocket]
         attr_reader :socket
 
+        #
+        # Initializes the client.
+        #
+        # @param [TCPSocket] socket
+        #   The socket.
+        #
         def initialize(socket)
           @socket = socket
           @buffer = ""
         end
 
+        #
+        # Unique identifier.
+        #
+        # @return [Integer]
+        #
         def id
           @socket.to_i
         end
 
+        #
+        # Reads available data from the client.
+        #
         def read
           if (data = @socket.recv(4096))
             @buffer << data
           end
         end
 
+        #
+        # Reads a line from the client.
+        #
+        # @yield [line]
+        #   When a new-line character is received, a line is yielded.
+        #
+        # @yieldparam [String] line
+        #   The latest line of input.
+        #
         def read_line
           read
 
@@ -104,16 +134,27 @@ module Badger
           end
         end
 
+        #
+        # Writes data to the client.
+        #
+        # @param [String] data
+        #
         def write(data)
           @socket.write(data)
         end
 
+        #
+        # Closes the clients connection.
+        #
         def close
           @socket.close
         end
 
       end
 
+      #
+      # Accepts a connection from a client.
+      #
       def connect
         socket = @server.accept
         client = Client.new(socket)
@@ -121,7 +162,13 @@ module Badger
         @clients[client.id] = client
       end
 
-      def disconnect(socket)
+      #
+      # Disconnects a client.
+      #
+      # @param [Client] client
+      #   The client to disconnect.
+      #
+      def disconnect(client)
         if (client = @clients.delete(client.id))
           client.close
         end

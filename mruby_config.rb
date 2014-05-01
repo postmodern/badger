@@ -14,10 +14,12 @@ MRuby::Build.new do |conf|
   # include the default GEMs
   conf.gembox 'default'
   conf.gem :core => 'mruby-eval'
-  conf.gem :github => 'iij/mruby-iijson'
-  conf.gem :github => 'iij/mruby-process'
   conf.gem :github => 'iij/mruby-io'
   conf.gem :github => 'iij/mruby-socket'
+  conf.gem :github => 'mattn/mruby-json'
+
+  
+
 
   # C compiler settings
   # conf.cc do |cc|

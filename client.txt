@@ -1,4 +1,0 @@
-EXAMPLE:
-
-
-echo '{"name":"Tcp.connect","arguments":["www.yahoo.com","80"]}' | nc localhost 9700

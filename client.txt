@@ -1,0 +1,1 @@
+echo '{"name":"Shell.exec","arguments":["ls","-la"]}' | nc HOST PORT

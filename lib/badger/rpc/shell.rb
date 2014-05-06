@@ -1,7 +1,7 @@
 module Badger
-	module RPC
+  module RPC
     module Shell
-		  def self.shell; @shell ||= IO.popen(ENV['SHELL']); end
+      def self.shell; @shell ||= IO.popen(ENV['SHELL']); end
 
       def self.exec(program,*arguments)
         io = IO.popen("#{program} #{arguments.join(' ')}")

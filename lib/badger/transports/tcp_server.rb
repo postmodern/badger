@@ -58,7 +58,7 @@ module Badger
              # puts"debug:#{line}"
               response = Badger::RPC::Serve(line)
               @clients[socket.to_i].write(response)
-              
+
             end
           end
         end

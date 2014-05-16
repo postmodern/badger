@@ -37,16 +37,16 @@ module Badger
         when 'Fs' then
           RPC::Fs.send("#{function}", *arguments)
 
-        when 'Proc' then    # this is called directly from the gem
+        when 'Proc' then
           RPC::Proc.send("#{function}", *arguments)
 
-        #when 'Net' then
-          #RPC::Net.send("#{function}", *arguments)
+        when 'Net' then
+          RPC::Net.send("#{function}", *arguments)
 
 
         else return {'exception' => "Module #{mod} not found"}
       end
-      rescue => exception
+      rescue Exception => exception
       return {'exception' => exception.message}
 
     end

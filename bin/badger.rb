@@ -22,7 +22,7 @@ end
 
 def fail(message)
   error(message)
-  exit -1
+  exit(-1)
 end
 
 transport = nil
@@ -68,10 +68,10 @@ while (opt = ARGV.shift)
     exit
   when nil
     $stderr.puts "badger: no options specified"
-    exit -1
+    exit(-1)
   else
     $stderr.puts "badger: unknown option: #{arg}"
-    exit -1
+    exit(-1)
   end
 end
 

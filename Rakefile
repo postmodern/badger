@@ -22,10 +22,6 @@ BIN      = 'badger'
 
 CLEAN.include OBJS, 'lib.mrb', 'src/lib.c', BIN
 
-p RUBY_SRC
-p SRC
-p OBJS
-
 file 'mruby' do
   sh 'git submodule init'
   sh 'git submodule update'

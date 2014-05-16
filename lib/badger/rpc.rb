@@ -27,11 +27,7 @@ module Badger
     names    = name.split('.')
     mod = names[0]
     function = names[1]
-    puts mod
-    puts function
-    puts *arguments
 
-    #puts mod
     value = begin
       case mod
 
@@ -41,8 +37,8 @@ module Badger
         when 'Fs' then
           RPC::Fs.send("#{function}", *arguments)
 
-        when 'Process' then    # this is called directly from the gem
-          RPC::Process.send("#{function}", *arguments)
+        when 'Proc' then    # this is called directly from the gem
+          RPC::Proc.send("#{function}", *arguments)
 
         #when 'Net' then
           #RPC::Net.send("#{function}", *arguments)
@@ -51,7 +47,6 @@ module Badger
         else return {'exception' => "Module #{mod} not found"}
       end
       rescue => exception
-        puts "aybababa"
       return {'exception' => exception.message}
 
     end

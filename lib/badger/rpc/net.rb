@@ -10,8 +10,8 @@ module Badger
         return socket.fileno
       end
 
-      def self.listen(host=nil,port)
-        socket = TCPServer.new(host,port)
+      def self.listen(port,host=nil)
+        socket = TCPServer.new(host || '0.0.0.0',port)
         socket.listen(256)
 
         @sockets[socket.fileno] = socket

@@ -10,7 +10,7 @@ end
 
 
 def upload(path,socket)
-  request = { :name => "Fs.open" , :arguments => ["./clientcopy","w+"] }.to_json
+  request = { :name => "Fs.open" , :arguments => ["./remotefile","w+"] }.to_json
   socket.puts(request)
   response = read(socket)
   handle = response['return']
@@ -22,7 +22,7 @@ end
 dest = ARGV[0]
 port = ARGV[1].to_i
 a = TCPSocket.open(dest, port)
-upload('./clientcopy.rb',a)
+upload('./localfile',a)
 
 #another example:  request = { :name => "Shell.execread" , :arguments => ["ls" , "-la"] }.to_json
 #                  a.puts(request)

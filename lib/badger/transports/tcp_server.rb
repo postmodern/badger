@@ -57,7 +57,7 @@ module Badger
           readable.each do |socket|
             @clients[socket.to_i].read_line do |line|
               response = Badger::RPC::Serve(line)
-              @clients[socket.to_i].write(response)
+              @clients[socket.to_i].write(response + "\r\n")
 
             end
           end

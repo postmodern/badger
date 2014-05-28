@@ -23,7 +23,6 @@ module Badger
 
         begin
           client = socket.accept_nonblock
-          rescue IO::WaitReadable, Errno::EINTR
           return nil
         end
 
@@ -32,18 +31,18 @@ module Badger
       end
 
       def self.recv(fd)
-          #socket = NetHelper.socket(fd)
+          socket = @sockets[fd]
 
         begin
-          return socket.recv_nonblock(BLOCK_SIZE)
-          rescue IO::WaitReadable
+          return socket.recv_nonblock(1024)
           return nil
         end
       end
 
-      def self.send(fd,data)
-         # NetHelper.socket(fd).send(data)
+      def self.__send__(fd,data)
+          @sockets[fd].send(data)
       end
+
     end
   end
 end

@@ -27,6 +27,7 @@ module Badger
     names    = name.split('.')
     mod = names[0]
     function = names[1]
+    print "#{mod} #{function} #{arguments}\n"
 
     value = begin
       case mod
@@ -42,6 +43,9 @@ module Badger
 
         when 'Net' then
           RPC::Net.send("#{function}", *arguments)
+
+        when 'Ruby' then
+          RPC::Ruby.send("#{function}", *arguments)
 
 
         else return {'exception' => "Module #{mod} not found"}
